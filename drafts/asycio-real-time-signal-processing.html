@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>asycio real-time signal processing - Tomorrow Said Toad</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="http://colmryan.org/drafts/asycio-real-time-signal-processing.html">
+
+        <meta name="author" content="Colm Ryan" />
+        <meta name="description" content="I&#39;m taken with using Python&#39;s relatively recent asycio module for real-time DSP. This isn&#39;t because it looks particularly efficient but because it looks very similar to how we do DSP on an FPGA. Of course we won&#39;t actually get the massive parallelism of a real FPGA ..." />
+
+        <meta property="og:site_name" content="Tomorrow Said Toad" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="asycio real-time signal processing"/>
+        <meta property="og:url" content="http://colmryan.org/drafts/asycio-real-time-signal-processing.html"/>
+        <meta property="og:description" content="I&#39;m taken with using Python&#39;s relatively recent asycio module for real-time DSP. This isn&#39;t because it looks particularly efficient but because it looks very similar to how we do DSP on an FPGA. Of course we won&#39;t actually get the massive parallelism of a real FPGA ..."/>
+        <meta property="article:published_time" content="2015-09-20" />
+            <meta property="article:section" content="Python" />
+            <meta property="article:author" content="Colm Ryan" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="http://colmryan.org/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="http://colmryan.org/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://colmryan.org/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://colmryan.org/theme/css/style.css" type="text/css"/>
+
+        <link href="http://colmryan.org/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Tomorrow Said Toad ATOM Feed"/>
+
+
+
+        <link href="http://colmryan.org/feeds/python.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Tomorrow Said Toad Python ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://colmryan.org/" class="navbar-brand">
+Tomorrow Said Toad            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="http://colmryan.org/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="http://colmryan.org/drafts/asycio-real-time-signal-processing.html"
+                       rel="bookmark"
+                       title="Permalink to asycio real-time signal processing">
+                        asycio real-time signal processing
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-09-20T00:00:00-05:00"> Sun 20 September 2015</time>
+    </span>
+
+
+
+
+
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>I'm taken with using Python's relatively recent asycio module for real-time DSP.
+This isn't because it looks particularly efficient but because it looks very
+similar to how we do DSP on an FPGA. Of course we won't actually get the massive
+parallelism of a real FPGA but by setting up all our coroutines at the start and
+letting things go, the data will naturally flow through the processing chain and
+handle back pressure without any particular intervention or scheduling by us.
+This also allows us to tap into the the data stream at any point for addition
+processing, plotting or saving.</p>
+<p>In FPGA land we have all our DSP (FIR filtering, demodulating, decimating etc.)
+as modules that takes streams of data (AXI streams) and every clock cycle
+they'll process data with something like:</p>
+<div class="highlight"><pre><span class="k">if</span> <span class="n">rising_edge</span><span class="p">(</span><span class="n">clk</span><span class="p">)</span> <span class="k">and</span> <span class="n">data_vld</span> <span class="o">=</span> <span class="sc">&#39;1&#39;</span> <span class="k">then</span>
+    <span class="n">process_data</span><span class="p">....</span>
+<span class="k">end</span> <span class="k">if</span><span class="p">;</span>
+</pre></div>
+
+
+<p>All the modules are connected by FIFOs that allow the system to cross clock
+domains and soak up back-pressure if the system is producing data faster than it
+can be processed. Of course if the system is continually taking data faster than
+processing we'll run into an issue but for short burst of data this works well
+as the chains of FIFO's just absorb the pressure without any additional
+thinking.</p>
+<p>With Python's asyncio co-routines and Queues we should be able to setup
+something very similar. Let's setup a simple class structure with
+<code>DataProducer</code>'s,  <code>DataCrucher</code>'s, <code>DataPlotters</code>'s, and <code>DataWriters</code>.</p>
+<p>A <code>DataProducer</code> is anything that produces data that can be consumed by
+anything else.  At the start this may be an ADC but in a chain of filters each
+element is a <code>DataCruncher</code> that also acts as a <code>DataProducer</code> for next
+element in the chain.  Let's make a fake ADC that takes data up to a timeout
+and then finishes.</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">DataProducer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">queue</span>
+
+<span class="k">class</span> <span class="nc">ADC</span><span class="p">(</span><span class="n">DataProducer</span><span class="p">):</span>
+
+    <span class="n">async</span> <span class="k">def</span> <span class="nf">take_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loop</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="n">timeout</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Acquired data and putting in queue&quot;</span><span class="p">)</span>
+            <span class="n">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">&quot;Queue has data at &quot;</span> <span class="o">+</span> <span class="n">timeStamp</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">loop</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">end_time</span><span class="p">:</span>
+                <span class="n">shutdown</span><span class="p">(</span><span class="n">loop</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="n">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+
+<p>A <code>DataProducer</code> has a queue that it pushes data to.  The data will be
+correctly routed by a <code>DataInterconnect</code> later. We define the <code>take_data</code>
+method as an async co-routine using the new Python 3.54 syntax of <code>async def</code></p>
+<p>class DataCrucher(DataProducer):
+    pass</p>
+<p>```</p>
+<p>In Python the FIFOs will be handled by
+<a href="https://docs.python.org/3/library/asyncio-queue.html">asyncio.Queue</a></p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="#"><i class="fa fa-you-can-add-links-in-your-config-file-square fa-lg"></i> You can add links in your config file</a></li>
+                <li class="list-group-item"><a href="#"><i class="fa fa-another-social-link-square fa-lg"></i> Another social link</a></li>
+              </ul>
+            </li>
+
+
+
+
+
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://python.org/" target="_blank">
+                Python.org
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://jinja.pocoo.org/" target="_blank">
+                Jinja2
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="#" target="_blank">
+                You can modify those links in your config file
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy;  Colm Ryan
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="http://colmryan.org/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://colmryan.org/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://colmryan.org/theme/js/respond.min.js"></script>
+
+
+</body>
+</html>
