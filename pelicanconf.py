@@ -23,13 +23,10 @@ AUTHOR_FEED_RSS = None
 
 # Blogroll
 LINKS = (('Pelican', 'http://getpelican.com/'),
-         ('Python.org', 'http://python.org/'),
-         ('Jinja2', 'http://jinja.pocoo.org/'),
-         ('You can modify those links in your config file', '#'),)
+         ('Python.org', 'http://python.org/'),)
 
 # Social widget
-SOCIAL = (('You can add links in your config file', '#'),
-          ('Another social link', '#'),)
+SOCIAL = (('github', 'http://github.com/caryan'),)
 
 DEFAULT_PAGINATION = 10
 
@@ -38,3 +35,5 @@ DEFAULT_PAGINATION = 10
 
 STATIC_PATHS = ['images', 'extra/CNAME']
 EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},}
+
+BANNER_SUBTITLE = 'Today I will take life easy...'
