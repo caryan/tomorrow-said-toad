@@ -6,7 +6,7 @@ AUTHOR = u'Colm Ryan'
 SITENAME = u'Tomorrow Said Toad'
 SITEURL = ''
 
-THEME = "Flex"
+THEME = "pelican-bootstrap3"
 
 PATH = 'content'
 
