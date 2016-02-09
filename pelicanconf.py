@@ -37,3 +37,5 @@ STATIC_PATHS = ['images', 'extra/CNAME']
 EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},}
 
 BANNER_SUBTITLE = 'Today I will take life easy...'
+
+CC_LICENSE = "CC-BY"
