@@ -1,4 +1,4 @@
-Title: asycio real-time signal processing
+Title: asyncio real-time signal processing
 Date: 2015-09-20
 Modified: 2015-10-03
 Status: Draft
@@ -46,22 +46,28 @@ class DataProducer(object):
 
 class ADC(DataProducer):
 
-    async def take_data(self, loop, timeout):
-        end_time = loop.time() + timeout
-        while True:
-			data = np.random.rand(10)
-            logging.info("Acquired data and putting in queue")
-            await self.queue.put("Queue has data at " + timeStamp )
-            if (loop.time() + 1.0) >= end_time:
-                shutdown(loop)
-                break
-            await asyncio.sleep(1)
+	    async def take_data(self, loop, timeout):
+	        end_time = loop.time() + timeout
+	        while True:
+	            data = np.random.rand(100)
+	            timeStamp = str(datetime.datetime.now())
+	            logging.info("Acquired data and putting in queue")
+	            await self.queue.put(data)
+	            if (loop.time() + 1.0) >= end_time:
+	                shutdown(loop)
+	                break
+	            await asyncio.sleep(1)
 ```
 
 A ``DataProducer`` has a queue that it pushes data to.  The data will be
 correctly routed by a ``DataInterconnect`` later. We define the ``take_data``
-method as an async co-routine using the new
+method as an async co-routine using the new Python 3.5 syntax of ``async def``.
+Since the
+[Queue.put](https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue.put)
+method is a coroutine we ``await`` on that (again using the the new syntax
+instead of the old ``yield from``).
 
+```
 class DataCrucher(DataProducer):
 	pass
 
