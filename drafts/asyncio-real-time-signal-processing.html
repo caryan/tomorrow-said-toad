@@ -1,105 +1,66 @@
 <!DOCTYPE html>
-<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<html lang="en">
 <head>
-    <title>asyncio real-time signal processing - Tomorrow Said Toad</title>
-    <!-- Using the latest rendering mode for IE -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="http://www.colmryan.org/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://www.colmryan.org/theme/stylesheet/pygments.min.css">
+  <link rel="stylesheet" type="text/css" href="http://www.colmryan.org/theme/stylesheet/font-awesome.min.css">
+
+
+    <link href="http://www.colmryan.org/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Tomorrow Said Toad Atom">
 
 
 
-<link rel="canonical" href="http://www.colmryan.org/drafts/asyncio-real-time-signal-processing.html">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
 
-        <meta name="author" content="Colm Ryan" />
-        <meta name="description" content="I&#39;m taken with using Python&#39;s relatively recent asycio module for real-time DSP. This isn&#39;t because it looks particularly efficient but because it looks very similar to how we do DSP on an FPGA. Of course we won&#39;t actually get the massive parallelism of a real FPGA ..." />
-
-        <meta property="og:site_name" content="Tomorrow Said Toad" />
-        <meta property="og:type" content="article"/>
-        <meta property="og:title" content="asyncio real-time signal processing"/>
-        <meta property="og:url" content="http://www.colmryan.org/drafts/asyncio-real-time-signal-processing.html"/>
-        <meta property="og:description" content="I&#39;m taken with using Python&#39;s relatively recent asycio module for real-time DSP. This isn&#39;t because it looks particularly efficient but because it looks very similar to how we do DSP on an FPGA. Of course we won&#39;t actually get the massive parallelism of a real FPGA ..."/>
-        <meta property="article:published_time" content="2015-09-20" />
-            <meta property="article:section" content="Python" />
-            <meta property="article:author" content="Colm Ryan" />
-
-
-    <!-- Bootstrap -->
-        <link rel="stylesheet" href="http://www.colmryan.org/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="http://www.colmryan.org/theme/css/font-awesome.min.css" rel="stylesheet">
-
-    <link href="http://www.colmryan.org/theme/css/pygments/native.css" rel="stylesheet">
-    <link rel="stylesheet" href="http://www.colmryan.org/theme/css/style.css" type="text/css"/>
-
-        <link href="http://www.colmryan.org/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
-              title="Tomorrow Said Toad ATOM Feed"/>
-
-
-
-        <link href="http://www.colmryan.org/feeds/python.atom.xml" type="application/atom+xml" rel="alternate"
-              title="Tomorrow Said Toad Python ATOM Feed"/>
-
+<meta name="author" content="Colm Ryan" />
+<meta name="description" content="I'm taken with using Python's relatively recent asycio module for real-time DSP. This isn't because it looks particularly efficient but because it looks very similar to how we do DSP on an FPGA. Of course we won't actually get the massive parallelism of a real FPGA ..." />
+<meta name="keywords" content="">
+<meta property="og:site_name" content="Tomorrow Said Toad"/>
+<meta property="og:title" content="asyncio real-time signal processing"/>
+<meta property="og:description" content="I'm taken with using Python's relatively recent asycio module for real-time DSP. This isn't because it looks particularly efficient but because it looks very similar to how we do DSP on an FPGA. Of course we won't actually get the massive parallelism of a real FPGA ..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://www.colmryan.org/drafts/asyncio-real-time-signal-processing.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2015-09-20 00:00:00-04:00"/>
+<meta property="article:modified_time" content="2015-10-03 00:00:00-04:00"/>
+<meta property="article:author" content="http://www.colmryan.org/author/colm-ryan.html">
+<meta property="article:section" content="Python"/>
+<meta property="og:image" content="">
+  <title>Tomorrow Said Toad &ndash; asyncio real-time signal processing</title>
 </head>
 <body>
-
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="http://www.colmryan.org/" class="navbar-brand">
-Tomorrow Said Toad            </a>
-        </div>
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
-            <ul class="nav navbar-nav">
-                        <li class="active">
-                            <a href="http://www.colmryan.org/category/python.html">Python</a>
-                        </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="http://www.colmryan.org/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
+  <aside>
+    <div>
+      <a href="http://www.colmryan.org">
+        <img src="http://www.colmryan.org/theme/img/profile.png" alt="Tomorrow Said Toad" title="Tomorrow Said Toad">
+      </a>
+      <h1><a href="http://www.colmryan.org">Tomorrow Said Toad</a></h1>
+      <p>Today I will take life easy...</p>
+      <nav>
+        <ul class="list">
+          <li><a href="http://getpelican.com/" target="_blank">Pelican</a></li>
+          <li><a href="http://python.org/" target="_blank">Python.org</a></li>
+        </ul>
+      </nav>
+      <ul class="social">
+        <li><a class="sc-github" href="http://github.com/caryan" target="_blank"><i class="fa fa-github"></i></a></li>
+      </ul>
     </div>
-</div> <!-- /.navbar -->
-<!-- Banner -->
-<!-- End Banner -->
-<div class="container">
-    <div class="row">
-        <div class="col-sm-9">
-    <section id="content">
-        <article>
-            <header class="page-header">
-                <h1>
-                    <a href="http://www.colmryan.org/drafts/asyncio-real-time-signal-processing.html"
-                       rel="bookmark"
-                       title="Permalink to asyncio real-time signal processing">
-                        asyncio real-time signal processing
-                    </a>
-                </h1>
-            </header>
-            <div class="entry-content">
-                <div class="panel">
-                    <div class="panel-body">
-<footer class="post-info">
-    <span class="label label-default">Date</span>
-    <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-09-20T00:00:00-05:00"> Sun 20 September 2015</time>
-    </span>
+  </aside>
+  <main>
 
-
-
-
-
-    
-</footer><!-- /.post-info -->                    </div>
-                </div>
-                <p>I'm taken with using Python's relatively recent asycio module for real-time DSP.
+<article>
+  <header>
+    <h1 id="asyncio-real-time-signal-processing">asyncio real-time signal processing</h1>
+    <p>Posted on Sun 20 September 2015 in <a href="http://www.colmryan.org/category/python.html">Python</a></p>
+  </header>
+  <div>
+    <p>I'm taken with using Python's relatively recent asycio module for real-time DSP.
 This isn't because it looks particularly efficient but because it looks very
 similar to how we do DSP on an FPGA. Of course we won't actually get the massive
 parallelism of a real FPGA but by setting up all our coroutines at the start and
@@ -110,7 +71,7 @@ processing, plotting or saving.</p>
 <p>In FPGA land we have all our DSP (FIR filtering, demodulating, decimating etc.)
 as modules that takes streams of data (AXI streams) and every clock cycle
 they'll process data with something like:</p>
-<div class="highlight"><pre><span class="k">if</span> <span class="n">rising_edge</span><span class="p">(</span><span class="n">clk</span><span class="p">)</span> <span class="k">and</span> <span class="n">data_vld</span> <span class="o">=</span> <span class="sc">&#39;1&#39;</span> <span class="k">then</span>
+<div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">rising_edge</span><span class="p">(</span><span class="n">clk</span><span class="p">)</span> <span class="k">and</span> <span class="n">data_vld</span> <span class="o">=</span> <span class="sc">&#39;1&#39;</span> <span class="k">then</span>
     <span class="n">process_data</span><span class="p">....</span>
 <span class="k">end</span> <span class="k">if</span><span class="p">;</span>
 </pre></div>
@@ -130,7 +91,7 @@ anything else.  At the start this may be an ADC but in a chain of filters each
 element is a <code>DataCruncher</code> that also acts as a <code>DataProducer</code> for next
 element in the chain.  Let's make a fake ADC that takes data up to a timeout
 and then finishes.</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">DataProducer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">DataProducer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">queue</span>
 
 <span class="k">class</span> <span class="nc">ADC</span><span class="p">(</span><span class="n">DataProducer</span><span class="p">):</span>
@@ -140,7 +101,7 @@ and then finishes.</p>
             <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
                 <span class="n">timeStamp</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Acquired data and putting in queue&quot;</span><span class="p">)</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Acquired data and putting in queue&quot;</span><span class="p">)</span>
                 <span class="n">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">loop</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">end_time</span><span class="p">:</span>
                     <span class="n">shutdown</span><span class="p">(</span><span class="n">loop</span><span class="p">)</span>
@@ -156,78 +117,58 @@ Since the
 <a href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue.put">Queue.put</a>
 method is a coroutine we <code>await</code> on that (again using the the new syntax
 instead of the old <code>yield from</code>).</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="n">DataCrucher</span>(<span class="n">DataProducer</span>):
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="n">DataCrucher</span>(<span class="n">DataProducer</span>):
     <span class="nb">pass</span>
 </pre></div>
 
 
 <p>In Python the FIFOs will be handled by
 <a href="https://docs.python.org/3/library/asyncio-queue.html">asyncio.Queue</a></p>
-            </div>
-            <!-- /.entry-content -->
-        </article>
-    </section>
+  </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+</article>
 
-        </div>
-        <div class="col-sm-3" id="sidebar">
-            <aside>
-
-<section class="well well-sm">
-    <ul class="list-group list-group-flush">
-            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
-              <ul class="list-group" id="social">
-                <li class="list-group-item"><a href="http://github.com/caryan"><i class="fa fa-github-square fa-lg"></i> github</a></li>
-              </ul>
-            </li>
-
-
-
-
-
-    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
-      <ul class="list-group" id="links">
-        <li class="list-group-item">
-            <a href="http://getpelican.com/" target="_blank">
-                Pelican
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://python.org/" target="_blank">
-                Python.org
-            </a>
-        </li>
-      </ul>
-    </li>
-    </ul>
-</section>
-            </aside>
-        </div>
-    </div>
-</div>
-<footer>
-   <div class="container">
-      <hr>
-      <div class="row">
-         <div class="col-xs-10">&copy; 2016 Colm Ryan
-            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
-            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
-            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>              <p><small>  <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by/4.0/80x15.png" /></a>
-    Content
-  licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>, except where indicated otherwise.
-</small></p>
-         </div>
-         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
-      </div>
-   </div>
-</footer>
-<script src="http://www.colmryan.org/theme/js/jquery.min.js"></script>
-
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="http://www.colmryan.org/theme/js/bootstrap.min.js"></script>
-
-<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="http://www.colmryan.org/theme/js/respond.min.js"></script>
+    <footer>
+<p>
+  &copy; Colm Ryan 2016 - This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses///">  International License</a>
+</p>
+<p>Built using <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a></p><p>
+  <a rel="license"
+     href="http://creativecommons.org/licenses///"
+     target="_blank">
+    <img alt="Creative Commons License"
+         title="Creative Commons License"
+         style="border-width:0"
+         src="https://i.creativecommons.org/l///80x15.png"
+         width="80"
+         height="15"/>
+  </a>
+</p>    </footer>
+  </main>
 
 
-</body>
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BlogPosting",
+  "name": "asyncio real-time signal processing",
+  "headline": "asyncio real-time signal processing",
+  "datePublished": "2015-09-20 00:00:00-04:00",
+  "dateModified": "2015-10-03 00:00:00-04:00",
+  "author": {
+    "@type": "Person",
+    "name": "Colm Ryan",
+    "url": "http://www.colmryan.org/author/colm-ryan.html"
+  },
+  "image": "{{ SITEURL }}/{{ THEME_STATIC_DIR }}/img/profile.png",
+  "url": "http://www.colmryan.org/drafts/asyncio-real-time-signal-processing.html",
+  "description": "I'm taken with using Python's relatively recent asycio module for real-time DSP. This isn't because it looks particularly efficient but because it looks very similar to how we do DSP on an FPGA. Of course we won't actually get the massive parallelism of a real FPGA ..."
+}
+</script></body>
 </html>

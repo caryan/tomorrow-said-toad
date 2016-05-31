@@ -1,143 +1,126 @@
 <!DOCTYPE html>
-<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<html lang="en">
 <head>
-    <title>Articles by Colm Ryan - Tomorrow Said Toad</title>
-    <!-- Using the latest rendering mode for IE -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="http://www.colmryan.org/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://www.colmryan.org/theme/stylesheet/pygments.min.css">
+  <link rel="stylesheet" type="text/css" href="http://www.colmryan.org/theme/stylesheet/font-awesome.min.css">
+
+
+    <link href="http://www.colmryan.org/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Tomorrow Said Toad Atom">
 
 
 
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
 
-        <meta name="author" content="Colm Ryan" />
+    <meta name="author" content="Colm Ryan" />
+    <meta name="description" content="" />
+<meta property="og:site_name" content="Tomorrow Said Toad"/>
+<meta property="og:type" content="blog"/>
+<meta property="og:title" content="Tomorrow Said Toad"/>
+<meta property="og:description" content=""/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://www.colmryan.org"/>
 
-    <!-- Open Graph tags -->
-        <meta property="og:site_name" content="Tomorrow Said Toad" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="Tomorrow Said Toad"/>
-        <meta property="og:url" content="http://www.colmryan.org"/>
-        <meta property="og:description" content="Tomorrow Said Toad"/>
-
-
-    <!-- Bootstrap -->
-        <link rel="stylesheet" href="http://www.colmryan.org/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="http://www.colmryan.org/theme/css/font-awesome.min.css" rel="stylesheet">
-
-    <link href="http://www.colmryan.org/theme/css/pygments/native.css" rel="stylesheet">
-    <link rel="stylesheet" href="http://www.colmryan.org/theme/css/style.css" type="text/css"/>
-
-        <link href="http://www.colmryan.org/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
-              title="Tomorrow Said Toad ATOM Feed"/>
-
-
-
-
+  <title>Tomorrow Said Toad &ndash; Posts by: Colm Ryan</title>
 </head>
 <body>
-
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="http://www.colmryan.org/" class="navbar-brand">
-Tomorrow Said Toad            </a>
-        </div>
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
-            <ul class="nav navbar-nav">
-                        <li >
-                            <a href="http://www.colmryan.org/category/python.html">Python</a>
-                        </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="http://www.colmryan.org/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
+  <aside>
+    <div>
+      <a href="http://www.colmryan.org">
+        <img src="http://www.colmryan.org/theme/img/profile.png" alt="Tomorrow Said Toad" title="Tomorrow Said Toad">
+      </a>
+      <h1><a href="http://www.colmryan.org">Tomorrow Said Toad</a></h1>
+      <p>Today I will take life easy...</p>
+      <nav>
+        <ul class="list">
+          <li><a href="http://getpelican.com/" target="_blank">Pelican</a></li>
+          <li><a href="http://python.org/" target="_blank">Python.org</a></li>
+        </ul>
+      </nav>
+      <ul class="social">
+        <li><a class="sc-github" href="http://github.com/caryan" target="_blank"><i class="fa fa-github"></i></a></li>
+      </ul>
     </div>
-</div> <!-- /.navbar -->
-<!-- Banner -->
-<!-- End Banner -->
-<div class="container">
-    <div class="row">
-        <div class="col-sm-9">
-            <article>
-                <h2><a href="http://www.colmryan.org/bitfield-nicities-in-python.html">Bitfield nicities in Python</a></h2>
-                <div class="summary"><p>With code contributions from <a href="http://www.grahamerowlands.com/">Graham Rowlands</a>.</p>
+  </aside>
+  <main>
+
+<article>
+  <header>
+    <h2><a href="http://www.colmryan.org/variant-calls-with-gatk.html#variant-calls-with-gatk">Variant calls with GATK</a></h2>
+    <p>
+      Posted on Sun 29 May 2016 in <a href="http://www.colmryan.org/category/bioinformatics-julia.html">bioinformatics, Julia</a>
+    </p>
+  </header>
+  <div>
+      <p>I had to replace a <a href="http://www.clcbio.com/">CLC Bio</a> variant calling pipeline
+with an open-source equivalent. These notes are mainly an update of another blog
+post <a href="https://approachedinthelimit.wordpress.com/2015/10/09/variant-calling-with-gatk/">Variant calling with
+GATK</a>.</p>
+<h1>Tools Setup</h1>
+<ol>
+<li>Build and install (to ~/.local) <a href="https://github.com/lh3/bwa">bwa</a></li>
+<li>Build and install <a href="http://www.htslib.org/download/">samtools</a></li>
+<li>Download and extract <a href="https://www.broadinstitute.org/gatk/">GATK</a> under non-comercial license</li>
+<li>Download and extract ...</li></ol>
+      <a class="btn" href="http://www.colmryan.org/variant-calls-with-gatk.html#variant-calls-with-gatk">Continue reading</a>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
+    <h2><a href="http://www.colmryan.org/bitfield-nicities-in-python.html#bitfield-nicities-in-python">Bitfield nicities in Python</a></h2>
+    <p>
+      Posted on Mon 08 February 2016 in <a href="http://www.colmryan.org/category/python.html">Python</a>
+    </p>
+  </header>
+  <div>
+      <p>With code contributions from <a href="http://www.grahamerowlands.com/">Graham Rowlands</a>.</p>
 <p>For low level device drivers or communications protocols it's handy to be able
 to bounce the individual bits in an integer around as several fields might be packed into a larger
 integer in a <a href="https://en.wikipedia.org/wiki/Bit_field">bitfield</a>.</p>
 <p>There are, of course, already several ways to ...</p>
-                    <a class="btn btn-default btn-xs" href="http://www.colmryan.org/bitfield-nicities-in-python.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
+      <a class="btn" href="http://www.colmryan.org/bitfield-nicities-in-python.html#bitfield-nicities-in-python">Continue reading</a>
+  </div>
+</article>
 
-        </div>
-        <div class="col-sm-3" id="sidebar">
-            <aside>
+  <div class="pagination">
+  </div>
 
-<section class="well well-sm">
-    <ul class="list-group list-group-flush">
-            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
-              <ul class="list-group" id="social">
-                <li class="list-group-item"><a href="http://github.com/caryan"><i class="fa fa-github-square fa-lg"></i> github</a></li>
-              </ul>
-            </li>
-
-
-
-
-
-    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
-      <ul class="list-group" id="links">
-        <li class="list-group-item">
-            <a href="http://getpelican.com/" target="_blank">
-                Pelican
-            </a>
-        </li>
-        <li class="list-group-item">
-            <a href="http://python.org/" target="_blank">
-                Python.org
-            </a>
-        </li>
-      </ul>
-    </li>
-    </ul>
-</section>
-            </aside>
-        </div>
-    </div>
-</div>
-<footer>
-   <div class="container">
-      <hr>
-      <div class="row">
-         <div class="col-xs-10">&copy; 2016 Colm Ryan
-            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
-            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
-            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>              <p><small>  <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by/4.0/80x15.png" /></a>
-    Content
-  licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>, except where indicated otherwise.
-</small></p>
-         </div>
-         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
-      </div>
-   </div>
-</footer>
-<script src="http://www.colmryan.org/theme/js/jquery.min.js"></script>
-
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="http://www.colmryan.org/theme/js/bootstrap.min.js"></script>
-
-<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="http://www.colmryan.org/theme/js/respond.min.js"></script>
+    <footer>
+<p>
+  &copy; Colm Ryan 2016 - This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses///">  International License</a>
+</p>
+<p>Built using <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a></p><p>
+  <a rel="license"
+     href="http://creativecommons.org/licenses///"
+     target="_blank">
+    <img alt="Creative Commons License"
+         title="Creative Commons License"
+         style="border-width:0"
+         src="https://i.creativecommons.org/l///80x15.png"
+         width="80"
+         height="15"/>
+  </a>
+</p>    </footer>
+  </main>
 
 
-</body>
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Tomorrow Said Toad ",
+  "url" : "http://www.colmryan.org",
+  "image": "",
+  "description": ""
+}
+</script></body>
 </html>
