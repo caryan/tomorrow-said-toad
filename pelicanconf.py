@@ -4,13 +4,16 @@ from __future__ import unicode_literals
 
 AUTHOR = u'Colm Ryan'
 SITENAME = u'Tomorrow Said Toad'
+SITETITLE = u'Tomorrow Said Toad'
+SITESUBTITLE = 'Today I will take life easy...'
 SITEURL = ''
 
-THEME = "pelican-bootstrap3"
+THEME = "/home/cryan/Programming/Repos/pelican-themes/Flex"
+# MAIN_MENU = True
 
 PATH = 'content'
 
-TIMEZONE = 'America/Atikokan'
+TIMEZONE = 'US/Eastern'
 
 DEFAULT_LANG = u'en'
 
@@ -36,6 +39,5 @@ DEFAULT_PAGINATION = 10
 STATIC_PATHS = ['images', 'extra/CNAME']
 EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},}
 
-BANNER_SUBTITLE = 'Today I will take life easy...'
-
+COPYRIGHT_YEAR = 2016
 CC_LICENSE = "CC-BY"
