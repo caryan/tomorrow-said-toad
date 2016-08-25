@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Tomorrow Said Toad</title><link href="http://www.colmryan.org/" rel="alternate"></link><link href="http://www.colmryan.org/feeds/bioinformatics.atom.xml" rel="self"></link><id>http://www.colmryan.org/</id><updated>2016-05-29T00:00:00-04:00</updated><entry><title>Variant calls with GATK</title><link href="http://www.colmryan.org/variant-calls-with-gatk.html" rel="alternate"></link><published>2016-05-29T00:00:00-04:00</published><author><name>Colm Ryan</name></author><id>tag:www.colmryan.org,2016-05-29:variant-calls-with-gatk.html</id><summary type="html">&lt;p&gt;I had to replace a &lt;a href="http://www.clcbio.com/"&gt;CLC Bio&lt;/a&gt; variant calling pipeline
+with an open-source equivalent. These notes are mainly an update of another blog
+post &lt;a href="https://approachedinthelimit.wordpress.com/2015/10/09/variant-calling-with-gatk/"&gt;Variant calling with
+GATK&lt;/a&gt;.&lt;/p&gt;
+&lt;h1&gt;Tools Setup&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;Build and install (to ~/.local) &lt;a href="https://github.com/lh3/bwa"&gt;bwa&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Build and install &lt;a href="http://www.htslib.org/download/"&gt;samtools&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Download and extract &lt;a href="https://www.broadinstitute.org/gatk/"&gt;GATK&lt;/a&gt; under non-comercial license&lt;/li&gt;
+&lt;li&gt;Download and extract &lt;a href="http://broadinstitute.github.io/picard/"&gt;Picard Tools&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Picard requires Java 1.8 so update to OpenJDK-1.8.72&lt;/li&gt;
+&lt;li&gt;Set environment variable to reference Picard&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;PICARD&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;~/Downloads/picard-tools-2.1.0/picard.jar
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1&gt;Pipeline&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Index the reference&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;bwa index PAO1_reference.fasta
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Sort the reference&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;samtools faidx PAO1_reference.fasta
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create sequence dictionary&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar &lt;span class="nv"&gt;$PICARD&lt;/span&gt; CreateSequenceDictionary &lt;span class="se"&gt;\&lt;/span&gt;
+ &lt;span class="nv"&gt;REFERENCE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;PAO1_reference.fasta &lt;span class="se"&gt;\&lt;/span&gt;
+ &lt;span class="nv"&gt;OUTPUT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;PAO1_reference.dict
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Align reads using bwa&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;bwa mem PAO1_reference.fasta &lt;span class="se"&gt;\&lt;/span&gt;
+ genomes/AZPAE12150_S4_L001_R1_001.fastq.gz &lt;span class="se"&gt;\&lt;/span&gt;
+ genomes/AZPAE12150_S4_L001_R2_001.fastq.gz &amp;gt; &lt;span class="se"&gt;\&lt;/span&gt;
+ pipeline_products/AZPAE12150_S4_L001.aln.sam
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Sort SAM file, add fake ReadGroup IDs (otherwise will fail at GATK RealignerTargetCreator below) and convert to bam&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar &lt;span class="nv"&gt;$PICARD&lt;/span&gt; AddOrReplaceReadGroups &lt;span class="se"&gt;\&lt;/span&gt;
+ &lt;span class="nv"&gt;I&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/AZPAE12150_S4_L001.aln.sam &lt;span class="se"&gt;\&lt;/span&gt;
+ &lt;span class="nv"&gt;O&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/AZPAE12150_S4_L001.sorted.bam &lt;span class="se"&gt;\&lt;/span&gt;
+ &lt;span class="nv"&gt;RGLB&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;kos1 &lt;span class="se"&gt;\&lt;/span&gt;
+ &lt;span class="nv"&gt;RGPL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;illumina &lt;span class="se"&gt;\&lt;/span&gt;
+ &lt;span class="nv"&gt;RGPU&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;unit1 &lt;span class="se"&gt;\&lt;/span&gt;
+ &lt;span class="nv"&gt;RGSM&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;AZPAE12150 &lt;span class="se"&gt;\&lt;/span&gt;
+ &lt;span class="nv"&gt;SORT_ORDER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;coordinate
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Mark duplicates&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar &lt;span class="nv"&gt;$PICARD&lt;/span&gt; MarkDuplicates &lt;span class="se"&gt;\&lt;/span&gt;
+ &lt;span class="nv"&gt;I&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/AZPAE12150_S4_L001.sorted.bam&lt;span class="se"&gt;\&lt;/span&gt;
+ &lt;span class="nv"&gt;O&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/AZPAE12150_S4_L001.dedup.bam &lt;span class="se"&gt;\&lt;/span&gt;
+ &lt;span class="nv"&gt;METRICS_FILE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/metrics.txt
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Build bam index&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar &lt;span class="nv"&gt;$PICARD&lt;/span&gt; BuildBamIndex &lt;span class="nv"&gt;INPUT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/AZPAE12150_S4_L001.dedup.bam
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create realignment targets&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar ~/Downloads/GATK/GenomeAnalysisTK.jar -T RealignerTargetCreator &lt;span class="se"&gt;\&lt;/span&gt;
+-R ../PAO1_reference.fasta -I AZPAE12150_S4_L001.dedup.bam &lt;span class="se"&gt;\&lt;/span&gt;
+-o AZPAE12150_S4_L001.targetintervals.list
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Indel realignment&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar ~/Downloads/GATK/GenomeAnalysisTK.jar -T IndelRealigner &lt;span class="se"&gt;\&lt;/span&gt;
+ -R ../PAO1_reference.fasta -I AZPAE12150_S4_L001.dedup.bam &lt;span class="se"&gt;\&lt;/span&gt;
+ -targetIntervals AZPAE12150_S4_L001.targetintervals.list &lt;span class="se"&gt;\&lt;/span&gt;
+ -o AZPAE12150_S4_L001.realigned.bam
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Call variants (takes ~10 minutes to run on a pair of 150M fastq.gz file )&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar ~/Downloads/GATK/GenomeAnalysisTK.jar -T HaplotypeCaller &lt;span class="se"&gt;\&lt;/span&gt;
+ -R ../PAO1_reference.fasta -I AZPAE12150_S4_L001.realigned.bam &lt;span class="se"&gt;\&lt;/span&gt;
+ -ploidy &lt;span class="m"&gt;1&lt;/span&gt; -stand_call_conf &lt;span class="m"&gt;30&lt;/span&gt; -stand_emit_conf &lt;span class="m"&gt;10&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+ -o AZPAE12150_S4_L001.raw.vcf
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Filter out SNPs (optional)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar ~/Downloads/GATK/GenomeAnalysisTK.jar -T SelectVariants &lt;span class="se"&gt;\&lt;/span&gt;
+ -R ../PAO1_reference.fasta -V AZPAE12150_S4_L001.raw.vcf -selectType SNP &lt;span class="se"&gt;\&lt;/span&gt;
+ -o AZPAE12150_S4_L001.snps.vcf
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Convert to a tab separated file for easy dataframe loading&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar ~/Downloads/GATK/GenomeAnalysisTK.jar -T VariantsToTable &lt;span class="se"&gt;\&lt;/span&gt;
+ -R ../PAO1_reference.fasta -V AZPAE12150_S4_L001.snps.vcf &lt;span class="se"&gt;\&lt;/span&gt;
+ -F POS -F REF -F ALT -F QUAL -o AZPAE12150_S4_L001.snps.tsv
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1&gt;Wrapping in a script&lt;/h1&gt;
+&lt;p&gt;I also put together a &lt;a href="https://gist.github.com/caryan/1a5624d8539c83d01cef2663b3bc2e7d"&gt;Julia
+script&lt;/a&gt; that
+automates the whole pipeline.&lt;/p&gt;
+&lt;h1&gt;Performance&lt;/h1&gt;
+&lt;p&gt;I don't have the experience to grade the quality of the SNP calling. Anecdotally
+I seemed to run into a &lt;a href="http://gatkforums.broadinstitute.org/dsde/discussion/5422/why-is-haplotypecaller-not-calling-obvious-snps-by-default-but-requires-allownonuniquekmersinref"&gt;reported
+issue&lt;/a&gt;
+where it seemed to miss SNPs at the beginning of a gene with lots of repeats.&lt;/p&gt;
+&lt;p&gt;In comparison to the CLC pipeline, some SNP set union/differences showed there
+were about 27k they both called;  CLC called a few hundred that GATK did not and
+GATK called a couple thousand that CLC did not.  Anecdotally, the extra calls
+from GATK seemed to come from low depth of coverage region however some
+primitive attempts to filter those using &lt;code&gt;SelectVariants&lt;/code&gt; did not seem to
+improve the overlap.&lt;/p&gt;</summary><category term="Julia"></category></entry></feed>
