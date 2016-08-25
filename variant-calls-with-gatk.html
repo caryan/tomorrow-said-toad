@@ -95,7 +95,7 @@ GATK</a>.</p>
 </li>
 <li>
 <p>Create sequence dictionary</p>
-<div class="highlight"><pre><span></span>java -jar $PICARD CreateSequenceDictionary <span class="se">\</span>
+<div class="highlight"><pre><span></span>java -jar <span class="nv">$PICARD</span> CreateSequenceDictionary <span class="se">\</span>
  <span class="nv">REFERENCE</span><span class="o">=</span>PAO1_reference.fasta <span class="se">\</span>
  <span class="nv">OUTPUT</span><span class="o">=</span>PAO1_reference.dict
 </pre></div>
@@ -114,7 +114,7 @@ GATK</a>.</p>
 </li>
 <li>
 <p>Sort SAM file, add fake ReadGroup IDs (otherwise will fail at GATK RealignerTargetCreator below) and convert to bam</p>
-<div class="highlight"><pre><span></span>java -jar $PICARD AddOrReplaceReadGroups <span class="se">\</span>
+<div class="highlight"><pre><span></span>java -jar <span class="nv">$PICARD</span> AddOrReplaceReadGroups <span class="se">\</span>
  <span class="nv">I</span><span class="o">=</span>pipeline_products/AZPAE12150_S4_L001.aln.sam <span class="se">\</span>
  <span class="nv">O</span><span class="o">=</span>pipeline_products/AZPAE12150_S4_L001.sorted.bam <span class="se">\</span>
  <span class="nv">RGLB</span><span class="o">=</span>kos1 <span class="se">\</span>
@@ -128,7 +128,7 @@ GATK</a>.</p>
 </li>
 <li>
 <p>Mark duplicates</p>
-<div class="highlight"><pre><span></span>java -jar $PICARD MarkDuplicates <span class="se">\</span>
+<div class="highlight"><pre><span></span>java -jar <span class="nv">$PICARD</span> MarkDuplicates <span class="se">\</span>
  <span class="nv">I</span><span class="o">=</span>pipeline_products/AZPAE12150_S4_L001.sorted.bam<span class="se">\</span>
  <span class="nv">O</span><span class="o">=</span>pipeline_products/AZPAE12150_S4_L001.dedup.bam <span class="se">\</span>
  <span class="nv">METRICS_FILE</span><span class="o">=</span>pipeline_products/metrics.txt
@@ -138,7 +138,7 @@ GATK</a>.</p>
 </li>
 <li>
 <p>Build bam index</p>
-<div class="highlight"><pre><span></span>java -jar $PICARD BuildBamIndex <span class="nv">INPUT</span><span class="o">=</span>pipeline_products/AZPAE12150_S4_L001.dedup.bam
+<div class="highlight"><pre><span></span>java -jar <span class="nv">$PICARD</span> BuildBamIndex <span class="nv">INPUT</span><span class="o">=</span>pipeline_products/AZPAE12150_S4_L001.dedup.bam
 </pre></div>
 
 

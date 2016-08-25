@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Tomorrow Said Toad</title><link href="http://www.colmryan.org/" rel="alternate"></link><link href="http://www.colmryan.org/feeds/bioinformatics-julia.atom.xml" rel="self"></link><id>http://www.colmryan.org/</id><updated>2016-05-29T00:00:00-04:00</updated><entry><title>Variant calls with GATK</title><link href="http://www.colmryan.org/variant-calls-with-gatk.html" rel="alternate"></link><updated>2016-05-29T00:00:00-04:00</updated><author><name>Colm Ryan</name></author><id>tag:www.colmryan.org,2016-05-29:variant-calls-with-gatk.html</id><summary type="html">&lt;p&gt;I had to replace a &lt;a href="http://www.clcbio.com/"&gt;CLC Bio&lt;/a&gt; variant calling pipeline
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Tomorrow Said Toad</title><link href="http://www.colmryan.org/" rel="alternate"></link><link href="http://www.colmryan.org/feeds/bioinformatics-julia.atom.xml" rel="self"></link><id>http://www.colmryan.org/</id><updated>2016-05-29T00:00:00-04:00</updated><entry><title>Variant calls with GATK</title><link href="http://www.colmryan.org/variant-calls-with-gatk.html" rel="alternate"></link><published>2016-05-29T00:00:00-04:00</published><author><name>Colm Ryan</name></author><id>tag:www.colmryan.org,2016-05-29:variant-calls-with-gatk.html</id><summary type="html">&lt;p&gt;I had to replace a &lt;a href="http://www.clcbio.com/"&gt;CLC Bio&lt;/a&gt; variant calling pipeline
 with an open-source equivalent. These notes are mainly an update of another blog
 post &lt;a href="https://approachedinthelimit.wordpress.com/2015/10/09/variant-calling-with-gatk/"&gt;Variant calling with
 GATK&lt;/a&gt;.&lt;/p&gt;
@@ -34,7 +34,7 @@ GATK&lt;/a&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Create sequence dictionary&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar $PICARD CreateSequenceDictionary &lt;span class="se"&gt;\&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar &lt;span class="nv"&gt;$PICARD&lt;/span&gt; CreateSequenceDictionary &lt;span class="se"&gt;\&lt;/span&gt;
  &lt;span class="nv"&gt;REFERENCE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;PAO1_reference.fasta &lt;span class="se"&gt;\&lt;/span&gt;
  &lt;span class="nv"&gt;OUTPUT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;PAO1_reference.dict
 &lt;/pre&gt;&lt;/div&gt;
@@ -53,7 +53,7 @@ GATK&lt;/a&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Sort SAM file, add fake ReadGroup IDs (otherwise will fail at GATK RealignerTargetCreator below) and convert to bam&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar $PICARD AddOrReplaceReadGroups &lt;span class="se"&gt;\&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar &lt;span class="nv"&gt;$PICARD&lt;/span&gt; AddOrReplaceReadGroups &lt;span class="se"&gt;\&lt;/span&gt;
  &lt;span class="nv"&gt;I&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/AZPAE12150_S4_L001.aln.sam &lt;span class="se"&gt;\&lt;/span&gt;
  &lt;span class="nv"&gt;O&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/AZPAE12150_S4_L001.sorted.bam &lt;span class="se"&gt;\&lt;/span&gt;
  &lt;span class="nv"&gt;RGLB&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;kos1 &lt;span class="se"&gt;\&lt;/span&gt;
@@ -67,7 +67,7 @@ GATK&lt;/a&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Mark duplicates&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar $PICARD MarkDuplicates &lt;span class="se"&gt;\&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar &lt;span class="nv"&gt;$PICARD&lt;/span&gt; MarkDuplicates &lt;span class="se"&gt;\&lt;/span&gt;
  &lt;span class="nv"&gt;I&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/AZPAE12150_S4_L001.sorted.bam&lt;span class="se"&gt;\&lt;/span&gt;
  &lt;span class="nv"&gt;O&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/AZPAE12150_S4_L001.dedup.bam &lt;span class="se"&gt;\&lt;/span&gt;
  &lt;span class="nv"&gt;METRICS_FILE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/metrics.txt
@@ -77,7 +77,7 @@ GATK&lt;/a&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Build bam index&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar $PICARD BuildBamIndex &lt;span class="nv"&gt;INPUT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/AZPAE12150_S4_L001.dedup.bam
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar &lt;span class="nv"&gt;$PICARD&lt;/span&gt; BuildBamIndex &lt;span class="nv"&gt;INPUT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/AZPAE12150_S4_L001.dedup.bam
 &lt;/pre&gt;&lt;/div&gt;
 
 

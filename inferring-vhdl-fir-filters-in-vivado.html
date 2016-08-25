@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="http://www.colmryan.org/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://www.colmryan.org/theme/stylesheet/pygments.min.css">
+  <link rel="stylesheet" type="text/css" href="http://www.colmryan.org/theme/stylesheet/font-awesome.min.css">
+
+
+    <link href="http://www.colmryan.org/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Tomorrow Said Toad Atom">
+
+
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+<meta name="author" content="Colm Ryan" />
+<meta name="description" content="Xilinx provides an FIR Compiler IP core which does a fantastic job of creating FIR filers. You should definitely use it, particularly for multi-rate filters where it can efficiently pack DSP usage by timeslicing their usage. However, for creating many filters with different coefficients, if you wants portable code or ..." />
+<meta name="keywords" content="">
+<meta property="og:site_name" content="Tomorrow Said Toad"/>
+<meta property="og:title" content="Inferring VHDL FIR filters in Vivado"/>
+<meta property="og:description" content="Xilinx provides an FIR Compiler IP core which does a fantastic job of creating FIR filers. You should definitely use it, particularly for multi-rate filters where it can efficiently pack DSP usage by timeslicing their usage. However, for creating many filters with different coefficients, if you wants portable code or ..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://www.colmryan.org/inferring-vhdl-fir-filters-in-vivado.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2016-08-14 00:00:00-04:00"/>
+<meta property="article:modified_time" content="2016-08-14 00:00:00-04:00"/>
+<meta property="article:author" content="http://www.colmryan.org/author/colm-ryan.html">
+<meta property="article:section" content="VHDL, Vivado"/>
+<meta property="og:image" content="">
+  <title>Tomorrow Said Toad &ndash; Inferring VHDL FIR filters in Vivado</title>
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://www.colmryan.org">
+        <img src="http://www.colmryan.org/theme/img/profile.png" alt="Tomorrow Said Toad" title="Tomorrow Said Toad">
+      </a>
+      <h1><a href="http://www.colmryan.org">Tomorrow Said Toad</a></h1>
+      <p>Today I will take life easy...</p>
+      <nav>
+        <ul class="list">
+          <li><a href="http://getpelican.com/" target="_blank">Pelican</a></li>
+          <li><a href="http://python.org/" target="_blank">Python.org</a></li>
+        </ul>
+      </nav>
+      <ul class="social">
+        <li><a class="sc-github" href="http://github.com/caryan" target="_blank"><i class="fa fa-github"></i></a></li>
+      </ul>
+    </div>
+  </aside>
+  <main>
+
+<article>
+  <header>
+    <h1 id="inferring-vhdl-fir-filters-in-vivado">Inferring VHDL FIR filters in Vivado</h1>
+    <p>Posted on Sun 14 August 2016 in <a href="http://www.colmryan.org/category/vhdl-vivado.html">VHDL, Vivado</a></p>
+  </header>
+  <div>
+    <p>Xilinx provides an <a href="https://www.xilinx.com/products/intellectual-property/fir_compiler.html">FIR Compiler</a> IP core which does a fantastic job of creating
+FIR filers.  You should definitely use it, particularly for multi-rate filters
+where it can efficiently pack DSP usage by timeslicing their usage. However, for
+creating many filters with different coefficients, if you wants portable code or
+if you just want to see how it all works then you have to check that the
+synthesis engine is making the best use of the hardware -- in this case the
+DSP48E1 slices -- hopefully from generic VHDL and not having to manually
+instantiate the DSP slice.</p>
+<p>The DSP48E1 slices have heaps of functionality (<a href="http://www.xilinx.com/support/documentation/user_guides/ug479_7Series_DSP48E1.pdf">user guide</a>).</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+</article>
+
+    <footer>
+<p>
+  &copy; Colm Ryan 2016 - This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses///">  International License</a>
+</p>
+<p>Built using <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a></p><p>
+  <a rel="license"
+     href="http://creativecommons.org/licenses///"
+     target="_blank">
+    <img alt="Creative Commons License"
+         title="Creative Commons License"
+         style="border-width:0"
+         src="https://i.creativecommons.org/l///80x15.png"
+         width="80"
+         height="15"/>
+  </a>
+</p>    </footer>
+  </main>
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BlogPosting",
+  "name": "Inferring VHDL FIR filters in Vivado",
+  "headline": "Inferring VHDL FIR filters in Vivado",
+  "datePublished": "2016-08-14 00:00:00-04:00",
+  "dateModified": "2016-08-14 00:00:00-04:00",
+  "author": {
+    "@type": "Person",
+    "name": "Colm Ryan",
+    "url": "http://www.colmryan.org/author/colm-ryan.html"
+  },
+  "image": "{{ SITEURL }}/{{ THEME_STATIC_DIR }}/img/profile.png",
+  "url": "http://www.colmryan.org/inferring-vhdl-fir-filters-in-vivado.html",
+  "description": "Xilinx provides an FIR Compiler IP core which does a fantastic job of creating FIR filers. You should definitely use it, particularly for multi-rate filters where it can efficiently pack DSP usage by timeslicing their usage. However, for creating many filters with different coefficients, if you wants portable code or ..."
+}
+</script></body>
+</html>

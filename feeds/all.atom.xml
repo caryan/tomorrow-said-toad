@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Tomorrow Said Toad</title><link href="http://www.colmryan.org/" rel="alternate"></link><link href="http://www.colmryan.org/feeds/all.atom.xml" rel="self"></link><id>http://www.colmryan.org/</id><updated>2016-05-29T00:00:00-04:00</updated><entry><title>Variant calls with GATK</title><link href="http://www.colmryan.org/variant-calls-with-gatk.html" rel="alternate"></link><updated>2016-05-29T00:00:00-04:00</updated><author><name>Colm Ryan</name></author><id>tag:www.colmryan.org,2016-05-29:variant-calls-with-gatk.html</id><summary type="html">&lt;p&gt;I had to replace a &lt;a href="http://www.clcbio.com/"&gt;CLC Bio&lt;/a&gt; variant calling pipeline
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Tomorrow Said Toad</title><link href="http://www.colmryan.org/" rel="alternate"></link><link href="http://www.colmryan.org/feeds/all.atom.xml" rel="self"></link><id>http://www.colmryan.org/</id><updated>2016-08-24T00:00:00-04:00</updated><entry><title>Avrum's Clock Domain Crossing Widsom</title><link href="http://www.colmryan.org/avrums-clock-domain-crossing-widsom.html" rel="alternate"></link><published>2016-08-24T00:00:00-04:00</published><author><name>Colm Ryan</name></author><id>tag:www.colmryan.org,2016-08-22:avrums-clock-domain-crossing-widsom.html</id><summary type="html">&lt;p&gt;&lt;a href="https://forums.xilinx.com/t5/user/viewprofilepage/user-id/7227"&gt;Avrum&lt;/a&gt; is an
+active fellow on the Xilinx forums whenever clock domain crossing (CDC) issues
+crop up. By default, and in contrast to ISE, Vivado assumes all clocks are
+related. Thus, even with a proper synchronization circuit, Vivado needs to be
+explicitly told not to try and time these paths. Avrum does an excellent job of
+explaining the correct constraint relaxation to use and why not use what I call
+the  "ostrich method" of just setting the clocks as asynchronous using
+&lt;code&gt;set_clock_groups -asynchronous&lt;/code&gt; or &lt;code&gt;set_false_path&lt;/code&gt; between all path between
+the clocks. This certainly is the easy way out but means you'll clobber all
+other more delicate constraints and could mask a real clock crossing problem
+where you've forgotten to synchronize.  I've tried to collect his posts here for
+reference:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://forums.xilinx.com/t5/Timing-Analysis/set-false-path/m-p/638630/highlight/true#M8189"&gt;post&lt;/a&gt; - constraints on a reset synchronizer and the one of the few places I've seen mentioned using a &lt;code&gt;set_max_delay&lt;/code&gt; on a single-bit synchronizer chain&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://forums.xilinx.com/t5/Timing-Analysis/Setting-ASYNC-REG-in-VHDL-for-Two-Flop-Synchronizer/m-p/701415/highlight/true#M9905"&gt;post&lt;/a&gt; and &lt;a href="https://forums.xilinx.com/t5/Timing-Analysis/Setting-ASYNC-REG-in-VHDL-for-Two-Flop-Synchronizer/m-p/701603/highlight/true#M9917"&gt;post&lt;/a&gt; - clever tcl commands to use to find module and register instances&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://forums.xilinx.com/t5/Timing-Analysis/What-does-quot-set-false-path-through-quot-do/m-p/397541/highlight/true#M5250"&gt;post&lt;/a&gt; - more reset syncrhonization with a nice slide attached&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://forums.xilinx.com/t5/Vivado-TCL-Community/How-to-set-timing-constraint-in-this-case/m-p/510771/highlight/true#M2049"&gt;post&lt;/a&gt; - long discussion about the difference between single bit and bus synchronization&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://forums.xilinx.com/t5/Timing-Analysis/Timing-Failure-MCMM-with-multiple-outputs/m-p/563460/highlight/true#M7580"&gt;post&lt;/a&gt; -  long discussion of different types of CDC exceptions and why &lt;code&gt;set_max_delay&lt;/code&gt; is almost always preferred&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://forums.xilinx.com/t5/Virtex-Family-FPGAs/idelayctrl-with-iodelay-group-example/m-p/320797/highlight/true#M16569"&gt;post&lt;/a&gt; - not quite clock domain crossing but a clear explanation of IODELAYCTRL instantiation&lt;/li&gt;
+&lt;/ul&gt;</summary></entry><entry><title>Inferring VHDL FIR filters in Vivado</title><link href="http://www.colmryan.org/inferring-vhdl-fir-filters-in-vivado.html" rel="alternate"></link><published>2016-08-14T00:00:00-04:00</published><author><name>Colm Ryan</name></author><id>tag:www.colmryan.org,2016-08-14:inferring-vhdl-fir-filters-in-vivado.html</id><summary type="html">&lt;p&gt;Xilinx provides an &lt;a href="https://www.xilinx.com/products/intellectual-property/fir_compiler.html"&gt;FIR Compiler&lt;/a&gt; IP core which does a fantastic job of creating
+FIR filers.  You should definitely use it, particularly for multi-rate filters
+where it can efficiently pack DSP usage by timeslicing their usage. However, for
+creating many filters with different coefficients, if you wants portable code or
+if you just want to see how it all works then you have to check that the
+synthesis engine is making the best use of the hardware -- in this case the
+DSP48E1 slices -- hopefully from generic VHDL and not having to manually
+instantiate the DSP slice.&lt;/p&gt;
+&lt;p&gt;The DSP48E1 slices have heaps of functionality (&lt;a href="http://www.xilinx.com/support/documentation/user_guides/ug479_7Series_DSP48E1.pdf"&gt;user guide&lt;/a&gt;).&lt;/p&gt;</summary></entry><entry><title>Variant calls with GATK</title><link href="http://www.colmryan.org/variant-calls-with-gatk.html" rel="alternate"></link><published>2016-05-29T00:00:00-04:00</published><author><name>Colm Ryan</name></author><id>tag:www.colmryan.org,2016-05-29:variant-calls-with-gatk.html</id><summary type="html">&lt;p&gt;I had to replace a &lt;a href="http://www.clcbio.com/"&gt;CLC Bio&lt;/a&gt; variant calling pipeline
 with an open-source equivalent. These notes are mainly an update of another blog
 post &lt;a href="https://approachedinthelimit.wordpress.com/2015/10/09/variant-calling-with-gatk/"&gt;Variant calling with
 GATK&lt;/a&gt;.&lt;/p&gt;
@@ -34,7 +61,7 @@ GATK&lt;/a&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Create sequence dictionary&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar $PICARD CreateSequenceDictionary &lt;span class="se"&gt;\&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar &lt;span class="nv"&gt;$PICARD&lt;/span&gt; CreateSequenceDictionary &lt;span class="se"&gt;\&lt;/span&gt;
  &lt;span class="nv"&gt;REFERENCE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;PAO1_reference.fasta &lt;span class="se"&gt;\&lt;/span&gt;
  &lt;span class="nv"&gt;OUTPUT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;PAO1_reference.dict
 &lt;/pre&gt;&lt;/div&gt;
@@ -53,7 +80,7 @@ GATK&lt;/a&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Sort SAM file, add fake ReadGroup IDs (otherwise will fail at GATK RealignerTargetCreator below) and convert to bam&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar $PICARD AddOrReplaceReadGroups &lt;span class="se"&gt;\&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar &lt;span class="nv"&gt;$PICARD&lt;/span&gt; AddOrReplaceReadGroups &lt;span class="se"&gt;\&lt;/span&gt;
  &lt;span class="nv"&gt;I&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/AZPAE12150_S4_L001.aln.sam &lt;span class="se"&gt;\&lt;/span&gt;
  &lt;span class="nv"&gt;O&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/AZPAE12150_S4_L001.sorted.bam &lt;span class="se"&gt;\&lt;/span&gt;
  &lt;span class="nv"&gt;RGLB&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;kos1 &lt;span class="se"&gt;\&lt;/span&gt;
@@ -67,7 +94,7 @@ GATK&lt;/a&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Mark duplicates&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar $PICARD MarkDuplicates &lt;span class="se"&gt;\&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar &lt;span class="nv"&gt;$PICARD&lt;/span&gt; MarkDuplicates &lt;span class="se"&gt;\&lt;/span&gt;
  &lt;span class="nv"&gt;I&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/AZPAE12150_S4_L001.sorted.bam&lt;span class="se"&gt;\&lt;/span&gt;
  &lt;span class="nv"&gt;O&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/AZPAE12150_S4_L001.dedup.bam &lt;span class="se"&gt;\&lt;/span&gt;
  &lt;span class="nv"&gt;METRICS_FILE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/metrics.txt
@@ -77,7 +104,7 @@ GATK&lt;/a&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Build bam index&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar $PICARD BuildBamIndex &lt;span class="nv"&gt;INPUT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/AZPAE12150_S4_L001.dedup.bam
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;java -jar &lt;span class="nv"&gt;$PICARD&lt;/span&gt; BuildBamIndex &lt;span class="nv"&gt;INPUT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;pipeline_products/AZPAE12150_S4_L001.dedup.bam
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -144,7 +171,7 @@ were about 27k they both called;  CLC called a few hundred that GATK did not and
 GATK called a couple thousand that CLC did not.  Anecdotally, the extra calls
 from GATK seemed to come from low depth of coverage region however some
 primitive attempts to filter those using &lt;code&gt;SelectVariants&lt;/code&gt; did not seem to
-improve the overlap.&lt;/p&gt;</summary></entry><entry><title>Bitfield nicities in Python</title><link href="http://www.colmryan.org/bitfield-nicities-in-python.html" rel="alternate"></link><updated>2016-02-08T00:00:00-05:00</updated><author><name>Colm Ryan</name></author><id>tag:www.colmryan.org,2016-02-08:bitfield-nicities-in-python.html</id><summary type="html">&lt;p&gt;With code contributions from &lt;a href="http://www.grahamerowlands.com/"&gt;Graham Rowlands&lt;/a&gt;.&lt;/p&gt;
+improve the overlap.&lt;/p&gt;</summary></entry><entry><title>Bitfield nicities in Python</title><link href="http://www.colmryan.org/bitfield-nicities-in-python.html" rel="alternate"></link><published>2016-02-08T00:00:00-05:00</published><author><name>Colm Ryan</name></author><id>tag:www.colmryan.org,2016-02-08:bitfield-nicities-in-python.html</id><summary type="html">&lt;p&gt;With code contributions from &lt;a href="http://www.grahamerowlands.com/"&gt;Graham Rowlands&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;For low level device drivers or communications protocols it's handy to be able
 to bounce the individual bits in an integer around as several fields might be packed into a larger
 integer in a &lt;a href="https://en.wikipedia.org/wiki/Bit_field"&gt;bitfield&lt;/a&gt;.&lt;/p&gt;
