@@ -40,4 +40,8 @@ STATIC_PATHS = ['images', 'extra/CNAME']
 EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},}
 
 COPYRIGHT_YEAR = 2016
-CC_LICENSE = "CC-BY"
+CC_LICENSE = {
+    'name': 'Creative Commons Attribution-ShareAlike',
+    'version': '4.0',
+    'slug': 'by-sa'
+}
