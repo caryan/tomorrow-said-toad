@@ -1,7 +1,8 @@
 Title: Bitfield nicities in Python
 Date: 2016-2-08
 Modified: 2016-2-08
-Category: Python
+Category: Software
+Tags: Python
 
 With code contributions from [Graham Rowlands](http://www.grahamerowlands.com/).
 

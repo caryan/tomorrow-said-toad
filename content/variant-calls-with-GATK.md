@@ -1,7 +1,8 @@
 Title: Variant calls with GATK
 Date: 2016-5-29
 Modified: 2016-5-29
-Category: bioinformatics, Julia
+Category: Bioinformatics
+Tags: Julia
 
 I had to replace a [CLC Bio](http://www.clcbio.com/) variant calling pipeline
 with an open-source equivalent. These notes are mainly an update of another blog

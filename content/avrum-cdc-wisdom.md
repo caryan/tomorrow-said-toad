@@ -1,7 +1,8 @@
 Title: Avrum's Clock Domain Crossing Widsom
 Date: 2016-08-22
 Modified: 2016-08-24
-Category: VHDL, Vivado
+Category: Hardware 
+Tags: VHDL, Vivado
 
 [Avrum](https://forums.xilinx.com/t5/user/viewprofilepage/user-id/7227) is an
 active fellow on the Xilinx forums whenever clock domain crossing (CDC) issues
