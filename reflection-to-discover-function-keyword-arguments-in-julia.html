@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="http://www.colmryan.org/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://www.colmryan.org/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://www.colmryan.org/theme/font-awesome/css/font-awesome.min.css">
+
+
+    <link href="http://www.colmryan.org/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Tomorrow Said Toad Atom">
+
+
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+
+<meta name="author" content="Colm Ryan" />
+<meta name="description" content="I needed to extract the named keyword arguments for a function in Julia. In Python we have the inspect.getargspec function but in Julia there doesn't seem to be any standard way to do so. Obviously it's possible because calling methods on a function lists them at the ..." />
+<meta name="keywords" content="">
+<meta property="og:site_name" content="Tomorrow Said Toad"/>
+<meta property="og:title" content="Reflection to discover function keyword arguments in Julia"/>
+<meta property="og:description" content="I needed to extract the named keyword arguments for a function in Julia. In Python we have the inspect.getargspec function but in Julia there doesn't seem to be any standard way to do so. Obviously it's possible because calling methods on a function lists them at the ..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://www.colmryan.org/reflection-to-discover-function-keyword-arguments-in-julia.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2017-01-12 00:00:00-05:00"/>
+<meta property="article:modified_time" content="2017-01-12 00:00:00-05:00"/>
+<meta property="article:author" content="http://www.colmryan.org/author/colm-ryan.html">
+<meta property="article:section" content="Julia"/>
+<meta property="og:image" content="">
+  <title>Tomorrow Said Toad &ndash; Reflection to discover function keyword arguments in Julia</title>
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://www.colmryan.org">
+        <img src="http://www.colmryan.org/theme/img/profile.png" alt="Tomorrow Said Toad" title="Tomorrow Said Toad">
+      </a>
+      <h1><a href="http://www.colmryan.org">Tomorrow Said Toad</a></h1>
+<p>Today I will take life easy...</p>      <nav>
+        <ul class="list">
+          <li><a href="http://getpelican.com/" target="_blank">Pelican</a></li>
+          <li><a href="http://python.org/" target="_blank">Python.org</a></li>
+        </ul>
+      </nav>
+      <ul class="social">
+        <li><a class="sc-github" href="http://github.com/caryan" target="_blank"><i class="fa fa-github"></i></a></li>
+      </ul>
+    </div>
+  </aside>
+  <main>
+
+<article>
+  <header>
+    <h1 id="reflection-to-discover-function-keyword-arguments-in-julia">Reflection to discover function keyword arguments in Julia</h1>
+    <p>Posted on Thu 12 January 2017 in <a href="http://www.colmryan.org/category/julia.html">Julia</a></p>
+  </header>
+  <div>
+    <p>I needed to extract the named keyword arguments for a function in Julia. In
+Python we have the
+<a href="https://docs.python.org/3.5/library/inspect.html#inspect.getargspec">inspect.getargspec</a>
+function but in Julia there doesn't seem to be any standard way to do so.
+Obviously it's possible because calling <code>methods</code> on a function lists them at
+the REPL.</p>
+<div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span> <span class="n">versioninfo</span><span class="p">()</span>
+<span class="n">Julia</span> <span class="n">Version</span> <span class="mf">0.5</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">Commit</span> <span class="mi">3</span><span class="n">c9d753</span> <span class="p">(</span><span class="mi">2016</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">19</span> <span class="mi">18</span><span class="p">:</span><span class="mi">14</span> <span class="n">UTC</span><span class="p">)</span>
+<span class="n">Platform</span> <span class="n">Info</span><span class="p">:</span>
+  <span class="n">System</span><span class="p">:</span> <span class="n">Linux</span> <span class="p">(</span><span class="n">x86_64</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">gnu</span><span class="p">)</span>
+  <span class="n">CPU</span><span class="p">:</span> <span class="n">Intel</span><span class="p">(</span><span class="n">R</span><span class="p">)</span> <span class="n">Xeon</span><span class="p">(</span><span class="n">R</span><span class="p">)</span> <span class="n">CPU</span> <span class="n">E3</span><span class="o">-</span><span class="mi">1505</span><span class="n">M</span> <span class="n">v5</span> <span class="p">@</span> <span class="mf">2.80</span><span class="n">GHz</span>
+  <span class="n">WORD_SIZE</span><span class="p">:</span> <span class="mi">64</span>
+  <span class="n">BLAS</span><span class="p">:</span> <span class="n">libopenblas</span> <span class="p">(</span><span class="n">USE64BITINT</span> <span class="n">DYNAMIC_ARCH</span> <span class="n">NO_AFFINITY</span> <span class="n">Haswell</span><span class="p">)</span>
+  <span class="n">LAPACK</span><span class="p">:</span> <span class="n">libopenblas64_</span>
+  <span class="n">LIBM</span><span class="p">:</span> <span class="n">libopenlibm</span>
+  <span class="n">LLVM</span><span class="p">:</span> <span class="n">libLLVM</span><span class="o">-</span><span class="mf">3.7</span><span class="o">.</span><span class="mi">1</span> <span class="p">(</span><span class="n">ORCJIT</span><span class="p">,</span> <span class="n">broadwell</span><span class="p">)</span>
+
+<span class="n">julia</span><span class="o">&gt;</span> <span class="k">using</span> <span class="n">Clustering</span>
+
+<span class="n">julia</span><span class="o">&gt;</span> <span class="n">methods</span><span class="p">(</span><span class="n">kmeans</span><span class="p">)</span>
+<span class="c"># 1 method for generic function &quot;kmeans&quot;:</span>
+<span class="n">kmeans</span><span class="p">(</span><span class="n">X</span><span class="p">::</span><span class="n">Array</span><span class="p">{</span><span class="n">T</span><span class="o">&lt;:</span><span class="kt">Any</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span> <span class="n">k</span><span class="p">::</span><span class="kt">Int64</span><span class="p">;</span> <span class="n">weights</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">display</span><span class="p">)</span> <span class="n">at</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">cryan</span><span class="o">/.</span><span class="n">julia</span><span class="o">/</span><span class="n">v0</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">Clustering</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">kmeans</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">49</span>
+<span class="o">...</span>
+</pre></div>
+
+
+<p>Digging through <code>methodsshow.jl</code> in <code>Base</code> we can pull the three lines that do
+what we want.</p>
+<div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span> <span class="n">ml</span> <span class="o">=</span> <span class="n">methods</span><span class="p">(</span><span class="n">kmeans</span><span class="p">)</span>
+<span class="c"># 1 method for generic function &quot;kmeans&quot;:</span>
+<span class="n">kmeans</span><span class="p">(</span><span class="n">X</span><span class="p">::</span><span class="n">Array</span><span class="p">{</span><span class="n">T</span><span class="o">&lt;:</span><span class="kt">Any</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span> <span class="n">k</span><span class="p">::</span><span class="kt">Int64</span><span class="p">;</span> <span class="n">weights</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">display</span><span class="p">)</span> <span class="n">at</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">cryan</span><span class="o">/.</span><span class="n">julia</span><span class="o">/</span><span class="n">v0</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">Clustering</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">kmeans</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">49</span>
+
+<span class="n">julia</span><span class="o">&gt;</span> <span class="n">m</span> <span class="o">=</span> <span class="n">collect</span><span class="p">(</span><span class="n">ml</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">kmeans</span><span class="p">(</span><span class="n">X</span><span class="p">::</span><span class="n">Array</span><span class="p">{</span><span class="n">T</span><span class="o">&lt;:</span><span class="kt">Any</span><span class="p">,</span><span class="mi">2</span><span class="p">},</span> <span class="n">k</span><span class="p">::</span><span class="kt">Int64</span><span class="p">)</span> <span class="n">at</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">cryan</span><span class="o">/.</span><span class="n">julia</span><span class="o">/</span><span class="n">v0</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">Clustering</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">kmeans</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">49</span>
+
+<span class="n">julia</span><span class="o">&gt;</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="n">Base</span><span class="o">.</span><span class="n">kwarg_decl</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">sig</span><span class="p">,</span> <span class="nb">typeof</span><span class="p">(</span><span class="n">ml</span><span class="o">.</span><span class="n">mt</span><span class="o">.</span><span class="n">kwsorter</span><span class="p">))</span>
+<span class="mi">5</span><span class="o">-</span><span class="n">element</span> <span class="n">Array</span><span class="p">{</span><span class="kt">Any</span><span class="p">,</span><span class="mi">1</span><span class="p">}:</span>
+ <span class="p">:</span><span class="n">weights</span>
+ <span class="p">:</span><span class="n">init</span>   
+ <span class="p">:</span><span class="n">maxiter</span>
+ <span class="p">:</span><span class="n">tol</span>    
+ <span class="p">:</span><span class="n">display</span>
+</pre></div>
+
+
+<p>Since this is not exported from <code>Base</code> there is no guarantee it will work in
+future versions of Julia.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+</article>
+
+    <footer>
+<p>
+  &copy; Colm Ryan 2016 - This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>
+</p>
+<p>Built using <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a></p><p>
+  <a rel="license"
+     href="http://creativecommons.org/licenses/by-sa/4.0/"
+     target="_blank">
+    <img alt="Creative Commons License"
+         title="Creative Commons License"
+         style="border-width:0"
+         src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"
+         width="80"
+         height="15"/>
+  </a>
+</p>    </footer>
+  </main>
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Tomorrow Said Toad ",
+  "url" : "http://www.colmryan.org",
+  "image": "",
+  "description": ""
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BlogPosting",
+  "name": "Reflection to discover function keyword arguments in Julia",
+  "headline": "Reflection to discover function keyword arguments in Julia",
+  "datePublished": "2017-01-12 00:00:00-05:00",
+  "dateModified": "2017-01-12 00:00:00-05:00",
+  "author": {
+    "@type": "Person",
+    "name": "Colm Ryan",
+    "url": "http://www.colmryan.org/author/colm-ryan.html"
+  },
+  "image": "{{ SITEURL }}/{{ THEME_STATIC_DIR }}/img/profile.png",
+  "url": "http://www.colmryan.org/reflection-to-discover-function-keyword-arguments-in-julia.html",
+  "description": "I needed to extract the named keyword arguments for a function in Julia. In Python we have the inspect.getargspec function but in Julia there doesn't seem to be any standard way to do so. Obviously it's possible because calling methods on a function lists them at the ..."
+}
+</script></body>
+</html>
