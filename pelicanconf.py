@@ -8,7 +8,7 @@ SITETITLE = u'Tomorrow Said Toad'
 SITESUBTITLE = 'Today I will take life easy...'
 SITEURL = ''
 
-THEME = "/home/cryan/Programming/Repos/pelican-themes/Flex"
+THEME = "/home/cryan/repos/pelican-themes/Flex"
 # MAIN_MENU = True
 
 PATH = 'content'
@@ -39,7 +39,7 @@ DEFAULT_PAGINATION = 10
 STATIC_PATHS = ['images', 'extra/CNAME']
 EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},}
 
-COPYRIGHT_YEAR = 2016
+COPYRIGHT_YEAR = 2019
 CC_LICENSE = {
     'name': 'Creative Commons Attribution-ShareAlike',
     'version': '4.0',
