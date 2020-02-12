@@ -6,7 +6,7 @@ AUTHOR = u'Colm Ryan'
 SITENAME = u'Tomorrow Said Toad'
 SITETITLE = u'Tomorrow Said Toad'
 SITESUBTITLE = 'Today I will take life easy...'
-SITEURL = ''
+SITEURL = 'https://www.colmryan.org'
 
 THEME = "/home/cryan/repos/pelican-themes/Flex"
 # MAIN_MENU = True
