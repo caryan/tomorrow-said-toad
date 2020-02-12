@@ -10,12 +10,13 @@
 
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="/theme/stylesheet/style.min.css">
+    <link rel="stylesheet" type="text/css" href="http://www.colmryan.org/theme/stylesheet/style.min.css">
 
-  <link rel="stylesheet" type="text/css" href="/theme/pygments/github.min.css">
-  <link rel="stylesheet" type="text/css" href="/theme/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="http://www.colmryan.org/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://www.colmryan.org/theme/font-awesome/css/font-awesome.min.css">
 
 
+    <link href="http://www.colmryan.org/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Tomorrow Said Toad Atom">
 
 
 
@@ -29,11 +30,11 @@
 <meta property="og:title" content="Bitfield nicities in Python"/>
 <meta property="og:description" content="With code contributions from Graham Rowlands. For low level device drivers or communications protocols it&#39;s handy to be able to bounce the individual bits in an integer around as several fields might be packed into a larger integer in a bitfield. There are, of course, already several ways to tackle …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="/bitfield-nicities-in-python.html"/>
+<meta property="og:url" content="http://www.colmryan.org/bitfield-nicities-in-python.html"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2016-02-08 00:00:00-05:00"/>
 <meta property="article:modified_time" content="2016-02-08 00:00:00-05:00"/>
-<meta property="article:author" content="/author/colm-ryan.html">
+<meta property="article:author" content="http://www.colmryan.org/author/colm-ryan.html">
 <meta property="article:section" content="Software"/>
 <meta property="article:tag" content="Python"/>
 <meta property="og:image" content="">
@@ -44,10 +45,10 @@
 <body>
   <aside>
     <div>
-      <a href="">
-        <img src="/theme/img/profile.png" alt="Tomorrow Said Toad" title="Tomorrow Said Toad">
+      <a href="http://www.colmryan.org">
+        <img src="http://www.colmryan.org/theme/img/profile.png" alt="Tomorrow Said Toad" title="Tomorrow Said Toad">
       </a>
-      <h1><a href="">Tomorrow Said Toad</a></h1>
+      <h1><a href="http://www.colmryan.org">Tomorrow Said Toad</a></h1>
 
 <p>Today I will take life easy...</p>
       <nav>
@@ -73,7 +74,7 @@
       
     <h1 id="bitfield-nicities-in-python">Bitfield nicities in Python</h1>
     <p>
-          Posted on Mon 08 February 2016 in <a href="/category/software.html">Software</a>
+          Posted on Mon 08 February 2016 in <a href="http://www.colmryan.org/category/software.html">Software</a>
 
 
     </p>
@@ -112,7 +113,7 @@ dictionary and parse the class variables.</p>
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">BitFieldUnionMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Metaclass for injecting bitfield descriptors&quot;&quot;&quot;</span>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">__prepare__</span><span class="p">(</span><span class="n">metacls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__prepare__</span><span class="p">(</span><span class="n">metacls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
@@ -126,11 +127,11 @@ dictionary and parse the class variables.</p>
                 <span class="k">def</span> <span class="nf">fset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">init_offset</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">v</span><span class="o">.</span><span class="n">width</span><span class="p">):</span>
                     <span class="c1">#check we don&#39;t exceed the width of the field</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">val</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">width</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">!=</span> <span class="n">val</span><span class="p">:</span>
-                        <span class="n">err_msg</span> <span class="o">=</span> <span class="s2">&quot;attempted to assign value that does not fit in bit field width {:d}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
+                        <span class="n">err_msg</span> <span class="o">=</span> <span class="s2">&quot;attempted to assign value that does not fit in bit field width </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
                         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">packed</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="p">((</span><span class="mi">2</span><span class="o">**</span><span class="n">width</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">offset</span><span class="p">)</span> <span class="c1">#clear the field</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">packed</span> <span class="o">|=</span> <span class="p">(</span><span class="n">val</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">width</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">&lt;&lt;</span> <span class="n">offset</span> <span class="c1">#set the field</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="p">,</span> <span class="n">fset</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">))</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="nb">property</span><span class="p">(</span><span class="n">fget</span><span class="p">,</span> <span class="n">fset</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
                 <span class="n">init_offset</span> <span class="o">+=</span> <span class="n">v</span><span class="o">.</span><span class="n">width</span>
 </pre></div>
 
@@ -188,7 +189,7 @@ This ensures that we pack the bits in the order in which they are defined.</li>
 <p>And use it...</p>
 <div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">ctrl_word</span> <span class="o">=</span> <span class="n">SequenceControlWord</span><span class="p">(</span><span class="n">segment_loop_count</span><span class="o">=</span><span class="mh">0xabc</span><span class="p">,</span> <span class="n">sequence_stop_flag</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">marker_enable</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">format</span><span class="p">(</span><span class="n">ctrl_word</span><span class="o">.</span><span class="n">packed</span><span class="p">,</span> <span class="s2">&quot;#08x&quot;</span><span class="p">)</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="nb">format</span><span class="p">(</span><span class="n">ctrl_word</span><span class="o">.</span><span class="n">packed</span><span class="p">,</span> <span class="s2">&quot;#08x&quot;</span><span class="p">)</span>
 <span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="s1">&#39;0x80020abc&#39;</span>
 
 <span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">ctrl_word</span><span class="o">.</span><span class="n">sequence_mode</span> <span class="o">=</span> <span class="mi">16</span>
@@ -199,7 +200,7 @@ This ensures that we pack the bits in the order in which they are defined.</li>
 
 <span class="o">..../</span><span class="n">binutils</span><span class="o">.</span><span class="n">py</span> <span class="ow">in</span> <span class="n">fset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
      <span class="mi">25</span>                     <span class="k">if</span> <span class="p">(</span><span class="n">val</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">width</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">!=</span> <span class="n">val</span><span class="p">:</span>
-     <span class="mi">26</span>                         <span class="n">err_msg</span> <span class="o">=</span> <span class="s2">&quot;attempted to assign value that does not fit in bit field width {:d}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
+     <span class="mi">26</span>                         <span class="n">err_msg</span> <span class="o">=</span> <span class="s2">&quot;attempted to assign value that does not fit in bit field width </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
 <span class="o">---&gt;</span> <span class="mi">27</span>                         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
      <span class="mi">28</span>                     <span class="bp">self</span><span class="o">.</span><span class="n">packed</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="p">((</span><span class="mi">2</span><span class="o">**</span><span class="n">width</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">offset</span><span class="p">)</span> <span class="c1">#clear the field</span>
      <span class="mi">29</span>                     <span class="bp">self</span><span class="o">.</span><span class="n">packed</span> <span class="o">|=</span> <span class="p">(</span><span class="n">val</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">width</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">&lt;&lt;</span> <span class="n">offset</span> <span class="c1">#set the field</span>
@@ -215,7 +216,7 @@ This ensures that we pack the bits in the order in which they are defined.</li>
   </div>
   <div class="tag-cloud">
     <p>
-      <a href="/tag/python.html">Python</a>
+      <a href="http://www.colmryan.org/tag/python.html">Python</a>
     </p>
   </div>
 
@@ -252,7 +253,7 @@ This ensures that we pack the bits in the order in which they are defined.</li>
   "@context" : "http://schema.org",
   "@type" : "Blog",
   "name": " Tomorrow Said Toad ",
-  "url" : "",
+  "url" : "http://www.colmryan.org",
   "image": "",
   "description": ""
 }

@@ -10,12 +10,13 @@
 
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="/theme/stylesheet/style.min.css">
+    <link rel="stylesheet" type="text/css" href="http://www.colmryan.org/theme/stylesheet/style.min.css">
 
-  <link rel="stylesheet" type="text/css" href="/theme/pygments/github.min.css">
-  <link rel="stylesheet" type="text/css" href="/theme/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="http://www.colmryan.org/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://www.colmryan.org/theme/font-awesome/css/font-awesome.min.css">
 
 
+    <link href="http://www.colmryan.org/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Tomorrow Said Toad Atom">
 
 
 
@@ -29,11 +30,11 @@
 <meta property="og:title" content="asyncio real-time signal processing"/>
 <meta property="og:description" content="I&#39;m taken with using Python&#39;s relatively recent asycio module for real-time DSP. This isn&#39;t because it looks particularly efficient but because it looks very similar to how we do DSP on an FPGA. Of course we won&#39;t actually get the massive parallelism of a real FPGA but by setting up …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="/asyncio-real-time-signal-processing.html"/>
+<meta property="og:url" content="http://www.colmryan.org/asyncio-real-time-signal-processing.html"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2015-09-20 00:00:00-04:00"/>
 <meta property="article:modified_time" content="2015-10-03 00:00:00-04:00"/>
-<meta property="article:author" content="/author/colm-ryan.html">
+<meta property="article:author" content="http://www.colmryan.org/author/colm-ryan.html">
 <meta property="article:section" content="Software"/>
 <meta property="article:tag" content="Python"/>
 <meta property="og:image" content="">
@@ -44,10 +45,10 @@
 <body>
   <aside>
     <div>
-      <a href="">
-        <img src="/theme/img/profile.png" alt="Tomorrow Said Toad" title="Tomorrow Said Toad">
+      <a href="http://www.colmryan.org">
+        <img src="http://www.colmryan.org/theme/img/profile.png" alt="Tomorrow Said Toad" title="Tomorrow Said Toad">
       </a>
-      <h1><a href="">Tomorrow Said Toad</a></h1>
+      <h1><a href="http://www.colmryan.org">Tomorrow Said Toad</a></h1>
 
 <p>Today I will take life easy...</p>
       <nav>
@@ -73,7 +74,7 @@
       
     <h1 id="asyncio-real-time-signal-processing">asyncio real-time signal processing</h1>
     <p>
-          Posted on Sun 20 September 2015 in <a href="/category/software.html">Software</a>
+          Posted on Sun 20 September 2015 in <a href="http://www.colmryan.org/category/software.html">Software</a>
 
 
     </p>
@@ -117,17 +118,17 @@ and then finishes.</p>
 
 <span class="k">class</span> <span class="nc">ADC</span><span class="p">(</span><span class="n">DataProducer</span><span class="p">):</span>
 
-        <span class="n">async</span> <span class="k">def</span> <span class="nf">take_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loop</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
+        <span class="k">async</span> <span class="k">def</span> <span class="nf">take_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loop</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
             <span class="n">end_time</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="n">timeout</span>
-            <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
                 <span class="n">timeStamp</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Acquired data and putting in queue&quot;</span><span class="p">)</span>
-                <span class="n">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">loop</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">end_time</span><span class="p">:</span>
                     <span class="n">shutdown</span><span class="p">(</span><span class="n">loop</span><span class="p">)</span>
                     <span class="k">break</span>
-                <span class="n">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
 
@@ -138,8 +139,8 @@ Since the
 <a href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue.put">Queue.put</a>
 method is a coroutine we <code>await</code> on that (again using the the new syntax
 instead of the old <code>yield from</code>).</p>
-<div class="highlight"><pre><span></span><span class="k">class</span> <span class="n">DataCrucher</span>(<span class="n">DataProducer</span>):
-    <span class="nb">pass</span>
+<div class="highlight"><pre><span></span><span class="err">class DataCrucher(DataProducer):</span>
+<span class="err">    pass</span>
 </pre></div>
 
 
@@ -148,7 +149,7 @@ instead of the old <code>yield from</code>).</p>
   </div>
   <div class="tag-cloud">
     <p>
-      <a href="/tag/python.html">Python</a>
+      <a href="http://www.colmryan.org/tag/python.html">Python</a>
     </p>
   </div>
 
@@ -185,7 +186,7 @@ instead of the old <code>yield from</code>).</p>
   "@context" : "http://schema.org",
   "@type" : "Blog",
   "name": " Tomorrow Said Toad ",
-  "url" : "",
+  "url" : "http://www.colmryan.org",
   "image": "",
   "description": ""
 }
