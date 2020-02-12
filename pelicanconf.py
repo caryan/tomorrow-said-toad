@@ -39,7 +39,7 @@ DEFAULT_PAGINATION = 10
 STATIC_PATHS = ['images', 'extra/CNAME']
 EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},}
 
-COPYRIGHT_YEAR = 2019
+COPYRIGHT_YEAR = 2020
 CC_LICENSE = {
     'name': 'Creative Commons Attribution-ShareAlike',
     'version': '4.0',
