@@ -2,66 +2,66 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Tomorrow Said Toad</title>
-    <link>http://www.colmryan.org/tags/</link>
+    <link>https://www.colmryan.org/tags/</link>
     <description>Recent content in Tags on Tomorrow Said Toad</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 10 Feb 2020 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://www.colmryan.org/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://www.colmryan.org/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>embedded</title>
-      <link>http://www.colmryan.org/tags/embedded/</link>
+      <link>https://www.colmryan.org/tags/embedded/</link>
       <pubDate>Mon, 10 Feb 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://www.colmryan.org/tags/embedded/</guid>
+      <guid>https://www.colmryan.org/tags/embedded/</guid>
       <description></description>
     </item>
     
     <item>
       <title>software</title>
-      <link>http://www.colmryan.org/tags/software/</link>
+      <link>https://www.colmryan.org/tags/software/</link>
       <pubDate>Mon, 10 Feb 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://www.colmryan.org/tags/software/</guid>
+      <guid>https://www.colmryan.org/tags/software/</guid>
       <description></description>
     </item>
     
     <item>
       <title>python</title>
-      <link>http://www.colmryan.org/tags/python/</link>
+      <link>https://www.colmryan.org/tags/python/</link>
       <pubDate>Mon, 12 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://www.colmryan.org/tags/python/</guid>
+      <guid>https://www.colmryan.org/tags/python/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>julia</title>
-      <link>http://www.colmryan.org/tags/julia/</link>
+      <title>Julia</title>
+      <link>https://www.colmryan.org/tags/julia/</link>
       <pubDate>Thu, 12 Jan 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://www.colmryan.org/tags/julia/</guid>
+      <guid>https://www.colmryan.org/tags/julia/</guid>
       <description></description>
     </item>
     
     <item>
       <title>vhdl</title>
-      <link>http://www.colmryan.org/tags/vhdl/</link>
+      <link>https://www.colmryan.org/tags/vhdl/</link>
       <pubDate>Mon, 22 Aug 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://www.colmryan.org/tags/vhdl/</guid>
+      <guid>https://www.colmryan.org/tags/vhdl/</guid>
       <description></description>
     </item>
     
     <item>
       <title>vivado</title>
-      <link>http://www.colmryan.org/tags/vivado/</link>
+      <link>https://www.colmryan.org/tags/vivado/</link>
       <pubDate>Mon, 22 Aug 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://www.colmryan.org/tags/vivado/</guid>
+      <guid>https://www.colmryan.org/tags/vivado/</guid>
       <description></description>
     </item>
     

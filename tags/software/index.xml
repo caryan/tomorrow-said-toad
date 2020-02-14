@@ -2,66 +2,66 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>software on Tomorrow Said Toad</title>
-    <link>http://www.colmryan.org/tags/software/</link>
+    <link>https://www.colmryan.org/tags/software/</link>
     <description>Recent content in software on Tomorrow Said Toad</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 10 Feb 2020 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://www.colmryan.org/tags/software/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://www.colmryan.org/tags/software/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>No init system on Ubuntu 18.04 base</title>
-      <link>http://www.colmryan.org/posts/no-init-in-ubuntu-18.04-base/</link>
+      <link>https://www.colmryan.org/posts/no-init-in-ubuntu-18.04-base/</link>
       <pubDate>Mon, 10 Feb 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://www.colmryan.org/posts/no-init-in-ubuntu-18.04-base/</guid>
+      <guid>https://www.colmryan.org/posts/no-init-in-ubuntu-18.04-base/</guid>
       <description>Restoring an init system to an Ubuntu 18.04 minimal image</description>
     </item>
     
     <item>
       <title>Asyncio Socket Pool</title>
-      <link>http://www.colmryan.org/posts/asyncio-socket-pool/</link>
+      <link>https://www.colmryan.org/posts/asyncio-socket-pool/</link>
       <pubDate>Mon, 12 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://www.colmryan.org/posts/asyncio-socket-pool/</guid>
+      <guid>https://www.colmryan.org/posts/asyncio-socket-pool/</guid>
       <description>A socket pool with Python&amp;rsquo;s asyncio</description>
     </item>
     
     <item>
       <title>Reflection to discover function keyword arguments in Julia</title>
-      <link>http://www.colmryan.org/posts/reflection_function_kwargs_julia/</link>
+      <link>https://www.colmryan.org/posts/reflection_function_kwargs_julia/</link>
       <pubDate>Thu, 12 Jan 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://www.colmryan.org/posts/reflection_function_kwargs_julia/</guid>
+      <guid>https://www.colmryan.org/posts/reflection_function_kwargs_julia/</guid>
       <description>Extracting named keyword arguments from a function in Julia</description>
     </item>
     
     <item>
       <title>asyncio real-time signal processing</title>
-      <link>http://www.colmryan.org/posts/asyncio-realtime-dsp/</link>
+      <link>https://www.colmryan.org/posts/asyncio-realtime-dsp/</link>
       <pubDate>Sun, 20 Sep 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://www.colmryan.org/posts/asyncio-realtime-dsp/</guid>
+      <guid>https://www.colmryan.org/posts/asyncio-realtime-dsp/</guid>
       <description>Using Python&amp;rsquo;s asyncio for real-time signal processing</description>
     </item>
     
     <item>
       <title>Bitfield nicities in Python</title>
-      <link>http://www.colmryan.org/posts/bitfield-nicieties-in-python/</link>
+      <link>https://www.colmryan.org/posts/bitfield-nicieties-in-python/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://www.colmryan.org/posts/bitfield-nicieties-in-python/</guid>
+      <guid>https://www.colmryan.org/posts/bitfield-nicieties-in-python/</guid>
       <description>Using metaprogamming to make bitfields easy in Python</description>
     </item>
     
     <item>
       <title>Variant calls with GATK</title>
-      <link>http://www.colmryan.org/posts/variant-calls-with-gatk/</link>
+      <link>https://www.colmryan.org/posts/variant-calls-with-gatk/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://www.colmryan.org/posts/variant-calls-with-gatk/</guid>
+      <guid>https://www.colmryan.org/posts/variant-calls-with-gatk/</guid>
       <description>Setting up a variant calling pipeline</description>
     </item>
     

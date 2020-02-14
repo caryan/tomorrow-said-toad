@@ -2,39 +2,39 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>python on Tomorrow Said Toad</title>
-    <link>http://www.colmryan.org/tags/python/</link>
+    <link>https://www.colmryan.org/tags/python/</link>
     <description>Recent content in python on Tomorrow Said Toad</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 12 Aug 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://www.colmryan.org/tags/python/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://www.colmryan.org/tags/python/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Asyncio Socket Pool</title>
-      <link>http://www.colmryan.org/posts/asyncio-socket-pool/</link>
+      <link>https://www.colmryan.org/posts/asyncio-socket-pool/</link>
       <pubDate>Mon, 12 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://www.colmryan.org/posts/asyncio-socket-pool/</guid>
+      <guid>https://www.colmryan.org/posts/asyncio-socket-pool/</guid>
       <description>A socket pool with Python&amp;rsquo;s asyncio</description>
     </item>
     
     <item>
       <title>asyncio real-time signal processing</title>
-      <link>http://www.colmryan.org/posts/asyncio-realtime-dsp/</link>
+      <link>https://www.colmryan.org/posts/asyncio-realtime-dsp/</link>
       <pubDate>Sun, 20 Sep 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://www.colmryan.org/posts/asyncio-realtime-dsp/</guid>
+      <guid>https://www.colmryan.org/posts/asyncio-realtime-dsp/</guid>
       <description>Using Python&amp;rsquo;s asyncio for real-time signal processing</description>
     </item>
     
     <item>
       <title>Bitfield nicities in Python</title>
-      <link>http://www.colmryan.org/posts/bitfield-nicieties-in-python/</link>
+      <link>https://www.colmryan.org/posts/bitfield-nicieties-in-python/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://www.colmryan.org/posts/bitfield-nicieties-in-python/</guid>
+      <guid>https://www.colmryan.org/posts/bitfield-nicieties-in-python/</guid>
       <description>Using metaprogamming to make bitfields easy in Python</description>
     </item>
     
