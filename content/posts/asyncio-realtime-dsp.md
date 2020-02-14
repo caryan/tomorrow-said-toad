@@ -1,9 +1,12 @@
-Title: asyncio real-time signal processing
-Date: 2015-09-20
-Modified: 2015-10-03
-Category: Software
-Tags: Python
-
+---
+title: asyncio real-time signal processing
+date: 2015-09-20
+tags:
+  - software
+  - python
+summary: Using Python's asyncio for real-time signal processing
+draft: false
+---
 I'm taken with using Python's relatively recent asycio module for real-time DSP.
 This isn't because it looks particularly efficient but because it looks very
 similar to how we do DSP on an FPGA. Of course we won't actually get the massive

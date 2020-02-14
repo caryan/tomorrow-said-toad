@@ -1,8 +1,12 @@
-Title: No init system on Ubuntu 18.04 base
-Date: 2020-02-10
-Modified: 2020-02-10
-Category: Software
-Tags: Embedded
+---
+title: No init system on Ubuntu 18.04 base
+date: 2020-02-10
+tags:
+  - embedded
+  - software
+summary: Restoring an init system to an Ubuntu 18.04 minimal image
+draft: false
+---
 
 I had some trouble setting up a Zynq system with [Ubuntu 18.04 base image](http://cdimage.ubuntu.com/ubuntu-base/releases/18.04.3/release/) as the rootfs. The kernel would panic when it handed off to the `rootfs`:
 ```

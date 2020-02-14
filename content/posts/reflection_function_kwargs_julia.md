@@ -1,7 +1,12 @@
-Title: Reflection to discover function keyword arguments in Julia
-Date: 2017-01-12
-Modified: 2017-01-12
-Category: Julia
+---
+title: Reflection to discover function keyword arguments in Julia
+date: 2017-01-12
+tags:
+  - software
+  - julia
+summary: Extracting named keyword arguments from a function in Julia
+draft: false
+---
 
 I needed to extract the named keyword arguments for a function in Julia. In
 Python we have the

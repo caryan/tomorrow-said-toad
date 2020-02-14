@@ -1,8 +1,12 @@
-Title: Asyncio Socket Pool
-Date: 2019-08-12
-Modified: 2019-10-28
-Category: Software
-Tags: Python
+---
+title: Asyncio Socket Pool
+date: 2019-08-12
+tags:
+  - software
+  - python
+summary: A socket pool with Python's asyncio
+draft: false
+---
 
 In a typical client-server over a socket setup the server may take some time to process any given
 request and so to allow thee client to fire off multiple requests in parallel to speed things up

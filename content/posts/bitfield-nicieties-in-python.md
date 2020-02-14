@@ -1,8 +1,12 @@
-Title: Bitfield nicities in Python
-Date: 2016-2-08
-Modified: 2016-2-08
-Category: Software
-Tags: Python
+---
+title: Bitfield nicities in Python
+date: 2016-2-08
+tags:
+  - software
+  - python
+summary: Using metaprogamming to make bitfields easy in Python
+draft: false
+---
 
 With code contributions from [Graham Rowlands](http://www.grahamerowlands.com/).
 

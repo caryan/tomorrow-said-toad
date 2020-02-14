@@ -1,0 +1,24 @@
+baseURL = "http://www.colmryan.org/"
+languageCode = "en-us"
+title = "Tomorrow Said Toad"
+summaryLength = 10 # Configure how long the post summary should be on the homepage.
+theme = "noteworthy"
+
+
+[taxonomies]
+  tag = "tags"
+
+[author]
+	name = "Colm Ryan"
+
+[params]
+	# Blog description at the top of the homepage. Supports markdown.
+	description = "Tomorrow said toad - today I will take life easy."
+
+    # account links
+    email    = "mailto:colm@colmryan.org"
+    github   = "https://github.com/caryan/"
+    gitlab   = "https://gitlab.com/caryan"
+	linkedin = "https://www.linkedin.com/in/colm-ryan-660687113"
+
+	math = true
