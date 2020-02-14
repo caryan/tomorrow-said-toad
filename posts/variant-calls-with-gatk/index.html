@@ -2,7 +2,6 @@
 
 <html lang="en-us">
     <head>
-	<meta name="generator" content="Hugo 0.64.1" />
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,8 +28,6 @@
     
     
  
-    
-    <link rel="alternate" type="application/rss+xml" href="http://www.colmryan.org/index.xml" title="Tomorrow Said Toad" />
     
     
 </head>
@@ -128,175 +125,171 @@
 </nav>
         <div id="content" class="content-container">
         
-<div class = "article-content">
-        
-        <div class="description">
-            <p>Tomorrow said toad - today I will take life easy.</p>
-        </div>
-        
-        
-        
-        
-        <article>
-            <h2>
-                <a href="http://www.colmryan.org/posts/no-init-in-ubuntu-18.04-base/">
-                    No init system on Ubuntu 18.04 base
-                </a>
-            </h2>
-            <div><p>Restoring an init system to an Ubuntu 18.04 minimal image</p></div>
-            <div class="post-footer">
-            <time>February 10, 2020</time>
+<h1 class="post-title">Variant calls with GATK</h1>
+    <time>January 1, 0001</time>
+    <div>
+        <p>
+        <p>I had to replace a <a href="http://www.clcbio.com/">CLC Bio</a> variant calling pipeline
+with an open-source equivalent. These notes are mainly an update of another blog
+post <a href="https://approachedinthelimit.wordpress.com/2015/10/09/variant-calling-with-gatk/">Variant calling with
+GATK</a>.</p>
+<h1 id="tools-setup">Tools Setup</h1>
+<ol>
+<li>
+<p>Build and install (to ~/.local) <a href="https://github.com/lh3/bwa">bwa</a></p>
+</li>
+<li>
+<p>Build and install <a href="http://www.htslib.org/download/">samtools</a></p>
+</li>
+<li>
+<p>Download and extract <a href="https://www.broadinstitute.org/gatk/">GATK</a> under non-comercial license</p>
+</li>
+<li>
+<p>Download and extract <a href="http://broadinstitute.github.io/picard/">Picard Tools</a></p>
+</li>
+<li>
+<p>Picard requires Java 1.8 so update to OpenJDK-1.8.72</p>
+</li>
+<li>
+<p>Set environment variable to reference Picard</p>
+<pre><code> :::shell
+ export PICARD=~/Downloads/picard-tools-2.1.0/picard.jar
+</code></pre>
+</li>
+</ol>
+<h1 id="pipeline">Pipeline</h1>
+<ol>
+<li>
+<p>Index the reference</p>
+<pre><code> :::shell
+ bwa index PAO1_reference.fasta
+</code></pre>
+</li>
+<li>
+<p>Sort the reference</p>
+<pre><code> :::shell
+ samtools faidx PAO1_reference.fasta
+</code></pre>
+</li>
+<li>
+<p>Create sequence dictionary</p>
+<pre><code> :::shell
+ java -jar $PICARD CreateSequenceDictionary \
+  REFERENCE=PAO1_reference.fasta \
+  OUTPUT=PAO1_reference.dict
+</code></pre>
+</li>
+<li>
+<p>Align reads using bwa</p>
+<pre><code> :::shell
+ bwa mem PAO1_reference.fasta \
+  genomes/AZPAE12150_S4_L001_R1_001.fastq.gz \
+  genomes/AZPAE12150_S4_L001_R2_001.fastq.gz &gt; \
+  pipeline_products/AZPAE12150_S4_L001.aln.sam
+</code></pre>
+</li>
+<li>
+<p>Sort SAM file, add fake ReadGroup IDs (otherwise will fail at GATK RealignerTargetCreator below) and convert to bam</p>
+<pre><code> :::shell
+ java -jar $PICARD AddOrReplaceReadGroups \
+  I=pipeline_products/AZPAE12150_S4_L001.aln.sam \
+  O=pipeline_products/AZPAE12150_S4_L001.sorted.bam \
+  RGLB=kos1 \
+  RGPL=illumina \
+  RGPU=unit1 \
+  RGSM=AZPAE12150 \
+  SORT_ORDER=coordinate
+</code></pre>
+</li>
+<li>
+<p>Mark duplicates</p>
+<pre><code> :::shell
+ java -jar $PICARD MarkDuplicates \
+  I=pipeline_products/AZPAE12150_S4_L001.sorted.bam\
+  O=pipeline_products/AZPAE12150_S4_L001.dedup.bam \
+  METRICS_FILE=pipeline_products/metrics.txt
+</code></pre>
+</li>
+<li>
+<p>Build bam index</p>
+<pre><code> :::shell
+ java -jar $PICARD BuildBamIndex INPUT=pipeline_products/AZPAE12150_S4_L001.dedup.bam
+</code></pre>
+</li>
+<li>
+<p>Create realignment targets</p>
+<pre><code> :::shell
+ java -jar ~/Downloads/GATK/GenomeAnalysisTK.jar -T RealignerTargetCreator \
+ -R ../PAO1_reference.fasta -I AZPAE12150_S4_L001.dedup.bam \
+ -o AZPAE12150_S4_L001.targetintervals.list
+</code></pre>
+</li>
+<li>
+<p>Indel realignment</p>
+<pre><code> :::shell
+ java -jar ~/Downloads/GATK/GenomeAnalysisTK.jar -T IndelRealigner \
+  -R ../PAO1_reference.fasta -I AZPAE12150_S4_L001.dedup.bam \
+  -targetIntervals AZPAE12150_S4_L001.targetintervals.list \
+  -o AZPAE12150_S4_L001.realigned.bam
+</code></pre>
+</li>
+<li>
+<p>Call variants (takes ~10 minutes to run on a pair of 150M fastq.gz file )</p>
+<pre><code> :::shell
+ java -jar ~/Downloads/GATK/GenomeAnalysisTK.jar -T HaplotypeCaller \
+  -R ../PAO1_reference.fasta -I AZPAE12150_S4_L001.realigned.bam \
+  -ploidy 1 -stand_call_conf 30 -stand_emit_conf 10 \
+  -o AZPAE12150_S4_L001.raw.vcf
+</code></pre>
+</li>
+<li>
+<p>Filter out SNPs (optional)</p>
+<pre><code> :::shell
+ java -jar ~/Downloads/GATK/GenomeAnalysisTK.jar -T SelectVariants \
+  -R ../PAO1_reference.fasta -V AZPAE12150_S4_L001.raw.vcf -selectType SNP \
+  -o AZPAE12150_S4_L001.snps.vcf
+</code></pre>
+</li>
+<li>
+<p>Convert to a tab separated file for easy dataframe loading</p>
+<pre><code> :::shell
+ java -jar ~/Downloads/GATK/GenomeAnalysisTK.jar -T VariantsToTable \
+  -R ../PAO1_reference.fasta -V AZPAE12150_S4_L001.snps.vcf \
+  -F POS -F REF -F ALT -F QUAL -o AZPAE12150_S4_L001.snps.tsv
+</code></pre>
+</li>
+</ol>
+<h1 id="wrapping-in-a-script">Wrapping in a script</h1>
+<p>I also put together a <a href="https://gist.github.com/caryan/1a5624d8539c83d01cef2663b3bc2e7d">Julia
+script</a> that
+automates the whole pipeline.</p>
+<h1 id="performance">Performance</h1>
+<p>I don&rsquo;t have the experience to grade the quality of the SNP calling. Anecdotally
+I seemed to run into a <a href="http://gatkforums.broadinstitute.org/dsde/discussion/5422/why-is-haplotypecaller-not-calling-obvious-snps-by-default-but-requires-allownonuniquekmersinref">reported
+issue</a>
+where it seemed to miss SNPs at the beginning of a gene with lots of repeats.</p>
+<p>In comparison to the CLC pipeline, some SNP set union/differences showed there
+were about 27k they both called;  CLC called a few hundred that GATK did not and
+GATK called a couple thousand that CLC did not.  Anecdotally, the extra calls
+from GATK seemed to come from low depth of coverage region however some
+primitive attempts to filter those using <code>SelectVariants</code> did not seem to
+improve the overlap.</p>
 
-            
-            
-                
-                    <a class="tag" href="/tags/embedded">#embedded</a>
-                
-                    <a class="tag" href="/tags/software">#software</a>
-                
-            
-            </div> 
-           
-        </article>
-        
-        <article>
-            <h2>
-                <a href="http://www.colmryan.org/posts/asyncio-socket-pool/">
-                    Asyncio Socket Pool
-                </a>
-            </h2>
-            <div><p>A socket pool with Python&rsquo;s asyncio</p></div>
-            <div class="post-footer">
-            <time>August 12, 2019</time>
-
-            
-            
-                
-                    <a class="tag" href="/tags/software">#software</a>
-                
-                    <a class="tag" href="/tags/python">#python</a>
-                
-            
-            </div> 
-           
-        </article>
-        
-        <article>
-            <h2>
-                <a href="http://www.colmryan.org/posts/reflection_function_kwargs_julia/">
-                    Reflection to discover function keyword arguments in Julia
-                </a>
-            </h2>
-            <div><p>Extracting named keyword arguments from a function in Julia</p></div>
-            <div class="post-footer">
-            <time>January 12, 2017</time>
-
-            
-            
-                
-                    <a class="tag" href="/tags/software">#software</a>
-                
-                    <a class="tag" href="/tags/julia">#julia</a>
-                
-            
-            </div> 
-           
-        </article>
-        
-        <article>
-            <h2>
-                <a href="http://www.colmryan.org/posts/avrum-cdc-wisdom/">
-                    Avrum&#39;s Clock Domain Crossing Widsom
-                </a>
-            </h2>
-            <div><p>A collection of clock domain crossing from Xilinx forums</p></div>
-            <div class="post-footer">
-            <time>August 22, 2016</time>
-
-            
-            
-                
-                    <a class="tag" href="/tags/vhdl">#vhdl</a>
-                
-                    <a class="tag" href="/tags/vivado">#vivado</a>
-                
-            
-            </div> 
-           
-        </article>
-        
-        <article>
-            <h2>
-                <a href="http://www.colmryan.org/posts/asyncio-realtime-dsp/">
-                    asyncio real-time signal processing
-                </a>
-            </h2>
-            <div><p>Using Python&rsquo;s asyncio for real-time signal processing</p></div>
-            <div class="post-footer">
-            <time>September 20, 2015</time>
-
-            
-            
-                
-                    <a class="tag" href="/tags/software">#software</a>
-                
-                    <a class="tag" href="/tags/python">#python</a>
-                
-            
-            </div> 
-           
-        </article>
-        
-        <article>
-            <h2>
-                <a href="http://www.colmryan.org/posts/bitfield-nicieties-in-python/">
-                    Bitfield nicities in Python
-                </a>
-            </h2>
-            <div><p>Using metaprogamming to make bitfields easy in Python</p></div>
-            <div class="post-footer">
-            <time>January 1, 0001</time>
-
-            
-            
-                
-                    <a class="tag" href="/tags/software">#software</a>
-                
-                    <a class="tag" href="/tags/python">#python</a>
-                
-            
-            </div> 
-           
-        </article>
-        
-        <article>
-            <h2>
-                <a href="http://www.colmryan.org/posts/variant-calls-with-gatk/">
-                    Variant calls with GATK
-                </a>
-            </h2>
-            <div><p>Setting up a variant calling pipeline</p></div>
-            <div class="post-footer">
-            <time>January 1, 0001</time>
-
-            
-            
-                
-                    <a class="tag" href="/tags/software">#software</a>
-                
-                    <a class="tag" href="/tags/julia">#Julia</a>
-                
-            
-            </div> 
-           
-        </article>
-        
+        </p>
     </div>
+    
+
+    <div class="page-footer">
+        <hr class="footer-divider">
         
-        <div class="paginator">
         
+            <a class="tag" href="/tags/software">#software</a>
         
+            <a class="tag" href="/tags/julia">#Julia</a>
+        
+      
     </div>
+
 
         
 

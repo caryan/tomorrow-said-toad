@@ -2,7 +2,6 @@
 
 <html lang="en-us">
     <head>
-	<meta name="generator" content="Hugo 0.64.1" />
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,8 +28,6 @@
     
     
  
-    
-    <link rel="alternate" type="application/rss+xml" href="http://www.colmryan.org/index.xml" title="Tomorrow Said Toad" />
     
     
 </head>
@@ -128,175 +125,82 @@
 </nav>
         <div id="content" class="content-container">
         
-<div class = "article-content">
-        
-        <div class="description">
-            <p>Tomorrow said toad - today I will take life easy.</p>
-        </div>
-        
-        
-        
-        
-        <article>
-            <h2>
-                <a href="http://www.colmryan.org/posts/no-init-in-ubuntu-18.04-base/">
-                    No init system on Ubuntu 18.04 base
-                </a>
-            </h2>
-            <div><p>Restoring an init system to an Ubuntu 18.04 minimal image</p></div>
-            <div class="post-footer">
-            <time>February 10, 2020</time>
+<h1 class="post-title">asyncio real-time signal processing</h1>
+    <time>September 20, 2015</time>
+    <div>
+        <p>
+        <p>I&rsquo;m taken with using Python&rsquo;s relatively recent asycio module for real-time DSP.
+This isn&rsquo;t because it looks particularly efficient but because it looks very
+similar to how we do DSP on an FPGA. Of course we won&rsquo;t actually get the massive
+parallelism of a real FPGA but by setting up all our coroutines at the start and
+letting things go, the data will naturally flow through the processing chain and
+handle back pressure without any particular intervention or scheduling by us.
+This also allows us to tap into the the data stream at any point for addition
+processing, plotting or saving.</p>
+<p>In FPGA land we have all our DSP (FIR filtering, demodulating, decimating etc.)
+as modules that takes streams of data (AXI streams) and every clock cycle
+they&rsquo;ll process data with something like:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-VHDL" data-lang="VHDL"><span style="color:#66d9ef">if</span> rising_edge(clk) <span style="color:#66d9ef">and</span> data_vld <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;1&#39;</span> <span style="color:#66d9ef">then</span>
+	process_data....
+<span style="color:#66d9ef">end</span> <span style="color:#66d9ef">if</span>;
+</code></pre></div><p>All the modules are connected by FIFOs that allow the system to cross clock
+domains and soak up back-pressure if the system is producing data faster than it
+can be processed. Of course if the system is continually taking data faster than
+processing we&rsquo;ll run into an issue but for short burst of data this works well
+as the chains of FIFO&rsquo;s just absorb the pressure without any additional
+thinking.</p>
+<p>With Python&rsquo;s asyncio co-routines and Queues we should be able to setup
+something very similar. Let&rsquo;s setup a simple class structure with
+<code>DataProducer</code>'s,  <code>DataCrucher</code>'s, <code>DataPlotters</code>'s, and <code>DataWriters</code>.</p>
+<p>A <code>DataProducer</code> is anything that produces data that can be consumed by
+anything else.  At the start this may be an ADC but in a chain of filters each
+element is a <code>DataCruncher</code> that also acts as a <code>DataProducer</code> for next
+element in the chain.  Let&rsquo;s make a fake ADC that takes data up to a timeout
+and then finishes.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DataProducer</span>(object):
+	queue
 
-            
-            
-                
-                    <a class="tag" href="/tags/embedded">#embedded</a>
-                
-                    <a class="tag" href="/tags/software">#software</a>
-                
-            
-            </div> 
-           
-        </article>
-        
-        <article>
-            <h2>
-                <a href="http://www.colmryan.org/posts/asyncio-socket-pool/">
-                    Asyncio Socket Pool
-                </a>
-            </h2>
-            <div><p>A socket pool with Python&rsquo;s asyncio</p></div>
-            <div class="post-footer">
-            <time>August 12, 2019</time>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ADC</span>(DataProducer):
 
-            
-            
-                
-                    <a class="tag" href="/tags/software">#software</a>
-                
-                    <a class="tag" href="/tags/python">#python</a>
-                
-            
-            </div> 
-           
-        </article>
-        
-        <article>
-            <h2>
-                <a href="http://www.colmryan.org/posts/reflection_function_kwargs_julia/">
-                    Reflection to discover function keyword arguments in Julia
-                </a>
-            </h2>
-            <div><p>Extracting named keyword arguments from a function in Julia</p></div>
-            <div class="post-footer">
-            <time>January 12, 2017</time>
+	    async <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">take_data</span>(self, loop, timeout):
+	        end_time <span style="color:#f92672">=</span> loop<span style="color:#f92672">.</span>time() <span style="color:#f92672">+</span> timeout
+	        <span style="color:#66d9ef">while</span> True:
+	            data <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>rand(<span style="color:#ae81ff">100</span>)
+	            timeStamp <span style="color:#f92672">=</span> str(datetime<span style="color:#f92672">.</span>datetime<span style="color:#f92672">.</span>now())
+	            logging<span style="color:#f92672">.</span>info(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Acquired data and putting in queue</span><span style="color:#e6db74">&#34;</span>)
+	            await self<span style="color:#f92672">.</span>queue<span style="color:#f92672">.</span>put(data)
+	            <span style="color:#66d9ef">if</span> (loop<span style="color:#f92672">.</span>time() <span style="color:#f92672">+</span> <span style="color:#ae81ff">1.0</span>) <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> end_time:
+	                shutdown(loop)
+	                <span style="color:#66d9ef">break</span>
+	            await asyncio<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">1</span>)
+</code></pre></div><p>A <code>DataProducer</code> has a queue that it pushes data to.  The data will be
+correctly routed by a <code>DataInterconnect</code> later. We define the <code>take_data</code>
+method as an async co-routine using the new Python 3.5 syntax of <code>async def</code>.
+Since the
+<a href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue.put">Queue.put</a>
+method is a coroutine we <code>await</code> on that (again using the the new syntax
+instead of the old <code>yield from</code>).</p>
+<pre><code>class DataCrucher(DataProducer):
+	pass
 
-            
-            
-                
-                    <a class="tag" href="/tags/software">#software</a>
-                
-                    <a class="tag" href="/tags/julia">#julia</a>
-                
-            
-            </div> 
-           
-        </article>
-        
-        <article>
-            <h2>
-                <a href="http://www.colmryan.org/posts/avrum-cdc-wisdom/">
-                    Avrum&#39;s Clock Domain Crossing Widsom
-                </a>
-            </h2>
-            <div><p>A collection of clock domain crossing from Xilinx forums</p></div>
-            <div class="post-footer">
-            <time>August 22, 2016</time>
+</code></pre><p>In Python the FIFOs will be handled by
+<a href="https://docs.python.org/3/library/asyncio-queue.html">asyncio.Queue</a></p>
 
-            
-            
-                
-                    <a class="tag" href="/tags/vhdl">#vhdl</a>
-                
-                    <a class="tag" href="/tags/vivado">#vivado</a>
-                
-            
-            </div> 
-           
-        </article>
-        
-        <article>
-            <h2>
-                <a href="http://www.colmryan.org/posts/asyncio-realtime-dsp/">
-                    asyncio real-time signal processing
-                </a>
-            </h2>
-            <div><p>Using Python&rsquo;s asyncio for real-time signal processing</p></div>
-            <div class="post-footer">
-            <time>September 20, 2015</time>
-
-            
-            
-                
-                    <a class="tag" href="/tags/software">#software</a>
-                
-                    <a class="tag" href="/tags/python">#python</a>
-                
-            
-            </div> 
-           
-        </article>
-        
-        <article>
-            <h2>
-                <a href="http://www.colmryan.org/posts/bitfield-nicieties-in-python/">
-                    Bitfield nicities in Python
-                </a>
-            </h2>
-            <div><p>Using metaprogamming to make bitfields easy in Python</p></div>
-            <div class="post-footer">
-            <time>January 1, 0001</time>
-
-            
-            
-                
-                    <a class="tag" href="/tags/software">#software</a>
-                
-                    <a class="tag" href="/tags/python">#python</a>
-                
-            
-            </div> 
-           
-        </article>
-        
-        <article>
-            <h2>
-                <a href="http://www.colmryan.org/posts/variant-calls-with-gatk/">
-                    Variant calls with GATK
-                </a>
-            </h2>
-            <div><p>Setting up a variant calling pipeline</p></div>
-            <div class="post-footer">
-            <time>January 1, 0001</time>
-
-            
-            
-                
-                    <a class="tag" href="/tags/software">#software</a>
-                
-                    <a class="tag" href="/tags/julia">#Julia</a>
-                
-            
-            </div> 
-           
-        </article>
-        
+        </p>
     </div>
+    
+
+    <div class="page-footer">
+        <hr class="footer-divider">
         
-        <div class="paginator">
         
+            <a class="tag" href="/tags/software">#software</a>
         
+            <a class="tag" href="/tags/python">#python</a>
+        
+      
     </div>
+
 
         
 

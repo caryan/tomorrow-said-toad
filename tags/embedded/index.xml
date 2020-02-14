@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>embedded on Tomorrow Said Toad</title>
+    <link>http://www.colmryan.org/tags/embedded/</link>
+    <description>Recent content in embedded on Tomorrow Said Toad</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 10 Feb 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://www.colmryan.org/tags/embedded/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>No init system on Ubuntu 18.04 base</title>
+      <link>http://www.colmryan.org/posts/no-init-in-ubuntu-18.04-base/</link>
+      <pubDate>Mon, 10 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://www.colmryan.org/posts/no-init-in-ubuntu-18.04-base/</guid>
+      <description>Restoring an init system to an Ubuntu 18.04 minimal image</description>
+    </item>
+    
+  </channel>
+</rss>
