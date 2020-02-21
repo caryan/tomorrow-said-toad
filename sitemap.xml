@@ -33,6 +33,16 @@
   </url>
   
   <url>
+    <loc>https://www.colmryan.org/tags/julia/</loc>
+    <lastmod>2019-11-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.colmryan.org/posts/savitsky_golay/</loc>
+    <lastmod>2019-11-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.colmryan.org/posts/asyncio-socket-pool/</loc>
     <lastmod>2019-08-12T00:00:00+00:00</lastmod>
   </url>
@@ -40,11 +50,6 @@
   <url>
     <loc>https://www.colmryan.org/tags/python/</loc>
     <lastmod>2019-08-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://www.colmryan.org/tags/julia/</loc>
-    <lastmod>2017-01-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>

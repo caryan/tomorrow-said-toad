@@ -21,6 +21,15 @@
     </item>
     
     <item>
+      <title>Two approaches to Savitsky-Golay filtering</title>
+      <link>https://www.colmryan.org/posts/savitsky_golay/</link>
+      <pubDate>Sat, 30 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.colmryan.org/posts/savitsky_golay/</guid>
+      <description>Comparing matrix inversion and Gram polynomial approaches to Savitsky-Golay filtering.</description>
+    </item>
+    
+    <item>
       <title>Asyncio Socket Pool</title>
       <link>https://www.colmryan.org/posts/asyncio-socket-pool/</link>
       <pubDate>Mon, 12 Aug 2019 00:00:00 +0000</pubDate>

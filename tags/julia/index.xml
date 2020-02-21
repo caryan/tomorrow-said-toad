@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Julia on Tomorrow Said Toad</title>
+    <title>julia on Tomorrow Said Toad</title>
     <link>https://www.colmryan.org/tags/julia/</link>
-    <description>Recent content in Julia on Tomorrow Said Toad</description>
+    <description>Recent content in julia on Tomorrow Said Toad</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 12 Jan 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 30 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://www.colmryan.org/tags/julia/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Two approaches to Savitsky-Golay filtering</title>
+      <link>https://www.colmryan.org/posts/savitsky_golay/</link>
+      <pubDate>Sat, 30 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.colmryan.org/posts/savitsky_golay/</guid>
+      <description>Comparing matrix inversion and Gram polynomial approaches to Savitsky-Golay filtering.</description>
+    </item>
     
     <item>
       <title>Reflection to discover function keyword arguments in Julia</title>
