@@ -180,7 +180,7 @@ y_2 \\
 
 <h2 id="full-pseudoinverse">Full Pseudo-Inverse</h2>
 
-<p>For fitting a <span  class="math">\(m^{th}\)</span> order polynomial to a data window <span  class="math">\(w\)</span> points wide we have a <span  class="math">\(\mathbf{A}\)</span> is a <span  class="math">\(w \times m\)</span> matrix and we are looking for the pseudo-inverse matrix <span  class="math">\(\mathbf{C}\)</span> (<span  class="math">\(m \times w\)</span>) such that <span  class="math">\(\mathbf{CA}\)</span> is a <span  class="math">\(m \times m\)</span> identity matrix and if we left multiply both sides by <span  class="math">\(\mathbf{C}\)</span> then we have the coefficients as a product of a matrix <span  class="math">\(\mathbf{C}\)</span> and the data.</p>
+<p>For fitting a <span  class="math">\(m^{th}\)</span> order polynomial to a data window <span  class="math">\(w\)</span> points wide we have a <span  class="math">\(\mathbf{A}\)</span> is a <span  class="math">\(w \times (m+1)\)</span> matrix and we are looking for the pseudo-inverse matrix <span  class="math">\(\mathbf{C}\)</span> (<span  class="math">\((m+1) \times w\)</span>) such that <span  class="math">\(\mathbf{CA}\)</span> is a <span  class="math">\((m+1) \times (m+1)\)</span> identity matrix and if we left multiply both sides by <span  class="math">\(\mathbf{C}\)</span> then we have the coefficients as a product of a matrix <span  class="math">\(\mathbf{C}\)</span> and the data.</p>
 
 <p><span  class="math">\[
 \begin{bmatrix}
@@ -202,9 +202,9 @@ y_2 \\
 \end{bmatrix}
 \]</span></p>
 
-<p>We are guaranteed the pseudo-inverse exists because $w &gt; m$ for the fit to unique and a rectangular <span  class="math">\(w \times m\)</span> Vandermonde matrix with all <span  class="math">\(x_i\)</span> unique (which we have because we have equally spaced points) has maximum rank.</p>
+<p>We are guaranteed the pseudo-inverse exists because <span  class="math">\(w > m\)</span> for the fit to unique and a rectangular <span  class="math">\(w \times m\)</span> Vandermonde matrix with all <span  class="math">\(x_i\)</span> unique (which we have because we have equally spaced points) has maximum rank.</p>
 
-<p>Each row of <span  class="math">\(\mathbf{C}\)</span> gives the coefficients for a particular polynomial coefficient. However, for Savitsky-Golay we have a moving window and we only need to evalutate the window at the middle point where <span  class="math">\(x=0\)</span> and so all the <span  class="math">\(p_i, i>0\)</span> don't matter and we only need the first row. Hence we only need a single row of the matrix. Taking the <span  class="math">\(n'\)</span>'th derivative of the smoothed signal just shifts the coefficients with a factorial scaling and accounting for the x-point spacing. For example the 1st derivative will be <span  class="math">\(p_1 + 2p_2x + 3p_3x^2 + \dots\)</span> so for <span  class="math">\(x=0\)</span> we only need to evaulate the <span  class="math">\(p_1\)</span> term or the first row.</p>
+<p>Each row of <span  class="math">\(\mathbf{C}\)</span> gives the coefficients for a particular polynomial coefficient. However, for Savitsky-Golay we have a moving window and we only need to evalutate the window at the middle point where <span  class="math">\(x=0\)</span> and so all the <span  class="math">\(p_i, i>0\)</span> don't matter and we only need the first row. Hence we only need a single row of the matrix. Taking the <span  class="math">\(n\)</span>'th derivative of the smoothed signal just shifts the coefficients with a factorial scaling and accounting for the x-point spacing. For example the 1st derivative will be <span  class="math">\(p_1 + 2p_2x + 3p_3x^2 + \dots\)</span> so for <span  class="math">\(x=0\)</span> we only need to evaulate the <span  class="math">\(p_1\)</span> term or the first row.</p>
 
 <h2 id="solving-for-a-only-a-single-row-of-coefficients">Solving for a only a single row of coefficients</h2>
 
