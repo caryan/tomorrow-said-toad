@@ -1,6 +1,7 @@
 ---
 title: Two approaches to Savitsky-Golay filtering
 date: 2019-11-30
+lastmod: 2020-02-27
 tags:
   - software
   - julia
@@ -47,7 +48,7 @@ $$
 
 ## Full Pseudo-Inverse 
 
-For fitting a $$m^{th}$$ order polynomial to a data window $$w$$ points wide we have a $$\mathbf{A}$$ is a $$w \times m$$ matrix and we are looking for the pseudo-inverse matrix $$\mathbf{C}$$ ($$m \times w$$) such that $$\mathbf{CA}$$ is a $$m \times m$$ identity matrix and if we left multiply both sides by $$\mathbf{C}$$ then we have the coefficients as a product of a matrix $$\mathbf{C}$$ and the data.
+For fitting a $$m^{th}$$ order polynomial to a data window $$w$$ points wide we have a $$\mathbf{A}$$ is a $$w \times (m+1)$$ matrix and we are looking for the pseudo-inverse matrix $$\mathbf{C}$$ ($$(m+1) \times w$$) such that $$\mathbf{CA}$$ is a $$(m+1) \times (m+1)$$ identity matrix and if we left multiply both sides by $$\mathbf{C}$$ then we have the coefficients as a product of a matrix $$\mathbf{C}$$ and the data.
 
 $$
 \begin{bmatrix}
@@ -69,9 +70,9 @@ y_2 \\
 \end{bmatrix}
 $$
 
-We are guaranteed the pseudo-inverse exists because $w > m$ for the fit to unique and a rectangular $$w \times m$$ Vandermonde matrix with all $$x_i$$ unique (which we have because we have equally spaced points) has maximum rank. 
+We are guaranteed the pseudo-inverse exists because $$w > m$$ for the fit to unique and a rectangular $$w \times m$$ Vandermonde matrix with all $$x_i$$ unique (which we have because we have equally spaced points) has maximum rank. 
 
-Each row of $$\mathbf{C}$$ gives the coefficients for a particular polynomial coefficient. However, for Savitsky-Golay we have a moving window and we only need to evalutate the window at the middle point where $$x=0$$ and so all the $$p_i, i>0$$ don't matter and we only need the first row. Hence we only need a single row of the matrix. Taking the $$n'$$'th derivative of the smoothed signal just shifts the coefficients with a factorial scaling and accounting for the x-point spacing. For example the 1st derivative will be $$p_1 + 2p_2x + 3p_3x^2 + \dots$$ so for $$x=0$$ we only need to evaulate the $$p_1$$ term or the first row.
+Each row of $$\mathbf{C}$$ gives the coefficients for a particular polynomial coefficient. However, for Savitsky-Golay we have a moving window and we only need to evalutate the window at the middle point where $$x=0$$ and so all the $$p_i, i>0$$ don't matter and we only need the first row. Hence we only need a single row of the matrix. Taking the $$n$$'th derivative of the smoothed signal just shifts the coefficients with a factorial scaling and accounting for the x-point spacing. For example the 1st derivative will be $$p_1 + 2p_2x + 3p_3x^2 + \dots$$ so for $$x=0$$ we only need to evaulate the $$p_1$$ term or the first row.
 
 ## Solving for a only a single row of coefficients
 
