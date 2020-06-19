@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no"/>
 
-    <title>software | Tomorrow Said Toad</title>
+    <title>Python function call overhead | Tomorrow Said Toad</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -28,8 +28,6 @@
     
     
  
-    
-    <link rel="alternate" type="application/rss+xml" href="https://www.colmryan.org/tags/software/index.xml" title="Tomorrow Said Toad" />
     
 <script type="application/javascript">
 var doNotTrack = false;
@@ -153,161 +151,132 @@ if (!doNotTrack) {
         <div id="content" class="content-container">
         
 
-  <h1>Tagged "software"</h1>
-  
-  
+<h1 class="post-title">Python function call overhead</h1>
     
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/python_function_call_overhead/">
-                    Python function call overhead
-                </a>
-            </h2>
-            <div>
-                <p>Measuring function call overhead from Python 2.7 to 3.8</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>June 17, 2020</time>
-            </div> 
-        </article>
+    <time>June 17, 2020</time>
     
-  
+    <div>
+        <p>
+        <p>Wrapping some piece of logic in a function provides all the promised benefits: code reuse, scope isolation, unit-testing boundary, etc. However, as always, there are no unalloyed goods and I&rsquo;m particulary partial to Cindy Sridharan&rsquo;s <a href="https://medium.com/@copyconstruct/small-functions-considered-harmful-91035d316c29">Small Functions considered Harmful</a> take on the harms of taking this too far. There is also a non-zero performance penalty where there is no optimizing compilier to inline function calls and out of curiousity I wanted to look what this performance penalty is for Python by trying to measure the overhead of Python functions.</p>
+<p>I am quite sure there are some benchmarking boobytraps I&rsquo;m missing, but the approach I took to measure function call overhead was to make a series of increasingly nested function calls and then time how long each one took. For example, if we define</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">a</span>():
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">29</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">b</span>():
+    <span style="color:#66d9ef">return</span> a()
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">c</span>():
+    <span style="color:#66d9ef">return</span> b()
+</code></pre></div><p>then by timing how much longer <code>b()</code> takes than <code>a()</code> and <code>c()</code> than <code>b()</code> and so on then can attribute that increase to function call overhead</p>
+<p>We can then repeat the pattern of nested function calls for a few different types of functions:</p>
+<ol>
+<li>Plain no-argument functions (as above).</li>
+<li>1 argument functions to see how expensive passing arguments is.</li>
+<li>Instance methods with no arguments to check the overhead of adding classes to the mix.</li>
+<li>Instance methods with 1 argument.</li>
+</ol>
+<p>The code for the remaining cases looks something like:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">times2_a</span>(x):
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>x
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">times2_b</span>(x):
+    <span style="color:#66d9ef">return</span> times2_a(x)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">times2_c</span>(x):
+    <span style="color:#66d9ef">return</span> times2_b(x)
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">OneLiners</span>():
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">a</span>(self):
+        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">29</span>
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">b</span>(self):
+        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>a()
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">c</span>(self):
+        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>b()
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">times2_a</span>(self, x):
+        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>x
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">times2_b</span>(self, x):
+        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>times2_a(x)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">times2_c</span>(self, x):
+        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>times2_b(x)
+</code></pre></div><p>We can then time everything using <a href="https://ipython.readthedocs.io/en/stable/interactive/magics.html#magic-timeit">iPython&rsquo;s <code>timeit</code> magic</a>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">timing_results <span style="color:#f92672">=</span> {}
+
+timing_results[<span style="color:#e6db74">&#39;Function No Arg&#39;</span>] <span style="color:#f92672">=</span> []
+
+ti <span style="color:#f92672">=</span> <span style="color:#f92672">%</span>timeit <span style="color:#f92672">-</span>o <span style="color:#f92672">-</span>q a()
+timing_results[<span style="color:#e6db74">&#39;Function No Arg&#39;</span>]<span style="color:#f92672">.</span>append(ti)
+
+ti <span style="color:#f92672">=</span> <span style="color:#f92672">%</span>timeit <span style="color:#f92672">-</span>o <span style="color:#f92672">-</span>q b()
+timing_results[<span style="color:#e6db74">&#39;Function No Arg&#39;</span>]<span style="color:#f92672">.</span>append(ti)
+
+<span style="color:#960050;background-color:#1e0010">⋮</span>
+</code></pre></div><p>And plot the timing results as function time versus function depth (up to 10) and run some simple linear regression to estimate the slope in order to extract the overhead per function call assuming it is constant with stack size.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">fig,ax <span style="color:#f92672">=</span> plt<span style="color:#f92672">.</span>subplots(figsize<span style="color:#f92672">=</span>(<span style="color:#ae81ff">10</span>,<span style="color:#ae81ff">6</span>))
+
+overheads <span style="color:#f92672">=</span> {}
+max_depth <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+
+<span style="color:#75715e"># explicit order because dictionary order is only preserved for Python 3.6+</span>
+<span style="color:#66d9ef">for</span> ct, label <span style="color:#f92672">in</span> enumerate((<span style="color:#e6db74">&#39;Function No Arg&#39;</span>, <span style="color:#e6db74">&#39;Function 1 Arg&#39;</span>, <span style="color:#e6db74">&#39;Class Method No Arg&#39;</span>, <span style="color:#e6db74">&#39;Class Method 1 Arg&#39;</span>)):
+    results <span style="color:#f92672">=</span> timing_results[label]
+    xs <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> np<span style="color:#f92672">.</span>arange(max_depth)
+    <span style="color:#75715e"># the results from timeit changed at some point</span>
+<span style="color:#75715e">#     vals = np.array([ti.average/1e-9 for ti in results])</span>
+<span style="color:#75715e">#     errs = np.array([ti.stdev/1e-9 for ti in results])</span>
+    vals <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([np<span style="color:#f92672">.</span>mean(ti<span style="color:#f92672">.</span>all_runs)<span style="color:#f92672">/</span>ti<span style="color:#f92672">.</span>loops<span style="color:#f92672">/</span><span style="color:#ae81ff">1e-9</span> <span style="color:#66d9ef">for</span> ti <span style="color:#f92672">in</span> results])
+    errs <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([np<span style="color:#f92672">.</span>std(ti<span style="color:#f92672">.</span>all_runs)<span style="color:#f92672">/</span>ti<span style="color:#f92672">.</span>loops<span style="color:#f92672">/</span><span style="color:#ae81ff">1e-9</span> <span style="color:#66d9ef">for</span> ti <span style="color:#f92672">in</span> results])
+    fit_coeffs, V <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>polyfit(xs, vals, deg<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, cov<span style="color:#f92672">=</span>True, w<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span><span style="color:#f92672">/</span>errs)
+    overheads[label] <span style="color:#f92672">=</span> (fit_coeffs[<span style="color:#ae81ff">0</span>], np<span style="color:#f92672">.</span>sqrt(V[<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>]))
+    err_bars <span style="color:#f92672">=</span> ax<span style="color:#f92672">.</span>errorbar(xs, vals, yerr<span style="color:#f92672">=</span>errs, linestyle<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;none&#34;</span>, elinewidth<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>, marker<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;.&#34;</span>, label<span style="color:#f92672">=</span>label<span style="color:#f92672">+</span><span style="color:#e6db74">&#34; | {:.0f} +- {:.0f} ns&#34;</span><span style="color:#f92672">.</span>format(overheads[label][<span style="color:#ae81ff">0</span>],overheads[label][<span style="color:#ae81ff">1</span>]), color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;C{}&#34;</span><span style="color:#f92672">.</span>format(ct))
+    ax<span style="color:#f92672">.</span>plot(xs, np<span style="color:#f92672">.</span>poly1d(fit_coeffs)(xs))
+    ax<span style="color:#f92672">.</span>set_xlabel(<span style="color:#e6db74">&#34;Function Depth&#34;</span>)
+    ax<span style="color:#f92672">.</span>set_ylabel(<span style="color:#e6db74">&#34;Overhead (ns)&#34;</span>)
+    ax<span style="color:#f92672">.</span>set_title(<span style="color:#e6db74">&#34;Function Call Overhead in Python {}&#34;</span><span style="color:#f92672">.</span>format(platform<span style="color:#f92672">.</span>python_version()))
+
+plt<span style="color:#f92672">.</span>legend(loc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;upper center&#34;</span>)
+plt<span style="color:#f92672">.</span>savefig(<span style="color:#e6db74">&#34;function_call_overheads_{}.svg&#34;</span><span style="color:#f92672">.</span>format(platform<span style="color:#f92672">.</span>python_version()))
+</code></pre></div><p>We get typical plots like below for Python 3.8. There are some outliers with large uncertainty which I attribute to not being careful about making sure there was nothing else going on. The results are not as linear as I expected. Particularly for the &ldquo;Function No Arg&rdquo; case there seems to be a step around a depth of 5 and and the error bars are inconsistent with the linear model. Nevertheless, the approach gives reproducible results over multiple runs.</p>
+<figure>
+    <img src="function_call_overheads_3.8.3.svg" width="100%"/> 
+</figure>
+
+<p>The results consistently show a function call overhead in the 50-100 ns range and increasing overhead with either function arguments or using class methods. If some code is only making a few function calls and trying to perform logic on a human timescale of many 10&rsquo;s of ms then this overhead of 10&rsquo;s of nanoseconds is probably immaterial. However, if you&rsquo;re applying some small function to many millions of array elements then this overhead is very material. Of course going fast in array processing in Python is all about avoiding this penalty and calling out to C via e.g. <code>numpy</code>.</p>
+<p>Finally we can rerun this overhead analysis for several recent versions of Python 3 and Python 2.7 to see how the optimizations made have changed the situation. Bundling the results by either function type or Python version we see:</p>
+<figure>
+    <img src="function_call_overhead_grouped_by_type.svg" width="100%"/> 
+</figure>
+
+<figure>
+    <img src="function_call_overhead_grouped_by_version.svg" width="100%"/> 
+</figure>
+
+<p>The overall picture is that the gap between bare functions and class methods appears to being squeezed out. Presumably the big improvement from Python 3.6 to 3.7 came from specific <a href="https://docs.python.org/3/whatsnew/3.7.html#optimizations">optimizations</a></p>
+<blockquote>
+<p>Method calls are now up to 20% faster due to the bytecode changes which avoid creating bound method instances.</p>
+</blockquote>
+<p>The entire notebook is available on <a href="https://nbviewer.jupyter.org/gist/caryan/4a2c94a62e9da5b18eaed62fb637fc4a">nbviewer</a></p>
+
+        </p>
+    </div>
     
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/quantum_optimal_control_diffeqflux/">
-                    Quantum Optimal Control with SciML
-                </a>
-            </h2>
-            <div>
-                <p>Using SciML and Julia for numerical optimized pulse shapes.</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>June 9, 2020</time>
-            </div> 
-        </article>
+
     
-  
-    
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/no-init-in-ubuntu-18.04-base/">
-                    No init system on Ubuntu 18.04 base
-                </a>
-            </h2>
-            <div>
-                <p>Restoring an init system to an Ubuntu 18.04 minimal image</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>February 10, 2020</time>
-            </div> 
-        </article>
-    
-  
-    
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/savitsky_golay/">
-                    Two approaches to Savitsky-Golay filtering
-                </a>
-            </h2>
-            <div>
-                <p>Comparing matrix inversion and Gram polynomial approaches to Savitsky-Golay filtering.</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>November 30, 2019</time>
-            </div> 
-        </article>
-    
-  
-    
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/asyncio-socket-pool/">
-                    Asyncio Socket Pool
-                </a>
-            </h2>
-            <div>
-                <p>A socket pool with Python&rsquo;s asyncio</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>August 12, 2019</time>
-            </div> 
-        </article>
-    
-  
-    
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/reflection_function_kwargs_julia/">
-                    Reflection to discover function keyword arguments in Julia
-                </a>
-            </h2>
-            <div>
-                <p>Extracting named keyword arguments from a function in Julia</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>January 12, 2017</time>
-            </div> 
-        </article>
-    
-  
-    
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/asyncio-realtime-dsp/">
-                    asyncio real-time signal processing
-                </a>
-            </h2>
-            <div>
-                <p>Using Python&rsquo;s asyncio for real-time signal processing</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>September 20, 2015</time>
-            </div> 
-        </article>
-    
-  
-    
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/bitfield-nicieties-in-python/">
-                    Bitfield nicities in Python
-                </a>
-            </h2>
-            <div>
-                <p>Using metaprogamming to make bitfields easy in Python</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>January 1, 0001</time>
-            </div> 
-        </article>
-    
-  
-    
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/variant-calls-with-gatk/">
-                    Variant calls with GATK
-                </a>
-            </h2>
-            <div>
-                <p>Setting up a variant calling pipeline</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>January 1, 0001</time>
-            </div> 
-        </article>
-    
+
+    <div class="page-footer">
+        
+        <hr class="footer-divider">
+        
+            <a class="tag" href="/tags/software">#software</a>
+        
+            <a class="tag" href="/tags/python">#python</a>
+        
+      
+    </div>
 
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
