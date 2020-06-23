@@ -9,7 +9,7 @@ summary: Measuring function call overhead from Python 2.7 to 3.8
 draft: false
 ---
 
-Wrapping some piece of logic in a function provides all the promised benefits: code reuse, scope isolation, unit-testing boundary, etc. However, as always, there are no unalloyed goods and I'm particulary partial to Cindy Sridharan's [Small Functions considered Harmful](https://medium.com/@copyconstruct/small-functions-considered-harmful-91035d316c29) take on the harms of taking this too far. There is also a non-zero performance penalty where there is no optimizing compilier to inline function calls and out of curiousity I wanted to look what this performance penalty is for Python by trying to measure the overhead of Python functions.
+Wrapping some piece of logic in a function provides all the promised benefits: code reuse, scope isolation, unit-testing boundary, etc. However, as always, there are no unalloyed goods and I'm particularly partial to Cindy Sridharan's [Small Functions considered Harmful](https://medium.com/@copyconstruct/small-functions-considered-harmful-91035d316c29) take on the harms of taking this too far. There is also a non-zero performance penalty where there is no optimizing compiler to inline function calls and out of curiosity I wanted to look at what this performance penalty is for Python by trying to measure the overhead of Python functions.
 
 I am quite sure there are some benchmarking boobytraps I'm missing, but the approach I took to measure function call overhead was to make a series of increasingly nested function calls and then time how long each one took. For example, if we define
 
@@ -109,7 +109,7 @@ plt.legend(loc="upper center")
 plt.savefig("function_call_overheads_{}.svg".format(platform.python_version()))
 ```
 
-We get typical plots like below for Python 3.8. There are some outliers with large uncertainty which I attribute to not being careful about making sure there was nothing else going on. The results are not as linear as I expected. Particularly for the "Function No Arg" case there seems to be a step around a depth of 5 and and the error bars are inconsistent with the linear model. Nevertheless, the approach gives reproducible results over multiple runs.
+We get typical plots like below for Python 3.8. There are some outliers with large uncertainty which I attribute to not being careful about making sure there was nothing else going on. The results are not as linear as I expected. Particularly for the "Function No Arg" case there seems to be a step around a depth of 5 and the error bars are inconsistent with the linear model. Nevertheless, the approach gives reproducible results over multiple runs.
 
 {{< figure src="function_call_overheads_3.8.3.svg" width="100%">}}
 

@@ -10,9 +10,9 @@ draft: false
 markup: mmark #  mmark is deprecated but needed for Katex for now https://github.com/gohugoio/hugo/issues/6544
 ---
 
-Savitsky-Golay filtering[^1] is one of my first choices for smoothing noisy experiental data. It has the nice property of preserving higher moments of the data and so particularly for spectroscopy it preserves peak heights [^2]. Savitsky-Golay filtering is a simple enough idea: fit a moving $$n^{th}$$-degree polynomial to a window around each point and then evaluate the polynomial at the mid-point to provide the smoothed value. The key insight of Savitsky-Golay was that we don't have to repeat the least-squares fit for every point: we can write the polynomial coefficients as a linear combination of the data values in the window so that once we know the appropriate weights we can apply the filter as a convolution.
+Savitsky-Golay filtering[^1] is one of my first choices for smoothing noisy experimental data. It has the nice property of preserving higher moments of the data and so particularly for spectroscopy it preserves peak heights [^2]. Savitsky-Golay filtering is a simple enough idea: fit a moving $$n^{th}$$-degree polynomial to a window around each point and then evaluate the polynomial at the mid-point to provide the smoothed value. The key insight of Savitsky-Golay was that we don't have to repeat the least-squares fit for every point: we can write the polynomial coefficients as a linear combination of the data values in the window so that once we know the appropriate weights we can apply the filter as a convolution.
 
-I wanted to work through the usual derivation for the Savitsky-Golay convolution coefficients starting from the design matrix to make sure I understood both the pseudo-inverse approach and how `SciPy` was calculating the filter coefficients for a particular derivative with a matrix-vector least squares inversion. And I also got curious about another approach using a different family of of polynomials, the Gram polynomials [^3].
+I wanted to work through the usual derivation for the Savitsky-Golay convolution coefficients starting from the design matrix to make sure I understood both the pseudo-inverse approach and how `SciPy` was calculating the filter coefficients for a particular derivative with a matrix-vector least squares inversion. And I also got curious about another approach using a different family of polynomials, the Gram polynomials [^3].
 
 # Calculating filter coefficients with matrix inversions
 
@@ -46,7 +46,7 @@ y_2 \\
 \end{bmatrix}
 $$
 
-## Full Pseudo-Inverse 
+## Full Pseudo-Inverse
 
 For fitting a $$m^{th}$$ order polynomial to a data window $$w$$ points wide we have a $$\mathbf{A}$$ is a $$w \times (m+1)$$ matrix and we are looking for the pseudo-inverse matrix $$\mathbf{C}$$ ($$(m+1) \times w$$) such that $$\mathbf{CA}$$ is a $$(m+1) \times (m+1)$$ identity matrix and if we left multiply both sides by $$\mathbf{C}$$ then we have the coefficients as a product of a matrix $$\mathbf{C}$$ and the data.
 
@@ -70,9 +70,9 @@ y_2 \\
 \end{bmatrix}
 $$
 
-We are guaranteed the pseudo-inverse exists because $$w > m$$ for the fit to unique and a rectangular $$w \times m$$ Vandermonde matrix with all $$x_i$$ unique (which we have because we have equally spaced points) has maximum rank. 
+We are guaranteed the pseudo-inverse exists because $$w > m$$ for the fit to unique and a rectangular $$w \times m$$ Vandermonde matrix with all $$x_i$$ unique (which we have because we have equally spaced points) has maximum rank.
 
-Each row of $$\mathbf{C}$$ gives the coefficients for a particular polynomial coefficient. However, for Savitsky-Golay we have a moving window and we only need to evalutate the window at the middle point where $$x=0$$ and so all the $$p_i, i>0$$ don't matter and we only need the first row. Hence we only need a single row of the matrix. Taking the $$n$$'th derivative of the smoothed signal just shifts the coefficients with a factorial scaling and accounting for the x-point spacing. For example the 1st derivative will be $$p_1 + 2p_2x + 3p_3x^2 + \dots$$ so for $$x=0$$ we only need to evaulate the $$p_1$$ term or the first row.
+Each row of $$\mathbf{C}$$ gives the coefficients for a particular polynomial coefficient. However, for Savitsky-Golay we have a moving window and we only need to evaluate the window at the middle point where $$x=0$$ and so all the $$p_i, i>0$$ don't matter and we only need the first row. Hence we only need a single row of the matrix. Taking the $$n$$'th derivative of the smoothed signal just shifts the coefficients with a factorial scaling and accounting for the x-point spacing. For example the 1st derivative will be $$p_1 + 2p_2x + 3p_3x^2 + \dots$$ so for $$x=0$$ we only need to evaluate the $$p_1$$ term or the first row.
 
 ## Solving for a only a single row of coefficients
 
@@ -91,7 +91,7 @@ $$
 
 # Calculating filter coefficients with orthogonal polynomials
 
-I was intrigued with a second approach using [discrete Chebyshev polynomials or Gram polynomials](https://en.wikipedia.org/wiki/Discrete_Chebyshev_polynomials) because it promised a closed form solution [^3] for all points in the window (as opposed to just the midpoint). This is particularly conventient at the edges. The paper provides a recursive forumula for the the full table of weights for every data point to evalute the least squares fit at every point in the window. I have implemented in the notebook but at first pass it seems rather slow and only of utility if you don't have access to matrix inversion routines. E.g. there appears to be a [C++ implementation](https://github.com/arntanguy/gram_savitzky_golay).
+I was intrigued with a second approach using [discrete Chebyshev polynomials or Gram polynomials](https://en.wikipedia.org/wiki/Discrete_Chebyshev_polynomials) because it promised a closed form solution [^3] for all points in the window (as opposed to just the midpoint). This is particularly convenient at the edges. The paper provides a recursive formula for the full table of weights for every data point to evaluate the least squares fit at every point in the window. I have implemented this in the notebook but at first pass it seems rather slow and only of utility if you don't have access to matrix inversion routines. E.g. there appears to be a [C++ implementation](https://github.com/arntanguy/gram_savitzky_golay).
 
 # Corrections to the original Savitsky-Golay
 
@@ -106,7 +106,7 @@ I put together a little notebook demoing and benchmarking the two approaches. Th
 
 <script src="https://gist.github.com/caryan/6cb5be4bf7e0306dc236c3688e548d68.js"></script>
 
-[^1]: Savitzky, A., & Golay, M. J. E. (1964). Smoothing and Differentiation of Data by Simplified Least Squares Procedures. [Analytical Chemistry, 36(8), 1627–1639](https://doi.org/10.1021/ac60214a047). 
+[^1]: Savitzky, A., & Golay, M. J. E. (1964). Smoothing and Differentiation of Data by Simplified Least Squares Procedures. [Analytical Chemistry, 36(8), 1627–1639](https://doi.org/10.1021/ac60214a047).
 
 [^2]: Press, W. H., & Teukolsky, S. A. (1990). Savitzky-Golay Smoothing Filters. [Computers in Physics, 4(6), 669](https://doi.org/10.1063/1.4822961).
 

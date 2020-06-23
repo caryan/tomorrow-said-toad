@@ -28,8 +28,8 @@ decorator](https://docs.python.org/3/library/contextlib.html#contextlib.asynccon
 we can nicely `async with ...` `await` on the next available socket. To bound the number of sockets
 we use an [asyncio
 Semaphore](https://docs.python.org/3/library/asyncio-sync.html#asyncio.Semaphore). The semaphore is
-an integer that is intialized to the maximum number of sockets. Every time a socket is checked out
-from the pool we `await` on the semphaore, the integer is decremented by one and then finally the
+an integer that is initialized to the maximum number of sockets. Every time a socket is checked out
+from the pool we `await` on the semaphore, the integer is decremented by one and then finally the
 semaphore blocks when the integer would go negative. When we are done with the socket we return it
 to the pool and increment the semaphore integer again. All this integer decrement/increment logic is
 wrapped with by the Python `asyncio` module with another `asynccontextmanager` so all the
