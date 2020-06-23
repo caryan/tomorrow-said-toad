@@ -6,10 +6,19 @@
     <description>Recent content in software on Tomorrow Said Toad</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 17 Jun 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 22 Jun 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://www.colmryan.org/tags/software/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>pylint to CodeClimate converter</title>
+      <link>https://www.colmryan.org/posts/pylint_to_codeclimate/</link>
+      <pubDate>Mon, 22 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.colmryan.org/posts/pylint_to_codeclimate/</guid>
+      <description>A little helper function to get nice code quality reports in Gitlab</description>
+    </item>
     
     <item>
       <title>Python function call overhead</title>

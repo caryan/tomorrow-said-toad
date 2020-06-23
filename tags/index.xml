@@ -6,15 +6,24 @@
     <description>Recent content in Tags on Tomorrow Said Toad</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 17 Jun 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 22 Jun 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://www.colmryan.org/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>CI</title>
+      <link>https://www.colmryan.org/tags/ci/</link>
+      <pubDate>Mon, 22 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.colmryan.org/tags/ci/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>python</title>
       <link>https://www.colmryan.org/tags/python/</link>
-      <pubDate>Wed, 17 Jun 2020 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 22 Jun 2020 00:00:00 +0000</pubDate>
       
       <guid>https://www.colmryan.org/tags/python/</guid>
       <description></description>
@@ -23,7 +32,7 @@
     <item>
       <title>software</title>
       <link>https://www.colmryan.org/tags/software/</link>
-      <pubDate>Wed, 17 Jun 2020 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 22 Jun 2020 00:00:00 +0000</pubDate>
       
       <guid>https://www.colmryan.org/tags/software/</guid>
       <description></description>

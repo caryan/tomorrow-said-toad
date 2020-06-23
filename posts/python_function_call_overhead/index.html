@@ -157,7 +157,7 @@ if (!doNotTrack) {
     
     <div>
         <p>
-        <p>Wrapping some piece of logic in a function provides all the promised benefits: code reuse, scope isolation, unit-testing boundary, etc. However, as always, there are no unalloyed goods and I&rsquo;m particulary partial to Cindy Sridharan&rsquo;s <a href="https://medium.com/@copyconstruct/small-functions-considered-harmful-91035d316c29">Small Functions considered Harmful</a> take on the harms of taking this too far. There is also a non-zero performance penalty where there is no optimizing compilier to inline function calls and out of curiousity I wanted to look what this performance penalty is for Python by trying to measure the overhead of Python functions.</p>
+        <p>Wrapping some piece of logic in a function provides all the promised benefits: code reuse, scope isolation, unit-testing boundary, etc. However, as always, there are no unalloyed goods and I&rsquo;m particularly partial to Cindy Sridharan&rsquo;s <a href="https://medium.com/@copyconstruct/small-functions-considered-harmful-91035d316c29">Small Functions considered Harmful</a> take on the harms of taking this too far. There is also a non-zero performance penalty where there is no optimizing compiler to inline function calls and out of curiosity I wanted to look at what this performance penalty is for Python by trying to measure the overhead of Python functions.</p>
 <p>I am quite sure there are some benchmarking boobytraps I&rsquo;m missing, but the approach I took to measure function call overhead was to make a series of increasingly nested function calls and then time how long each one took. For example, if we define</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">a</span>():
     <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">29</span>
@@ -240,7 +240,7 @@ max_depth <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</s
 
 plt<span style="color:#f92672">.</span>legend(loc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;upper center&#34;</span>)
 plt<span style="color:#f92672">.</span>savefig(<span style="color:#e6db74">&#34;function_call_overheads_{}.svg&#34;</span><span style="color:#f92672">.</span>format(platform<span style="color:#f92672">.</span>python_version()))
-</code></pre></div><p>We get typical plots like below for Python 3.8. There are some outliers with large uncertainty which I attribute to not being careful about making sure there was nothing else going on. The results are not as linear as I expected. Particularly for the &ldquo;Function No Arg&rdquo; case there seems to be a step around a depth of 5 and and the error bars are inconsistent with the linear model. Nevertheless, the approach gives reproducible results over multiple runs.</p>
+</code></pre></div><p>We get typical plots like below for Python 3.8. There are some outliers with large uncertainty which I attribute to not being careful about making sure there was nothing else going on. The results are not as linear as I expected. Particularly for the &ldquo;Function No Arg&rdquo; case there seems to be a step around a depth of 5 and the error bars are inconsistent with the linear model. Nevertheless, the approach gives reproducible results over multiple runs.</p>
 <figure>
     <img src="function_call_overheads_3.8.3.svg" width="100%"/> 
 </figure>

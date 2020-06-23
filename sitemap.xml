@@ -3,32 +3,42 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://www.colmryan.org/tags/ci/</loc>
+    <lastmod>2020-06-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.colmryan.org/posts/</loc>
-    <lastmod>2020-06-17T00:00:00+00:00</lastmod>
+    <lastmod>2020-06-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.colmryan.org/posts/pylint_to_codeclimate/</loc>
+    <lastmod>2020-06-22T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.colmryan.org/tags/python/</loc>
-    <lastmod>2020-06-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://www.colmryan.org/posts/python_function_call_overhead/</loc>
-    <lastmod>2020-06-17T00:00:00+00:00</lastmod>
+    <lastmod>2020-06-22T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.colmryan.org/tags/software/</loc>
-    <lastmod>2020-06-17T00:00:00+00:00</lastmod>
+    <lastmod>2020-06-22T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.colmryan.org/tags/</loc>
-    <lastmod>2020-06-17T00:00:00+00:00</lastmod>
+    <lastmod>2020-06-22T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.colmryan.org/</loc>
+    <lastmod>2020-06-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.colmryan.org/posts/python_function_call_overhead/</loc>
     <lastmod>2020-06-17T00:00:00+00:00</lastmod>
   </url>
   

@@ -2,12 +2,13 @@
 
 <html lang="en-us">
     <head>
+	<meta name="generator" content="Hugo 0.72.0" />
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no"/>
 
-    <title>Two approaches to Savitsky-Golay filtering | Tomorrow Said Toad</title>
+    <title>Tomorrow Said Toad</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -28,6 +29,8 @@
     
     
  
+    
+    <link rel="alternate" type="application/rss+xml" href="https://www.colmryan.org/index.xml" title="Tomorrow Said Toad" />
     
 <script type="application/javascript">
 var doNotTrack = false;
@@ -150,144 +153,62 @@ if (!doNotTrack) {
 
         <div id="content" class="content-container">
         
+<div class = "article-content">
+        
+        <div class="description">
+            <p>Tomorrow said toad - today I will take life easy.</p>
+        </div>
+        
+        
+        
+        
+        <article>
+            <h2>
+                <a href="https://www.colmryan.org/posts/variant-calls-with-gatk/">
+                    Variant calls with GATK
+                </a>
+            </h2>
+            <div>
+                <p>Setting up a variant calling pipeline</p>
+                
+            </div>
+            <div class="post-footer">
+            <time>January 1, 0001</time>
 
-<h1 class="post-title">Two approaches to Savitsky-Golay filtering</h1>
-    
-    <time>November 30, 2019</time>
-    
-    <div>
-        <p>
-        <p>Savitsky-Golay filtering<sup class="footnote-ref" id="fnref:1"><a class="footnote" href="#fn:1">1</a></sup> is one of my first choices for smoothing noisy experimental data. It has the nice property of preserving higher moments of the data and so particularly for spectroscopy it preserves peak heights <sup class="footnote-ref" id="fnref:2"><a class="footnote" href="#fn:2">2</a></sup>. Savitsky-Golay filtering is a simple enough idea: fit a moving <span  class="math">\(n^{th}\)</span>-degree polynomial to a window around each point and then evaluate the polynomial at the mid-point to provide the smoothed value. The key insight of Savitsky-Golay was that we don't have to repeat the least-squares fit for every point: we can write the polynomial coefficients as a linear combination of the data values in the window so that once we know the appropriate weights we can apply the filter as a convolution.</p>
-
-<p>I wanted to work through the usual derivation for the Savitsky-Golay convolution coefficients starting from the design matrix to make sure I understood both the pseudo-inverse approach and how <code>SciPy</code> was calculating the filter coefficients for a particular derivative with a matrix-vector least squares inversion. And I also got curious about another approach using a different family of polynomials, the Gram polynomials <sup class="footnote-ref" id="fnref:3"><a class="footnote" href="#fn:3">3</a></sup>.</p>
-
-<h1 id="calculating-filter-coefficients-with-matrix-inversions">Calculating filter coefficients with matrix inversions</h1>
-
-<p>Using the conventional polynomials <span  class="math">\(p_0 + p_1x + p_2x^2 + p_3x^3 + \dots\)</span> we can cast the polynomial fitting problem in matrix form: <span  class="math">\(\mathbf{A}\cdot\mathbf{p} = \mathbf{y}\)</span> for a column vector of the polynomial coefficients, <span  class="math">\(\mathbf{p}\)</span> and the data in the window to fit <span  class="math">\(\mathbf{y}\)</span>. For equally spaced normalized points <span  class="math">\(\dots -2, -1, 0, 1, 2, \dots\)</span> the design matrix <span  class="math">\(\mathbf{A}\)</span> is a <a href="https://en.wikipedia.org/wiki/Vandermonde_matrix">Vandermonde matrix</a>:</p>
-
-<p><span  class="math">\[
-\begin{bmatrix}
-\vdots & \vdots & \vdots & \vdots &\\
-1 & -2 & 4 & -8 & \dots \\
-1 & -1 & 1 & -1 & \dots \\
-1 &  0 & 0 &  0 & \dots \\
-1 &  1 & 1 &  1 & \dots \\
-1 &  2 & 4 &  8 & \dots \\
-\vdots & \vdots & \vdots & \vdots &\\
-\end{bmatrix}
-\begin{bmatrix}
-p_0 \\
-p_1 \\
-p_2 \\
-p_3 \\
-\vdots
-\end{bmatrix} =
-\begin{bmatrix}
-\vdots \\
-y_{-2} \\
-y_{-1} \\
-y_0 \\
-y_1 \\
-y_2 \\
-\vdots
-\end{bmatrix}
-\]</span></p>
-
-<h2 id="full-pseudoinverse">Full Pseudo-Inverse</h2>
-
-<p>For fitting a <span  class="math">\(m^{th}\)</span> order polynomial to a data window <span  class="math">\(w\)</span> points wide we have a <span  class="math">\(\mathbf{A}\)</span> is a <span  class="math">\(w \times (m+1)\)</span> matrix and we are looking for the pseudo-inverse matrix <span  class="math">\(\mathbf{C}\)</span> (<span  class="math">\((m+1) \times w\)</span>) such that <span  class="math">\(\mathbf{CA}\)</span> is a <span  class="math">\((m+1) \times (m+1)\)</span> identity matrix and if we left multiply both sides by <span  class="math">\(\mathbf{C}\)</span> then we have the coefficients as a product of a matrix <span  class="math">\(\mathbf{C}\)</span> and the data.</p>
-
-<p><span  class="math">\[
-\begin{bmatrix}
-p_0 \\
-p_1 \\
-p_2 \\
-p_3 \\
-\vdots
-\end{bmatrix} =
-\mathbf{C}
-\begin{bmatrix}
-\vdots \\
-y_{-2} \\
-y_{-1} \\
-y_0 \\
-y_1 \\
-y_2 \\
-\vdots
-\end{bmatrix}
-\]</span></p>
-
-<p>We are guaranteed the pseudo-inverse exists because <span  class="math">\(w > m\)</span> for the fit to unique and a rectangular <span  class="math">\(w \times m\)</span> Vandermonde matrix with all <span  class="math">\(x_i\)</span> unique (which we have because we have equally spaced points) has maximum rank.</p>
-
-<p>Each row of <span  class="math">\(\mathbf{C}\)</span> gives the coefficients for a particular polynomial coefficient. However, for Savitsky-Golay we have a moving window and we only need to evaluate the window at the middle point where <span  class="math">\(x=0\)</span> and so all the <span  class="math">\(p_i, i>0\)</span> don't matter and we only need the first row. Hence we only need a single row of the matrix. Taking the <span  class="math">\(n\)</span>'th derivative of the smoothed signal just shifts the coefficients with a factorial scaling and accounting for the x-point spacing. For example the 1st derivative will be <span  class="math">\(p_1 + 2p_2x + 3p_3x^2 + \dots\)</span> so for <span  class="math">\(x=0\)</span> we only need to evaluate the <span  class="math">\(p_1\)</span> term or the first row.</p>
-
-<h2 id="solving-for-a-only-a-single-row-of-coefficients">Solving for a only a single row of coefficients</h2>
-
-<p>We can take advantage of that by least-squares solving for only a single row of <span  class="math">\(\mathbf{C}\)</span>. We're looking to solve <span  class="math">\(\mathbf{CA} = \mathbf{I}\)</span> and taking the transpose to put it in the conventional <span  class="math">\(\mathbf{AX} = \mathbf{B}\)</span> we have <span  class="math">\(\mathbf{A}^\mathrm{T}\mathbf{C}^\mathrm{T} = \mathbf{I}\)</span> or <span  class="math">\(\mathbf{C}^\mathrm{T} = \mathbf{A}^\mathrm{T} \backslash \mathbf{I}\)</span>. We can then solve for say only the first column of <span  class="math">\(\mathbf{C}^\mathrm{T}\)</span> with</p>
-
-<p><span  class="math">\[
-\vec{C}_0 = \mathbf{A}^\mathrm{T} \backslash
-\begin{bmatrix}
-1 \\
-0 \\
-0 \\
-0 \\
-\vdots
-\end{bmatrix}
-\]</span></p>
-
-<h1 id="calculating-filter-coefficients-with-orthogonal-polynomials">Calculating filter coefficients with orthogonal polynomials</h1>
-
-<p>I was intrigued with a second approach using <a href="https://en.wikipedia.org/wiki/Discrete_Chebyshev_polynomials">discrete Chebyshev polynomials or Gram polynomials</a> because it promised a closed form solution <sup class="footnote-ref" id="fnref:3"><a class="footnote" href="#fn:3">4</a></sup> for all points in the window (as opposed to just the midpoint). This is particularly convenient at the edges. The paper provides a recursive formula for the full table of weights for every data point to evaluate the least squares fit at every point in the window. I have implemented this in the notebook but at first pass it seems rather slow and only of utility if you don't have access to matrix inversion routines. E.g. there appears to be a <a href="https://github.com/arntanguy/gram_savitzky_golay">C++ implementation</a>.</p>
-
-<h1 id="corrections-to-the-original-savitskygolay">Corrections to the original Savitsky-Golay</h1>
-
-<p>Gorry's paper also pointed out a subsequent paper <sup class="footnote-ref" id="fnref:4"><a class="footnote" href="#fn:4">5</a></sup> that corrected many of the tables in the original Savitsky-Golay paper with the particularly harsh comment:</p>
-
-<blockquote>
-<p>The corrected values are presented in Table I. Also, Tables II, III, IV, V, and VI are corrected versions of Tables V, VII, IX, X, and XI given by Savitzky and Golay (I). They either contain more numerous errors or are systematically false.</p>
-</blockquote>
-
-<h1 id="julia-notebook-demo">Julia Notebook Demo</h1>
-
-<p>I put together a little notebook demoing and benchmarking the two approaches. There are probably plenty of optimizations to be made to the Gram polynomial approach but if we have access to good matrix inversion routines then there does not seem to be any advantage to using Gram polynomials as it's a couple of orders of magnitude slower.</p>
-
-<script src="https://gist.github.com/caryan/6cb5be4bf7e0306dc236c3688e548d68.js"></script>
-<div class="footnotes">
-
-<hr>
-
-<ol>
-<li id="fn:1">Savitzky, A., &amp; Golay, M. J. E. (1964). Smoothing and Differentiation of Data by Simplified Least Squares Procedures. <a href="https://doi.org/10.1021/ac60214a047">Analytical Chemistry, 36(8), 1627–1639</a>.
- <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
-<li id="fn:2">Press, W. H., &amp; Teukolsky, S. A. (1990). Savitzky-Golay Smoothing Filters. <a href="https://doi.org/10.1063/1.4822961">Computers in Physics, 4(6), 669</a>.
- <a class="footnote-return" href="#fnref:2"><sup>[return]</sup></a></li>
-<li id="fn:3">Gorry, P. A. (1990). General Least-Squares Smoothing and Differentiation by the Convolution (Savitzky-Golay) Method. <a href="https://doi.org/10.1021/ac00205a007">Analytical Chemistry, 62(6), 570–573</a>.
- <a class="footnote-return" href="#fnref:3"><sup>[return]</sup></a></li>
-<li id="fn:3">Gorry, P. A. (1990). General Least-Squares Smoothing and Differentiation by the Convolution (Savitzky-Golay) Method. <a href="https://doi.org/10.1021/ac00205a007">Analytical Chemistry, 62(6), 570–573</a>.
- <a class="footnote-return" href="#fnref:3"><sup>[return]</sup></a></li>
-<li id="fn:4">Steinier, J., Termonia, Y., &amp; Deltour, J. (1972). Comments on Smoothing and differentiation of data by simplified least square procedure. <a href="https://doi.org/10.1021/ac60319a045">Analytical Chemistry, 44(11), 1906–1909</a>
- <a class="footnote-return" href="#fnref:4"><sup>[return]</sup></a></li>
-</ol>
-</div>
-
-        </p>
+            
+            
+                
+                    <a class="tag" href="/tags/software">#software</a>
+                
+                    <a class="tag" href="/tags/julia">#Julia</a>
+                
+            
+            </div> 
+           
+        </article>
+        
     </div>
-    
-
-    
-
-    <div class="page-footer">
         
-        <hr class="footer-divider">
+        <div class="paginator">
         
-            <a class="tag" href="/tags/software">#software</a>
         
-            <a class="tag" href="/tags/julia">#julia</a>
+        <p>Page 2 of 2</p>
+        <div class="paginator-group">
+            
+            <a class="color-link" href="/">
+                    <svg width="13px" height="9px" viewBox="0 0 13 9" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
+                        <g class="color-arrow" fill="#63BDA2" fill-rule="nonzero">
+                            <polygon id="Path" points="1.75929935 4.50000282 5.3292523 7.62371165 4.6707477 8.37628835 0.240700645 4.49999718 4.67081049 0.623709205 5.32930951 1.37629079"></polygon>
+                            <polygon id="Path" points="13 4 13 5 1 5 1 4"></polygon>
+                        </g>
+                </svg>  
+                Newer          
+            </a>
+            
+            
+        </div>
         
-      
     </div>
-
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
