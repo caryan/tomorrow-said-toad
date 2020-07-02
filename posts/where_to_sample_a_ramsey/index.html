@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no"/>
 
-    <title>software | Tomorrow Said Toad</title>
+    <title>Where to sample a Ramsey experiment | Tomorrow Said Toad</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -28,8 +28,6 @@
     
     
  
-    
-    <link rel="alternate" type="application/rss+xml" href="https://www.colmryan.org/tags/software/index.xml" title="Tomorrow Said Toad" />
     
 <script type="application/javascript">
 var doNotTrack = false;
@@ -153,195 +151,199 @@ if (!doNotTrack) {
         <div id="content" class="content-container">
         
 
-  <h1>Tagged "software"</h1>
-  
-  
+<h1 class="post-title">Where to sample a Ramsey experiment</h1>
     
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/where_to_sample_a_ramsey/">
-                    Where to sample a Ramsey experiment
-                </a>
-            </h2>
-            <div>
-                <p>The tradeoff between sensitivity and shot noise</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>June 30, 2020</time>
-            </div> 
-        </article>
+    <time>June 30, 2020</time>
     
-  
+    <div>
+        <p>
+        <p>Let's take a look at the experimental design problem of choosing the sampling points when  estimating frequency with a Ramsey experiment. The intuitive result is that we should measure at the point of maximum slope to maximize our sensitivity. However, when measuring a qubit we will run into a tradeoff between sensitivity and projection noise. We will work through the surprising result that these two effects perfectly balance such that all sampling points give the same information.</p>
+
+<h1 id="ramsey-sequence">Ramsey Sequence</h1>
+
+<p>A time-domain Ramsey experiment is typically used to measure the frequency (and <span  class="math">\(T_2\)</span>) of a qubit. We start with the qubit in the ground state, apply a <span  class="math">\(X_{90}\)</span> pulse to create a superposition of |0⟩ and |1⟩ with a defined phase, let the superposition evolve for some time <span  class="math">\(t\)</span>, apply a second <span  class="math">\(X_{90}\)</span> to convert the phase of the superposition in a population that can be read out. If the qubit is detuned with respect to the frame of the drive by a frequency <span  class="math">\(f\)</span> then the probability of measuring a |1⟩ goes as <span  class="math">\(\cos(2\pi ft/2)^2\)</span>.</p>
+
+<p>If we convert <span  class="math">\(f\)</span> and <span  class="math">\(t\)</span> to some accumulated phase <span  class="math">\(\theta\)</span> then the idealized Ramsey signal is a simple sinusoid and measuring the sinusoid gives us information about the qubit frequency. Intuitively, to maximize the information gained from the experiment we want to sample at the maximum slope at <span  class="math">\(\theta = \frac{\pi}{2}\)</span> or <span  class="math">\(\theta = \frac{3\pi}{2}\)</span> where small changes in phase lead to large changes in the measurement outcome and vice-versa we do not want to measure at the extrema at 0 or <span  class="math">\(\pi\)</span> where small changes in frequency will change the probability of |1⟩ very little.  And so if we have a good prior for the frequency we should choose our sampling time to give us the maximum sensitivity.</p>
+
+<figure>
+    <img src="ramsey_fringe.svg" width="100%"/> 
+</figure>
+
+
+<p>We can visualize this by adding Gaussian noise on top of the Ramsey fringe sinusoid and looking at the likelihood distribution for <span  class="math">\(\theta\)</span> given we measured the probability of |1⟩ to be <span  class="math">\(x\)</span>. Near the extrema at 0 or 1 the likelihood is broad and so our uncertainty about <span  class="math">\(\theta\)</span> is still large whereas at the points of maximum slope the likelihood is sharply peaked and so we have more more information about <span  class="math">\(\theta\)</span>.</p>
+
+<figure>
+    <img src="likelihood.svg" width="100%"/> 
+</figure>
+
+
+<p>However, if we are measuring a qubit then there is an additional wrinkle: the points of maximum slope come at the 50% probability of |1⟩ when the qubit is left in an equal superposition state. Measuring a qubit gives binary outcomes like coin flips and at this 50% point we have maximum variance in the outcome and so we would expect less information. The information coming from the slope of the Ramsey curve is fighting against the variance from the projection noise. We will show that surprisingly these two effects perfectly cancel out.</p>
+
+<h1 id="fisher-information">Fisher Information</h1>
+
+<p>We will start with some random variable <span  class="math">\(X\)</span> we are measuring that depends on an unknown parameter <span  class="math">\(\theta\)</span> and we are trying to use the measurements of <span  class="math">\(X\)</span> to infer <span  class="math">\(\theta\)</span>. The Fisher information makes concrete the intuition that regions of steep slope or sharp peaks in the output probability versus <span  class="math">\(\theta\)</span> as will have much more information than flat regions. If the probability density/mass function for getting some output <span  class="math">\(x\)</span> given <span  class="math">\(\theta\)</span> is <span  class="math">\(f(x|\theta)\)</span>. then the Fisher information is the variance of the partial derivative of <span  class="math">\(f(x|\theta)\)</span>:</p>
+
+<p><span  class="math">\[
+\mathcal{I(\theta)} = E\left[ \left(\frac{\partial}{\partial\theta} \log f(x|\theta) \right)^2 \right] = \int dx \left( \frac{\partial}{\partial\theta} \log f(x|\theta)\right)^2 f(x|\theta)
+\]</span></p>
+
+<p>If we can take the second derivative then:</p>
+
+<p><span  class="math">\[
+\frac{\partial ^2}{\partial\theta ^2} \log f(x|\theta)
+= \frac{\partial}{\partial\theta} \left( \frac{ \frac{\partial}{\partial\theta } f(x|\theta) } {f(x|\theta)} \right)
+= \frac{\frac{\partial ^2}{\partial\theta ^2} f(x|\theta)}{f(x|\theta)} - \frac{(\frac{\partial}{\partial\theta } f(x|\theta))^2}{f(x|\theta) ^2}
+\]</span></p>
+
+<p>If we then take an expectation value over <span  class="math">\(x\)</span> then the first term vanishes:</p>
+
+<p><span  class="math">\[
+E\left[ \frac{\frac{\partial ^2}{\partial\theta ^2} f(x|\theta)}{f(x|\theta)} \right]
+= \int dx \frac{\frac{\partial ^2}{\partial\theta ^2} f(x|\theta)}{f(x|\theta)} f(x|\theta)
+= \frac{\partial ^2}{\partial\theta ^2} \int dx f(x|\theta)
+= \frac{\partial ^2}{\partial\theta ^2} 1
+= 0
+\]</span></p>
+
+<p>and the second term equals the integrand in <span  class="math">\(\mathcal{I}(\theta)\)</span> as defined above so</p>
+
+<p><span  class="math">\[
+\mathcal{I(\theta)} = -E\left[ \frac{\partial ^2}{\partial\theta ^2} \log f(x|\theta) \right]
+\]</span></p>
+
+<p>This nicely quantifies the intuition above that we are looking for sharply peaked regions of the likelihood.</p>
+
+<h2 id="fisher-information-for-a-bernoulli-trial">Fisher Information for a Bernoulli trial</h2>
+
+<p>Take <span  class="math">\(f(x|\theta)\)</span> to for a Bernouilli trial i.e. the outcomes are either 0 or 1 and the underlying parameter we are trying to estimate, <span  class="math">\(\theta\)</span>, is the probability of getting a 1.</p>
+
+<p><span  class="math">\[
+f(x|\theta) = θ^x (1-θ)^{1-x}
+\]</span></p>
+
+<p>Then</p>
+
+<p><span  class="math">\[
+\begin{aligned}
+\frac{\partial^2}{\partial\theta^2} \log f(x|\theta)
+&= \frac{\partial^2}{\partial\theta^2} \left( x\log\theta + (1-x)\log(1-\theta) \right) \\
+&= -\frac{x}{\theta^2} - \frac{1-x}{(1-\theta)^2}
+\end{aligned}
+\]</span></p>
+
+<p>If we take the expectation value over <span  class="math">\(x\)</span> then this becomes a discrete sum or we can just push the expectation value into <span  class="math">\(E[x] = \theta\)</span> so</p>
+
+<p><span  class="math">\[
+\begin{aligned}
+\mathcal{I}(\theta) &= -E\left[-\frac{x}{\theta^2} - \frac{1-x}{(1-\theta)^2}\right] \\
+&= \frac{E[x]}{\theta^2} - \frac{1-E[x]}{(1-\theta)^2} \\
+&= \frac{1}{\theta} + \frac{1}{1-\theta} \\
+&= \frac{1}{\theta(1-\theta)}
+\end{aligned}
+\]</span></p>
+
+<p>Hence, we expect the Fisher information to go to infinity as θ goes to either 0 or 1 and reaches a minimum of 4 at the 50:50 probability point.</p>
+
+<figure>
+    <img src="fisher_information_bernoulli.svg" width="100%"/> 
+</figure>
+
+
+<h2 id="fisher-information-for-a-sinusoid-with-additive-gaussian-noise">Fisher information for a sinusoid with additive Gaussian noise</h2>
+
+<p>If we go back to a sinusoid with noise independent of <span  class="math">\(\theta\)</span> then we can confirm the original intuition that the most information comes at the slope. If we assume independent Gaussian noise on top of a sinusoid and take <span  class="math">\(N(\mu, \sigma^2)\)</span> to be the normal distribution with mean <span  class="math">\(\mu\)</span> and variance <span  class="math">\(\sigma^2\)</span> then
+<span  class="math">\( f(x|θ) = N(\cos\theta, σ^2) \)</span> and</p>
+
+<p><span  class="math">\[
+\begin{aligned}
+\frac{\partial^2}{\partial\theta^2} \log f(x|\theta)
+&= \frac{\partial^2}{\partial\theta^2} \log \left( \frac{1}{\sigma\sqrt{2\pi}} \exp\left(-\frac{1}{2} \left(\frac{x-\cos\theta}{\sigma}\right)^2 \right) \right) \\
+&= \frac{\partial^2}{\partial\theta^2}\left(\log(\frac{1}{2σ\sqrt{2\pi}}) -\frac{1}{2\sigma^2} \left(x-\cos\theta\right)^2 \right) \\
+&= -\frac{1}{\sigma^2}\frac{\partial}{\partial\theta}\left(\left(x-\cos\theta\right)\sin\theta\right) \\
+&= -\frac{1}{\sigma^2}\left(x\cos\theta - \cos(2\theta) \right)
+\end{aligned}
+\]</span></p>
+
+<p>Then taking the expectation value to get the Fisher information (and using the both that the expectation value of <span  class="math">\(x\)</span> is the mean value <span  class="math">\(\cos\theta\)</span> and the double angle identity)</p>
+
+<p><span  class="math">\[
+\begin{aligned}
+\mathcal{I}(\theta)
+&= -E\left[-\frac{1}{\sigma^2}\left(x\cos\theta - \cos(2\theta) \right)\right] \\
+&= \frac{1}{\sigma^2}\left(E[x]\cos\theta - \cos(2\theta)\right) \\
+&= \frac{1}{\sigma^2}\left(\cos^2\theta - (\cos^2\theta - \sin^2\theta) \right) \\
+&= \frac{1}{\sigma^2}\sin^2\theta
+\end{aligned}
+\]</span></p>
+
+<figure>
+    <img src="fisher_information_sinusoid_gaussian.svg" width="100%"/> 
+</figure>
+
+
+<h1 id="fisher-information-in-a-ramsey-experiment">Fisher Information in a Ramsey Experiment</h1>
+
+<p>Finally we look at the Fisher information for a Bernouilli trial where the success probability (probability of measuring a 1) goes as the Ramsey fringe probability <span  class="math">\(\cos^2\left(\frac{\theta}{2}\right)\)</span> where <span  class="math">\(\theta\)</span> is the accumulated phase during the Ramsey free evolution. Therefore,</p>
+
+<p><span  class="math">\[
+\log f(x|\theta) = x \log \left(\cos^2\left(\frac{\theta}{2}\right)\right) + (1-x)\log\left(1-\cos^2\left(\frac{\theta}{2}\right)\right)
+\]</span></p>
+
+<p>and</p>
+
+<p><span  class="math">\[
+\begin{aligned}
+\frac{\partial^2}{\partial\theta^2} \log f(x|\theta)
+&= \frac{\partial}{\partial\theta}\left[2x\frac{-\frac{1}{2}\sin\left(\frac{\theta}{2}\right)}{\cos\left(\frac{\theta}{2}\right)} + (1-x)\frac{\cos\left(\frac{\theta}{2}\right)\sin\left(\frac{\theta}{2}\right)}{1-\cos^2\left(\frac{\theta}{2}\right)}\right] \\
+&= \frac{\partial}{\partial\theta}\left[-x\tan\left(\frac{\theta}{2}\right) + (1-x)\cot\left(\frac{\theta}{2}\right) \right] \\
+&= \frac{-x}{2\cos^2\left(\frac{\theta}{2}\right)} + \frac{-(1-x)}{2\sin^2\left(\frac{\theta}{2}\right)}
+\end{aligned}
+\]</span></p>
+
+<p>Finally we can evaluate the Fisher information by taking the expectation value over <span  class="math">\(x\)</span> and using the fact that <span  class="math">\(E[x] = \cos^2\left(\frac{\theta}{2}\right)\)</span></p>
+
+<p><span  class="math">\[
+\begin{aligned}
+\mathcal{I}(\theta)
+&= -E\left[ \frac{-x}{2\cos^2\left(\frac{\theta}{2}\right)} + \frac{-(1-x)}{2\sin^2\left(\frac{\theta}{2}\right)} \right] \\
+&= 1
+\end{aligned}
+\]</span></p>
+
+<p>And so we arrive at the surprising result that the contributions to the Fisher information from the sinusoid and Bernoulli terms perfectly cancel leaving a constant Fisher information. Of course this is only for the case of perfect projection noise. In some experiments with low single shot readout fidelity there will be a mixture of Gaussian and projection noise and there will be an advantage to optimizing the sampling.</p>
+
+<figure>
+    <img src="fisher_information_sinusoid_projection.svg" width="100%"/> 
+</figure>
+
+
+<h1 id="julia-notebook">Julia Notebook</h1>
+
+<p>Calculating the Fisher information requires taking derivatives of the log-likelihood and so it was a fun excuse to use the <a href="https://github.com/FluxML/Zygote.jl">Zygote.jl</a> automatic differentiation package in Julia. I was impressed that with <a href="https://github.com/JuliaStats/Distributions.jl">Distributions.jl</a> augmented with <a href="https://github.com/TuringLang/DistributionsAD.jl">DistributionsAD.jl</a> I could easily take derivatives of the <code>logpdf</code> of a distribution. The notebook has a function for numerically calculating the Fisher information and generates the plots above.</p>
+
+<p><a href="https://nbviewer.jupyter.org/gist/caryan/75f6b0d48472de2a610b0a2d50510a25">nbviewer with plots</a></p>
+
+<script type="application/javascript" src="https://gist.github.com/caryan/75f6b0d48472de2a610b0a2d50510a25.js"></script>
+
+
+        </p>
+    </div>
     
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/pylint_to_codeclimate/">
-                    pylint to CodeClimate converter
-                </a>
-            </h2>
-            <div>
-                <p>A little helper function to get nice code quality reports in Gitlab</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>June 22, 2020</time>
-            </div> 
-        </article>
+
     
-  
-    
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/python_function_call_overhead/">
-                    Python function call overhead
-                </a>
-            </h2>
-            <div>
-                <p>Measuring function call overhead from Python 2.7 to 3.8</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>June 17, 2020</time>
-            </div> 
-        </article>
-    
-  
-    
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/quantum_optimal_control_diffeqflux/">
-                    Quantum Optimal Control with SciML
-                </a>
-            </h2>
-            <div>
-                <p>Using SciML and Julia for numerical optimized pulse shapes.</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>June 9, 2020</time>
-            </div> 
-        </article>
-    
-  
-    
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/no-init-in-ubuntu-18.04-base/">
-                    No init system on Ubuntu 18.04 base
-                </a>
-            </h2>
-            <div>
-                <p>Restoring an init system to an Ubuntu 18.04 minimal image</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>February 10, 2020</time>
-            </div> 
-        </article>
-    
-  
-    
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/savitsky_golay/">
-                    Two approaches to Savitsky-Golay filtering
-                </a>
-            </h2>
-            <div>
-                <p>Comparing matrix inversion and Gram polynomial approaches to Savitsky-Golay filtering.</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>November 30, 2019</time>
-            </div> 
-        </article>
-    
-  
-    
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/asyncio-socket-pool/">
-                    Asyncio Socket Pool
-                </a>
-            </h2>
-            <div>
-                <p>A socket pool with Python&rsquo;s asyncio</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>August 12, 2019</time>
-            </div> 
-        </article>
-    
-  
-    
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/reflection_function_kwargs_julia/">
-                    Reflection to discover function keyword arguments in Julia
-                </a>
-            </h2>
-            <div>
-                <p>Extracting named keyword arguments from a function in Julia</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>January 12, 2017</time>
-            </div> 
-        </article>
-    
-  
-    
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/asyncio-realtime-dsp/">
-                    asyncio real-time signal processing
-                </a>
-            </h2>
-            <div>
-                <p>Using Python&rsquo;s asyncio for real-time signal processing</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>September 20, 2015</time>
-            </div> 
-        </article>
-    
-  
-    
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/bitfield-nicieties-in-python/">
-                    Bitfield nicities in Python
-                </a>
-            </h2>
-            <div>
-                <p>Using metaprogamming to make bitfields easy in Python</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>January 1, 0001</time>
-            </div> 
-        </article>
-    
-  
-    
-    <article>
-            <h2>
-                <a href="https://www.colmryan.org/posts/variant-calls-with-gatk/">
-                    Variant calls with GATK
-                </a>
-            </h2>
-            <div>
-                <p>Setting up a variant calling pipeline</p>
-                
-            </div>
-            <div class="post-footer">
-            <time>January 1, 0001</time>
-            </div> 
-        </article>
-    
+
+    <div class="page-footer">
+        
+        <hr class="footer-divider">
+        
+            <a class="tag" href="/tags/information-theory">#information theory</a>
+        
+            <a class="tag" href="/tags/software">#software</a>
+        
+            <a class="tag" href="/tags/julia">#julia</a>
+        
+      
+    </div>
 
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">

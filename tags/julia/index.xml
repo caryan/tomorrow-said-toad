@@ -6,10 +6,19 @@
     <description>Recent content in julia on Tomorrow Said Toad</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 09 Jun 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 30 Jun 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://www.colmryan.org/tags/julia/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Where to sample a Ramsey experiment</title>
+      <link>https://www.colmryan.org/posts/where_to_sample_a_ramsey/</link>
+      <pubDate>Tue, 30 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.colmryan.org/posts/where_to_sample_a_ramsey/</guid>
+      <description>The tradeoff between sensitivity and shot noise</description>
+    </item>
     
     <item>
       <title>Quantum Optimal Control with SciML</title>

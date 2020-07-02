@@ -6,10 +6,37 @@
     <description>Recent content in Tags on Tomorrow Said Toad</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 22 Jun 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 30 Jun 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://www.colmryan.org/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>information theory</title>
+      <link>https://www.colmryan.org/tags/information-theory/</link>
+      <pubDate>Tue, 30 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.colmryan.org/tags/information-theory/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>julia</title>
+      <link>https://www.colmryan.org/tags/julia/</link>
+      <pubDate>Tue, 30 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.colmryan.org/tags/julia/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>software</title>
+      <link>https://www.colmryan.org/tags/software/</link>
+      <pubDate>Tue, 30 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.colmryan.org/tags/software/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>CI</title>
@@ -26,24 +53,6 @@
       <pubDate>Mon, 22 Jun 2020 00:00:00 +0000</pubDate>
       
       <guid>https://www.colmryan.org/tags/python/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>software</title>
-      <link>https://www.colmryan.org/tags/software/</link>
-      <pubDate>Mon, 22 Jun 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.colmryan.org/tags/software/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>julia</title>
-      <link>https://www.colmryan.org/tags/julia/</link>
-      <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.colmryan.org/tags/julia/</guid>
       <description></description>
     </item>
     
