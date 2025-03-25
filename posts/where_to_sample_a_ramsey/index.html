@@ -1,260 +1,149 @@
 <!DOCTYPE html>
+<html><head lang="en">
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Where to sample a Ramsey experiment - Tomorrow Said Toad</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="The tradeoff between sensitivity and shot noise" />
+	<meta property="og:image" content=""/>
+	<meta property="og:url" content="https://www.colmryan.org/posts/where_to_sample_a_ramsey/">
+  <meta property="og:site_name" content="Tomorrow Said Toad">
+  <meta property="og:title" content="Where to sample a Ramsey experiment">
+  <meta property="og:description" content="The tradeoff between sensitivity and shot noise">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-06-30T00:00:00+00:00">
+    <meta property="article:modified_time" content="2020-06-30T00:00:00+00:00">
+    <meta property="article:tag" content="Information Theory">
+    <meta property="article:tag" content="Software">
+    <meta property="article:tag" content="Julia">
 
-<html lang="en-us">
-    <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="format-detection" content="telephone=no"/>
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Where to sample a Ramsey experiment">
+  <meta name="twitter:description" content="The tradeoff between sensitivity and shot noise">
 
-    <title>Where to sample a Ramsey experiment | Tomorrow Said Toad</title>
-    
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#FF3DB4">
-    <meta name="theme-color" content="#ffffff">
-
-    
-    
-    
-    <link rel="stylesheet" href="https://www.colmryan.org/css/main.min.975b1911c008aee6ab5fb42e51274b8268ebcb65dc15bd4a5f69b9eedb485c3e.css"/>
-
-    
-    
-    
-
-    
-    
- 
-    
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-158537342-1', 'auto');
+        <link href="https://www.colmryan.org/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css" rel="stylesheet">
 	
-	ga('send', 'pageview');
-}
-</script>
-</head>
 
-    <body>
-        
-<nav>
-  <header>
-    <div class="site-title">
-        <a href="/">Tomorrow Said Toad</a>
-    </div>  
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="https://www.colmryan.org/css/main.6a0f23ea50fd34b46fee262a5a68e17d458c51a2bc99ba1ba018065de6b180c3.css" />
+		<link id="darkModeStyle" rel="stylesheet" type="text/css" href="https://www.colmryan.org/css/dark.50b57e12d401420df23965fed157368aba37b76df0ecefd0b1ecd4da664f01a0.css" media="(prefers-color-scheme: dark)"  /><script type="text/javascript"
+		src="https://www.colmryan.org/js/MathJax.js"></script>
+		
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({
+			tex2jax: {
+				inlineMath: [['$','$'], ['\\(','\\)']],
+				displayMath: [['$$','$$'], ['\[','\]']],
+				processEscapes: true,
+				processEnvironments: true,
+				skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+				TeX: { equationNumbers: { autoNumber: "AMS" },
+						 extensions: ["AMSmath.js", "AMSsymbols.js"] }
+			}
+		});
+		</script><link rel="stylesheet" href="https://www.colmryan.org/katex/katex.min.css ">
+		<script defer src="https://www.colmryan.org/katex/katex.min.js"></script>
+		<script defer src="https://www.colmryan.org/katex/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+		
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+					renderMathInElement(document.body, {
+							delimiters: [
+									{left: "$$", right: "$$", display: true},
+									{left: "$", right: "$", display: false}
+							]
+					});
+			});
+		</script>
+</head>
+<body>
+        <div class="content"><header>
+	<div class="main">
+		<a href="https://www.colmryan.org/">Tomorrow Said Toad</a>
+	</div>
+	<nav>
+		
+		<a href="/">Home</a>
+		
+		<a href="/posts">All posts</a>
+		
+		<a href="/about">About</a>
+		
+		<a href="/tags">Tags</a>
+		
+		
+	</nav>
 </header>
 
-  <div class="nav-menu">
-  
-  <a class="color-link nav-link" href="https://www.colmryan.org/index.xml" target="_blank" rel="noopener" type="application/rss+xml">RSS</a>
-</div>
-<footer class="footer">
-	<div class="social-icons">
+<main>
+  <article>
+    <div class="post-container">
+      
+      <div class="post-content">
+        <div class="title">
+          <h1 class="title">Where to sample a Ramsey experiment</h1>
+          <div class="meta">Posted on Jun 30, 2020</div>
+        </div>
         
-    <a class="social-icon" href="mailto:colm@colmryan.org" target="_blank" rel="noopener" title="Email">
-        <svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" fill="#ABABAB" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
-            <path d="M25.2794292,5.59128519 L14,16.8707144 L2.72057081,5.59128519 C3.06733103,5.30237414 3.51336915,5.12857603 4,5.12857603 L24,5.12857603 C24.4866308,5.12857603 24.932669,5.30237414 25.2794292,5.59128519 Z M25.9956978,6.99633695 C25.998551,7.04004843 26,7.08414302 26,7.12857603 L26,20.871424 C26,21.0798433 25.9681197,21.2808166 25.9089697,21.4697335 L18.7156355,14.2763993 L25.9956978,6.99633695 Z M24.9498374,22.6319215 C24.6672737,22.7846939 24.3437653,22.871424 24,22.871424 L4,22.871424 C3.5268522,22.871424 3.09207889,22.7071233 2.74962118,22.432463 L10.0950247,15.0870594 L13.9848068,18.9768415 L14.1878486,18.7737996 L14.2030419,18.7889929 L17.6549753,15.3370594 L24.9498374,22.6319215 Z M2.00810114,21.0526627 C2.00273908,20.9929669 2,20.9325153 2,20.871424 L2,7.12857603 C2,7.08414302 2.00144896,7.04004843 2.00430222,6.99633695 L9.03436454,14.0263993 L2.00810114,21.0526627 Z"></path>
-        </svg>
-    </a>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <a class="social-icon" href="https://www.linkedin.com/in/colm-ryan-660687113" target="_blank" rel="noopener" title="LinkedIn">
-        <svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" fill="#ABABAB" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
-            <path d="M2,3.654102 C2,2.69908141 2.79442509,1.92397846 3.77383592,1.92397846 L24.2261641,1.92397846 C25.2058917,1.92397846 26,2.69908141 26,3.654102 L26,24.3462148 C26,25.3015521 25.2058917,26.0760215 24.2261641,26.0760215 L3.77383592,26.0760215 C2.79442509,26.0760215 2,25.3015521 2,24.3465315 L2,3.65378524 L2,3.654102 Z M9.27526132,22.1415901 L9.27526132,11.2356668 L5.65030092,11.2356668 L5.65030092,22.1415901 L9.27557808,22.1415901 L9.27526132,22.1415901 Z M7.46341463,9.74691162 C8.72727273,9.74691162 9.51409566,8.90940767 9.51409566,7.86284447 C9.49033893,6.79252455 8.72727273,5.97846056 7.48748812,5.97846056 C6.24675325,5.97846056 5.43649034,6.79252455 5.43649034,7.86284447 C5.43649034,8.90940767 6.22299652,9.74691162 7.4396579,9.74691162 L7.46309788,9.74691162 L7.46341463,9.74691162 Z M11.2815965,22.1415901 L14.9062401,22.1415901 L14.9062401,16.0519481 C14.9062401,15.7263225 14.9299968,15.4000634 15.0256573,15.1675641 C15.2876148,14.5159962 15.8840672,13.8416218 16.8856509,13.8416218 C18.1970225,13.8416218 18.7218879,14.8416218 18.7218879,16.3078872 L18.7218879,22.1415901 L22.3465315,22.1415901 L22.3465315,15.8885017 C22.3465315,12.5388027 20.5584416,10.9800443 18.1735825,10.9800443 C16.2182452,10.9800443 15.3595185,12.072854 14.8824834,12.8172315 L14.9065569,12.8172315 L14.9065569,11.2359835 L11.2819132,11.2359835 C11.3291099,12.2591067 11.2815965,22.1419069 11.2815965,22.1419069 L11.2815965,22.1415901 Z"></path>
-        </svg>
-    </a>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    <a class="social-icon" href="https://github.com/caryan/" target="_blank" rel="noopener" title="GitHub">
-        <svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" fill="#ABABAB" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
-            <path d="M13.9988029,1.32087331 C6.82105037,1.32087331 1,7.14112562 1,14.3212723 C1,20.0649109 4.72454649,24.9370678 9.89038951,26.6560892 C10.5408085,26.7757983 10.7778323,26.374374 10.7778323,26.0296121 C10.7778323,25.7215609 10.7666595,24.9035493 10.760275,23.8189856 C7.14426471,24.6042767 6.38131925,22.0760223 6.38131925,22.0760223 C5.78995672,20.5740732 4.93762853,20.1742451 4.93762853,20.1742451 C3.75729765,19.3682044 5.02701126,19.3841656 5.02701126,19.3841656 C6.33183953,19.4759425 7.01817121,20.7241085 7.01817121,20.7241085 C8.17775254,22.7104801 10.0611744,22.1366749 10.8017741,21.8038838 C10.919887,20.9643246 11.2558703,20.3913175 11.6269683,20.066507 C8.74038491,19.7385043 5.70536235,18.6228163 5.70536235,13.6413251 C5.70536235,12.2223743 6.21213051,11.0611968 7.04370914,10.1530044 C6.90963504,9.82420367 6.46351945,8.50181809 7.17139875,6.71256734 C7.17139875,6.71256734 8.26234691,6.36301702 10.7459099,8.04532771 C11.78259,7.75642995 12.8950858,7.61277914 14.000399,7.60719272 C15.1049142,7.61277914 16.2166119,7.75642995 17.2548881,8.04532771 C19.736855,6.36301702 20.8262071,6.71256734 20.8262071,6.71256734 C21.5356825,8.50181809 21.0895669,9.82420367 20.9562909,10.1530044 C21.7894656,11.0611968 22.2922435,12.2223743 22.2922435,13.6413251 C22.2922435,18.6355852 19.2524325,19.734514 16.3570705,20.0561322 C16.8231376,20.4575564 17.2389269,21.2508282 17.2389269,22.4638795 C17.2389269,24.2012564 17.2229657,25.603448 17.2229657,26.0296121 C17.2229657,26.3775663 17.4575954,26.7821827 18.116793,26.6552912 C23.2786458,24.9322794 27,20.0633148 27,14.3212723 C27,7.14112562 21.1789496,1.32087331 13.9988029,1.32087331"></path>
-        </svg>
-    </a>
-    
-
-    
-    
-    
-    <a class="social-icon" href="https://gitlab.com/caryan" target="_blank" rel="noopener" title="GitLab">
-        <svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" fill="#ABABAB" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
-            <path d="M25.8928355,15.330615 L24.6377766,11.4743798 C24.6311235,11.4388709 24.6209558,11.4041117 24.6074237,11.370615 L22.0895413,3.62002681 C21.9519499,3.20985323 21.5664025,2.9345029 21.1337766,2.93743857 C20.7020628,2.93482083 20.3190624,3.21391308 20.189306,3.62567387 L17.789306,11.0113209 L10.2144825,11.0113209 L7.8109531,3.62567387 C7.68166096,3.2154114 7.3008703,2.9366795 6.8707178,2.93743857 L6.86507074,2.93743857 C6.43207772,2.9375139 6.04793469,3.21523509 5.91212957,3.62637975 L3.39212957,11.3861445 C3.39212957,11.3932033 3.38648251,11.3988503 3.38436486,11.4059092 L2.1067178,15.3313209 C1.91410826,15.9219503 2.1242249,16.569406 2.6269531,16.9343798 L13.6655413,24.9553209 C13.8649064,25.0996309 14.1347733,25.098203 14.3326002,24.9517915 L25.373306,16.9343798 C25.8762704,16.5692556 26.0861711,15.9213012 25.8928355,15.330615 M9.39283545,12.144968 L12.4697766,21.6150856 L5.08342369,12.144968 M15.5340119,21.6172033 L18.4846002,12.5381445 L18.611659,12.144968 L22.9246002,12.144968 L16.2420119,20.7059092 M21.143659,4.35273269 L23.3057766,11.0113209 L18.9780119,11.0113209 M17.4229531,12.1407327 L15.2791884,18.7379092 L14.0001296,22.6668503 L10.5822472,12.1407327 M6.86012957,4.35273269 L9.02648251,11.0113209 L4.70154133,11.0113209 M3.29118839,16.020968 C3.18436061,15.9432767 3.13987047,15.8055284 3.18107074,15.6800268 L4.12977663,12.7647327 L11.087659,21.684968 M24.7097766,16.020968 L16.9126002,21.6828503 L16.9387178,21.648968 L23.8704825,12.7647327 L24.8191884,15.678615 C24.8608813,15.8041731 24.8166519,15.9422827 24.7097766,16.0202621"></path>
-        </svg>
-    </a>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-</div>
-
-
-
-
-	<p><a href="https://github.com/kimcc/hugo-theme-noteworthy" target="_blank" rel="noopener">Noteworthy theme</a></p>
-	<p><a href="https://gohugo.io" target="_blank" rel="noopener">Built with Hugo</a></p>
-
-	<script src="https://www.colmryan.org/js/main.min.fa5c2b23e07b5d9bfad267a52b4b24fdb053e6fb7524993383594926a3ac270c.js" integrity="sha256-+lwrI+B7XZv60melK0sk/bBT5vt1JJkzg1lJJqOsJww=" crossorigin="anonymous"></script>
-</footer>
-</nav>
-
-        <div id="content" class="content-container">
-        
-
-<h1 class="post-title">Where to sample a Ramsey experiment</h1>
-    
-    <time>June 30, 2020</time>
-    
-    <div>
-        <p>
-        <p>Let's take a look at the experimental design problem of choosing the sampling points when  estimating frequency with a Ramsey experiment. The intuitive result is that we should measure at the point of maximum slope to maximize our sensitivity. However, when measuring a qubit we will run into a tradeoff between sensitivity and projection noise. We will work through the surprising result that these two effects perfectly balance such that all sampling points give the same information.</p>
-
+        <section class="body">
+          <p>Let&rsquo;s take a look at the experimental design problem of choosing the sampling points when  estimating frequency with a Ramsey experiment. The intuitive result is that we should measure at the point of maximum slope to maximize our sensitivity. However, when measuring a qubit we will run into a tradeoff between sensitivity and projection noise. We will work through the surprising result that these two effects perfectly balance such that all sampling points give the same information.</p>
 <h1 id="ramsey-sequence">Ramsey Sequence</h1>
-
-<p>A time-domain Ramsey experiment is typically used to measure the frequency (and <span  class="math">\(T_2\)</span>) of a qubit. We start with the qubit in the ground state, apply a <span  class="math">\(X_{90}\)</span> pulse to create a superposition of |0⟩ and |1⟩ with a defined phase, let the superposition evolve for some time <span  class="math">\(t\)</span>, apply a second <span  class="math">\(X_{90}\)</span> to convert the phase of the superposition in a population that can be read out. If the qubit is detuned with respect to the frame of the drive by a frequency <span  class="math">\(f\)</span> then the probability of measuring a |1⟩ goes as <span  class="math">\(\cos(2\pi ft/2)^2\)</span>.</p>
-
-<p>If we convert <span  class="math">\(f\)</span> and <span  class="math">\(t\)</span> to some accumulated phase <span  class="math">\(\theta\)</span> then the idealized Ramsey signal is a simple sinusoid and measuring the sinusoid gives us information about the qubit frequency. Intuitively, to maximize the information gained from the experiment we want to sample at the maximum slope at <span  class="math">\(\theta = \frac{\pi}{2}\)</span> or <span  class="math">\(\theta = \frac{3\pi}{2}\)</span> where small changes in phase lead to large changes in the measurement outcome and vice-versa we do not want to measure at the extrema at 0 or <span  class="math">\(\pi\)</span> where small changes in frequency will change the probability of |1⟩ very little.  And so if we have a good prior for the frequency we should choose our sampling time to give us the maximum sensitivity.</p>
-
-<figure>
-    <img src="ramsey_fringe.svg" width="100%"/> 
+<p>A time-domain Ramsey experiment is typically used to measure the frequency (and \(T_2\)) of a qubit. We start with the qubit in the ground state, apply a \(X_{90}\) pulse to create a superposition of |0⟩ and |1⟩ with a defined phase, let the superposition evolve for some time \(t\), apply a second \(X_{90}\) to convert the phase of the superposition in a population that can be read out. If the qubit is detuned with respect to the frame of the drive by a frequency \(f\) then the probability of measuring a |1⟩ goes as \(\cos(2\pi ft/2)^2\).</p>
+<p>If we convert \(f\) and \(t\) to some accumulated phase \(\theta\) then the idealized Ramsey signal is a simple sinusoid and measuring the sinusoid gives us information about the qubit frequency. Intuitively, to maximize the information gained from the experiment we want to sample at the maximum slope at \(\theta = \frac{\pi}{2}\) or \(\theta = \frac{3\pi}{2}\) where small changes in phase lead to large changes in the measurement outcome and vice-versa we do not want to measure at the extrema at 0 or \(\pi\) where small changes in frequency will change the probability of |1⟩ very little.  And so if we have a good prior for the frequency we should choose our sampling time to give us the maximum sensitivity.</p>
+<figure><img src="/posts/where_to_sample_a_ramsey/ramsey_fringe.svg" width="100%">
 </figure>
 
-
-<p>We can visualize this by adding Gaussian noise on top of the Ramsey fringe sinusoid and looking at the likelihood distribution for <span  class="math">\(\theta\)</span> given we measured the probability of |1⟩ to be <span  class="math">\(x\)</span>. Near the extrema at 0 or 1 the likelihood is broad and so our uncertainty about <span  class="math">\(\theta\)</span> is still large whereas at the points of maximum slope the likelihood is sharply peaked and so we have more more information about <span  class="math">\(\theta\)</span>.</p>
-
-<figure>
-    <img src="likelihood.svg" width="100%"/> 
+<p>We can visualize this by adding Gaussian noise on top of the Ramsey fringe sinusoid and looking at the likelihood distribution for \(\theta\) given we measured the probability of |1⟩ to be \(x\). Near the extrema at 0 or 1 the likelihood is broad and so our uncertainty about \(\theta\) is still large whereas at the points of maximum slope the likelihood is sharply peaked and so we have more more information about \(\theta\).</p>
+<figure><img src="/posts/where_to_sample_a_ramsey/likelihood.svg" width="100%">
 </figure>
-
 
 <p>However, if we are measuring a qubit then there is an additional wrinkle: the points of maximum slope come at the 50% probability of |1⟩ when the qubit is left in an equal superposition state. Measuring a qubit gives binary outcomes like coin flips and at this 50% point we have maximum variance in the outcome and so we would expect less information. The information coming from the slope of the Ramsey curve is fighting against the variance from the projection noise. We will show that surprisingly these two effects perfectly cancel out.</p>
-
 <h1 id="fisher-information">Fisher Information</h1>
-
-<p>We will start with some random variable <span  class="math">\(X\)</span> we are measuring that depends on an unknown parameter <span  class="math">\(\theta\)</span> and we are trying to use the measurements of <span  class="math">\(X\)</span> to infer <span  class="math">\(\theta\)</span>. The Fisher information makes concrete the intuition that regions of steep slope or sharp peaks in the output probability versus <span  class="math">\(\theta\)</span> as will have much more information than flat regions. If the probability density/mass function for getting some output <span  class="math">\(x\)</span> given <span  class="math">\(\theta\)</span> is <span  class="math">\(f(x|\theta)\)</span>. then the Fisher information is the variance of the partial derivative of <span  class="math">\(f(x|\theta)\)</span>:</p>
-
-<p><span  class="math">\[
+<p>We will start with some random variable \(X\) we are measuring that depends on an unknown parameter \(\theta\) and we are trying to use the measurements of \(X\) to infer \(\theta\). The Fisher information makes concrete the intuition that regions of steep slope or sharp peaks in the output probability versus \(\theta\) as will have much more information than flat regions. If the probability density/mass function for getting some output \(x\) given \(\theta\) is \(f(x|\theta)\). then the Fisher information is the variance of the partial derivative of \(f(x|\theta)\):</p>
+$$
 \mathcal{I(\theta)} = E\left[ \left(\frac{\partial}{\partial\theta} \log f(x|\theta) \right)^2 \right] = \int dx \left( \frac{\partial}{\partial\theta} \log f(x|\theta)\right)^2 f(x|\theta)
-\]</span></p>
-
-<p>If we can take the second derivative then:</p>
-
-<p><span  class="math">\[
+$$<p>If we can take the second derivative then:</p>
+$$
 \frac{\partial ^2}{\partial\theta ^2} \log f(x|\theta)
 = \frac{\partial}{\partial\theta} \left( \frac{ \frac{\partial}{\partial\theta } f(x|\theta) } {f(x|\theta)} \right)
 = \frac{\frac{\partial ^2}{\partial\theta ^2} f(x|\theta)}{f(x|\theta)} - \frac{(\frac{\partial}{\partial\theta } f(x|\theta))^2}{f(x|\theta) ^2}
-\]</span></p>
-
-<p>If we then take an expectation value over <span  class="math">\(x\)</span> then the first term vanishes:</p>
-
-<p><span  class="math">\[
+$$<p>If we then take an expectation value over \(x\) then the first term vanishes:</p>
+$$
 E\left[ \frac{\frac{\partial ^2}{\partial\theta ^2} f(x|\theta)}{f(x|\theta)} \right]
 = \int dx \frac{\frac{\partial ^2}{\partial\theta ^2} f(x|\theta)}{f(x|\theta)} f(x|\theta)
 = \frac{\partial ^2}{\partial\theta ^2} \int dx f(x|\theta)
 = \frac{\partial ^2}{\partial\theta ^2} 1
 = 0
-\]</span></p>
-
-<p>and the second term equals the integrand in <span  class="math">\(\mathcal{I}(\theta)\)</span> as defined above so</p>
-
-<p><span  class="math">\[
+$$<p>and the second term equals the integrand in \(\mathcal{I}(\theta)\) as defined above so</p>
+$$
 \mathcal{I(\theta)} = -E\left[ \frac{\partial ^2}{\partial\theta ^2} \log f(x|\theta) \right]
-\]</span></p>
-
-<p>This nicely quantifies the intuition above that we are looking for sharply peaked regions of the likelihood.</p>
-
+$$<p>This nicely quantifies the intuition above that we are looking for sharply peaked regions of the likelihood.</p>
 <h2 id="fisher-information-for-a-bernoulli-trial">Fisher Information for a Bernoulli trial</h2>
-
-<p>Take <span  class="math">\(f(x|\theta)\)</span> to for a Bernouilli trial i.e. the outcomes are either 0 or 1 and the underlying parameter we are trying to estimate, <span  class="math">\(\theta\)</span>, is the probability of getting a 1.</p>
-
-<p><span  class="math">\[
+<p>Take \(f(x|\theta)\) to for a Bernouilli trial i.e. the outcomes are either 0 or 1 and the underlying parameter we are trying to estimate, \(\theta\), is the probability of getting a 1.</p>
+$$
 f(x|\theta) = θ^x (1-θ)^{1-x}
-\]</span></p>
-
-<p>Then</p>
-
-<p><span  class="math">\[
+$$<p>Then</p>
+$$
 \begin{aligned}
 \frac{\partial^2}{\partial\theta^2} \log f(x|\theta)
 &= \frac{\partial^2}{\partial\theta^2} \left( x\log\theta + (1-x)\log(1-\theta) \right) \\
 &= -\frac{x}{\theta^2} - \frac{1-x}{(1-\theta)^2}
 \end{aligned}
-\]</span></p>
-
-<p>If we take the expectation value over <span  class="math">\(x\)</span> then this becomes a discrete sum or we can just push the expectation value into <span  class="math">\(E[x] = \theta\)</span> so</p>
-
-<p><span  class="math">\[
+$$<p>If we take the expectation value over \(x\) then this becomes a discrete sum or we can just push the expectation value into \(E[x] = \theta\) so</p>
+$$
 \begin{aligned}
 \mathcal{I}(\theta) &= -E\left[-\frac{x}{\theta^2} - \frac{1-x}{(1-\theta)^2}\right] \\
 &= \frac{E[x]}{\theta^2} - \frac{1-E[x]}{(1-\theta)^2} \\
 &= \frac{1}{\theta} + \frac{1}{1-\theta} \\
 &= \frac{1}{\theta(1-\theta)}
 \end{aligned}
-\]</span></p>
-
-<p>Hence, we expect the Fisher information to go to infinity as θ goes to either 0 or 1 and reaches a minimum of 4 at the 50:50 probability point.</p>
-
-<figure>
-    <img src="fisher_information_bernoulli.svg" width="100%"/> 
+$$<p>Hence, we expect the Fisher information to go to infinity as θ goes to either 0 or 1 and reaches a minimum of 4 at the 50:50 probability point.</p>
+<figure><img src="/posts/where_to_sample_a_ramsey/fisher_information_bernoulli.svg" width="100%">
 </figure>
 
-
 <h2 id="fisher-information-for-a-sinusoid-with-additive-gaussian-noise">Fisher information for a sinusoid with additive Gaussian noise</h2>
-
-<p>If we go back to a sinusoid with noise independent of <span  class="math">\(\theta\)</span> then we can confirm the original intuition that the most information comes at the slope. If we assume independent Gaussian noise on top of a sinusoid and take <span  class="math">\(N(\mu, \sigma^2)\)</span> to be the normal distribution with mean <span  class="math">\(\mu\)</span> and variance <span  class="math">\(\sigma^2\)</span> then
-<span  class="math">\( f(x|θ) = N(\cos\theta, σ^2) \)</span> and</p>
-
-<p><span  class="math">\[
+<p>If we go back to a sinusoid with noise independent of \(\theta\) then we can confirm the original intuition that the most information comes at the slope. If we assume independent Gaussian noise on top of a sinusoid and take \(N(\mu, \sigma^2)\) to be the normal distribution with mean \(\mu\) and variance \(\sigma^2\) then \(f(x|θ) = N(\cos\theta, σ^2)\) and</p>
+$$
 \begin{aligned}
 \frac{\partial^2}{\partial\theta^2} \log f(x|\theta)
 &= \frac{\partial^2}{\partial\theta^2} \log \left( \frac{1}{\sigma\sqrt{2\pi}} \exp\left(-\frac{1}{2} \left(\frac{x-\cos\theta}{\sigma}\right)^2 \right) \right) \\
@@ -262,11 +151,8 @@ f(x|\theta) = θ^x (1-θ)^{1-x}
 &= -\frac{1}{\sigma^2}\frac{\partial}{\partial\theta}\left(\left(x-\cos\theta\right)\sin\theta\right) \\
 &= -\frac{1}{\sigma^2}\left(x\cos\theta - \cos(2\theta) \right)
 \end{aligned}
-\]</span></p>
-
-<p>Then taking the expectation value to get the Fisher information (and using the both that the expectation value of <span  class="math">\(x\)</span> is the mean value <span  class="math">\(\cos\theta\)</span> and the double angle identity)</p>
-
-<p><span  class="math">\[
+$$<p>Then taking the expectation value to get the Fisher information (and using the both that the expectation value of \(x\) is the mean value \(\cos\theta\) and the double angle identity)</p>
+$$
 \begin{aligned}
 \mathcal{I}(\theta)
 &= -E\left[-\frac{1}{\sigma^2}\left(x\cos\theta - \cos(2\theta) \right)\right] \\
@@ -274,176 +160,80 @@ f(x|\theta) = θ^x (1-θ)^{1-x}
 &= \frac{1}{\sigma^2}\left(\cos^2\theta - (\cos^2\theta - \sin^2\theta) \right) \\
 &= \frac{1}{\sigma^2}\sin^2\theta
 \end{aligned}
-\]</span></p>
-
-<figure>
-    <img src="fisher_information_sinusoid_gaussian.svg" width="100%"/> 
+$$<figure><img src="/posts/where_to_sample_a_ramsey/fisher_information_sinusoid_gaussian.svg" width="100%">
 </figure>
 
-
 <h1 id="fisher-information-in-a-ramsey-experiment">Fisher Information in a Ramsey Experiment</h1>
-
-<p>Finally we look at the Fisher information for a Bernouilli trial where the success probability (probability of measuring a 1) goes as the Ramsey fringe probability <span  class="math">\(\cos^2\left(\frac{\theta}{2}\right)\)</span> where <span  class="math">\(\theta\)</span> is the accumulated phase during the Ramsey free evolution. Therefore,</p>
-
-<p><span  class="math">\[
+<p>Finally we look at the Fisher information for a Bernouilli trial where the success probability (probability of measuring a 1) goes as the Ramsey fringe probability \(\cos^2\left(\frac{\theta}{2}\right)\) where \(\theta\) is the accumulated phase during the Ramsey free evolution. Therefore,</p>
+$$
 \log f(x|\theta) = x \log \left(\cos^2\left(\frac{\theta}{2}\right)\right) + (1-x)\log\left(1-\cos^2\left(\frac{\theta}{2}\right)\right)
-\]</span></p>
-
-<p>and</p>
-
-<p><span  class="math">\[
+$$<p>and</p>
+$$
 \begin{aligned}
 \frac{\partial^2}{\partial\theta^2} \log f(x|\theta)
 &= \frac{\partial}{\partial\theta}\left[2x\frac{-\frac{1}{2}\sin\left(\frac{\theta}{2}\right)}{\cos\left(\frac{\theta}{2}\right)} + (1-x)\frac{\cos\left(\frac{\theta}{2}\right)\sin\left(\frac{\theta}{2}\right)}{1-\cos^2\left(\frac{\theta}{2}\right)}\right] \\
 &= \frac{\partial}{\partial\theta}\left[-x\tan\left(\frac{\theta}{2}\right) + (1-x)\cot\left(\frac{\theta}{2}\right) \right] \\
 &= \frac{-x}{2\cos^2\left(\frac{\theta}{2}\right)} + \frac{-(1-x)}{2\sin^2\left(\frac{\theta}{2}\right)}
 \end{aligned}
-\]</span></p>
-
-<p>Finally we can evaluate the Fisher information by taking the expectation value over <span  class="math">\(x\)</span> and using the fact that <span  class="math">\(E[x] = \cos^2\left(\frac{\theta}{2}\right)\)</span></p>
-
-<p><span  class="math">\[
+$$<p>Finally we can evaluate the Fisher information by taking the expectation value over \(x\) and using the fact that \(E[x] = \cos^2\left(\frac{\theta}{2}\right)\)</p>
+$$
 \begin{aligned}
 \mathcal{I}(\theta)
 &= -E\left[ \frac{-x}{2\cos^2\left(\frac{\theta}{2}\right)} + \frac{-(1-x)}{2\sin^2\left(\frac{\theta}{2}\right)} \right] \\
 &= 1
 \end{aligned}
-\]</span></p>
-
-<p>And so we arrive at the surprising result that the contributions to the Fisher information from the sinusoid and Bernoulli terms perfectly cancel leaving a constant Fisher information. Of course this is only for the case of perfect projection noise. In some experiments with low single shot readout fidelity there will be a mixture of Gaussian and projection noise and there will be an advantage to optimizing the sampling.</p>
-
-<figure>
-    <img src="fisher_information_sinusoid_projection.svg" width="100%"/> 
+$$<p>And so we arrive at the surprising result that the contributions to the Fisher information from the sinusoid and Bernoulli terms perfectly cancel leaving a constant Fisher information. Of course this is only for the case of perfect projection noise. In some experiments with low single shot readout fidelity there will be a mixture of Gaussian and projection noise and there will be an advantage to optimizing the sampling.</p>
+<figure><img src="/posts/where_to_sample_a_ramsey/fisher_information_sinusoid_projection.svg" width="100%">
 </figure>
 
-
 <h1 id="julia-notebook">Julia Notebook</h1>
-
 <p>Calculating the Fisher information requires taking derivatives of the log-likelihood and so it was a fun excuse to use the <a href="https://github.com/FluxML/Zygote.jl">Zygote.jl</a> automatic differentiation package in Julia. I was impressed that with <a href="https://github.com/JuliaStats/Distributions.jl">Distributions.jl</a> augmented with <a href="https://github.com/TuringLang/DistributionsAD.jl">DistributionsAD.jl</a> I could easily take derivatives of the <code>logpdf</code> of a distribution. The notebook has a function for numerically calculating the Fisher information and generates the plots above.</p>
-
 <p><a href="https://nbviewer.jupyter.org/gist/caryan/75f6b0d48472de2a610b0a2d50510a25">nbviewer with plots</a></p>
+<script src="https://gist.github.com/caryan/75f6b0d48472de2a610b0a2d50510a25.js"></script>
 
-<script type="application/javascript" src="https://gist.github.com/caryan/75f6b0d48472de2a610b0a2d50510a25.js"></script>
 
+        </section>
+        <div class="post-tags">
+          
+          
+          <nav class="nav tags">
+            <ul class="tags">
+              
+              <li><a href="/tags/information-theory">information theory</a></li>
+              
+              <li><a href="/tags/software">software</a></li>
+              
+              <li><a href="/tags/julia">julia</a></li>
+              
+            </ul>
+          </nav>
+          
+          
+        </div>
+      </div>
 
-        </p>
-    </div>
-    
-
-    
-
-    <div class="page-footer">
-        
-        <hr class="footer-divider">
-        
-            <a class="tag" href="/tags/information-theory">#information theory</a>
-        
-            <a class="tag" href="/tags/software">#software</a>
-        
-            <a class="tag" href="/tags/julia">#julia</a>
-        
+      
       
     </div>
 
+    </article>
+</main>
+<footer>
+  <div style="display:flex"><a class="soc" href="mailto:colm@colmryan.org" rel="me" title="Email"><svg class="feather">
+   <use href="/svg/feather-sprite.51cf5647cb1987f769b616558f2620fd9423d72058490231b391bf6aa3744b55.svg#mail" />
+</svg></a><a class="border"></a><a class="soc" href="https://github.com/caryan/" rel="me" title="GitHub"><svg class="feather">
+   <use href="/svg/feather-sprite.51cf5647cb1987f769b616558f2620fd9423d72058490231b391bf6aa3744b55.svg#github" />
+</svg></a><a class="border"></a><a class="soc" href="https://gitlab.com/caryan" rel="me" title="GitLab"><svg class="feather">
+   <use href="/svg/feather-sprite.51cf5647cb1987f769b616558f2620fd9423d72058490231b391bf6aa3744b55.svg#gitlab" />
+</svg></a><a class="border"></a></div>
+  <div class="footer-info">
+    2025  © Colm Ryan |  <a
+      href="https://github.com/athul/archie">Archie Theme</a> | Built with <a href="https://gohugo.io">Hugo</a>
+  </div>
+</footer>
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
-    onload="renderMathInElement(document.body);"></script>
 
-        </div>
-        <footer class="footer-mobile">
-	<div class="social-icons">
-        
-    <a class="social-icon" href="mailto:colm@colmryan.org" target="_blank" rel="noopener" title="Email">
-        <svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" fill="#ABABAB" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
-            <path d="M25.2794292,5.59128519 L14,16.8707144 L2.72057081,5.59128519 C3.06733103,5.30237414 3.51336915,5.12857603 4,5.12857603 L24,5.12857603 C24.4866308,5.12857603 24.932669,5.30237414 25.2794292,5.59128519 Z M25.9956978,6.99633695 C25.998551,7.04004843 26,7.08414302 26,7.12857603 L26,20.871424 C26,21.0798433 25.9681197,21.2808166 25.9089697,21.4697335 L18.7156355,14.2763993 L25.9956978,6.99633695 Z M24.9498374,22.6319215 C24.6672737,22.7846939 24.3437653,22.871424 24,22.871424 L4,22.871424 C3.5268522,22.871424 3.09207889,22.7071233 2.74962118,22.432463 L10.0950247,15.0870594 L13.9848068,18.9768415 L14.1878486,18.7737996 L14.2030419,18.7889929 L17.6549753,15.3370594 L24.9498374,22.6319215 Z M2.00810114,21.0526627 C2.00273908,20.9929669 2,20.9325153 2,20.871424 L2,7.12857603 C2,7.08414302 2.00144896,7.04004843 2.00430222,6.99633695 L9.03436454,14.0263993 L2.00810114,21.0526627 Z"></path>
-        </svg>
-    </a>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <a class="social-icon" href="https://www.linkedin.com/in/colm-ryan-660687113" target="_blank" rel="noopener" title="LinkedIn">
-        <svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" fill="#ABABAB" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
-            <path d="M2,3.654102 C2,2.69908141 2.79442509,1.92397846 3.77383592,1.92397846 L24.2261641,1.92397846 C25.2058917,1.92397846 26,2.69908141 26,3.654102 L26,24.3462148 C26,25.3015521 25.2058917,26.0760215 24.2261641,26.0760215 L3.77383592,26.0760215 C2.79442509,26.0760215 2,25.3015521 2,24.3465315 L2,3.65378524 L2,3.654102 Z M9.27526132,22.1415901 L9.27526132,11.2356668 L5.65030092,11.2356668 L5.65030092,22.1415901 L9.27557808,22.1415901 L9.27526132,22.1415901 Z M7.46341463,9.74691162 C8.72727273,9.74691162 9.51409566,8.90940767 9.51409566,7.86284447 C9.49033893,6.79252455 8.72727273,5.97846056 7.48748812,5.97846056 C6.24675325,5.97846056 5.43649034,6.79252455 5.43649034,7.86284447 C5.43649034,8.90940767 6.22299652,9.74691162 7.4396579,9.74691162 L7.46309788,9.74691162 L7.46341463,9.74691162 Z M11.2815965,22.1415901 L14.9062401,22.1415901 L14.9062401,16.0519481 C14.9062401,15.7263225 14.9299968,15.4000634 15.0256573,15.1675641 C15.2876148,14.5159962 15.8840672,13.8416218 16.8856509,13.8416218 C18.1970225,13.8416218 18.7218879,14.8416218 18.7218879,16.3078872 L18.7218879,22.1415901 L22.3465315,22.1415901 L22.3465315,15.8885017 C22.3465315,12.5388027 20.5584416,10.9800443 18.1735825,10.9800443 C16.2182452,10.9800443 15.3595185,12.072854 14.8824834,12.8172315 L14.9065569,12.8172315 L14.9065569,11.2359835 L11.2819132,11.2359835 C11.3291099,12.2591067 11.2815965,22.1419069 11.2815965,22.1419069 L11.2815965,22.1415901 Z"></path>
-        </svg>
-    </a>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    <a class="social-icon" href="https://github.com/caryan/" target="_blank" rel="noopener" title="GitHub">
-        <svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" fill="#ABABAB" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
-            <path d="M13.9988029,1.32087331 C6.82105037,1.32087331 1,7.14112562 1,14.3212723 C1,20.0649109 4.72454649,24.9370678 9.89038951,26.6560892 C10.5408085,26.7757983 10.7778323,26.374374 10.7778323,26.0296121 C10.7778323,25.7215609 10.7666595,24.9035493 10.760275,23.8189856 C7.14426471,24.6042767 6.38131925,22.0760223 6.38131925,22.0760223 C5.78995672,20.5740732 4.93762853,20.1742451 4.93762853,20.1742451 C3.75729765,19.3682044 5.02701126,19.3841656 5.02701126,19.3841656 C6.33183953,19.4759425 7.01817121,20.7241085 7.01817121,20.7241085 C8.17775254,22.7104801 10.0611744,22.1366749 10.8017741,21.8038838 C10.919887,20.9643246 11.2558703,20.3913175 11.6269683,20.066507 C8.74038491,19.7385043 5.70536235,18.6228163 5.70536235,13.6413251 C5.70536235,12.2223743 6.21213051,11.0611968 7.04370914,10.1530044 C6.90963504,9.82420367 6.46351945,8.50181809 7.17139875,6.71256734 C7.17139875,6.71256734 8.26234691,6.36301702 10.7459099,8.04532771 C11.78259,7.75642995 12.8950858,7.61277914 14.000399,7.60719272 C15.1049142,7.61277914 16.2166119,7.75642995 17.2548881,8.04532771 C19.736855,6.36301702 20.8262071,6.71256734 20.8262071,6.71256734 C21.5356825,8.50181809 21.0895669,9.82420367 20.9562909,10.1530044 C21.7894656,11.0611968 22.2922435,12.2223743 22.2922435,13.6413251 C22.2922435,18.6355852 19.2524325,19.734514 16.3570705,20.0561322 C16.8231376,20.4575564 17.2389269,21.2508282 17.2389269,22.4638795 C17.2389269,24.2012564 17.2229657,25.603448 17.2229657,26.0296121 C17.2229657,26.3775663 17.4575954,26.7821827 18.116793,26.6552912 C23.2786458,24.9322794 27,20.0633148 27,14.3212723 C27,7.14112562 21.1789496,1.32087331 13.9988029,1.32087331"></path>
-        </svg>
-    </a>
-    
-
-    
-    
-    
-    <a class="social-icon" href="https://gitlab.com/caryan" target="_blank" rel="noopener" title="GitLab">
-        <svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" fill="#ABABAB" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
-            <path d="M25.8928355,15.330615 L24.6377766,11.4743798 C24.6311235,11.4388709 24.6209558,11.4041117 24.6074237,11.370615 L22.0895413,3.62002681 C21.9519499,3.20985323 21.5664025,2.9345029 21.1337766,2.93743857 C20.7020628,2.93482083 20.3190624,3.21391308 20.189306,3.62567387 L17.789306,11.0113209 L10.2144825,11.0113209 L7.8109531,3.62567387 C7.68166096,3.2154114 7.3008703,2.9366795 6.8707178,2.93743857 L6.86507074,2.93743857 C6.43207772,2.9375139 6.04793469,3.21523509 5.91212957,3.62637975 L3.39212957,11.3861445 C3.39212957,11.3932033 3.38648251,11.3988503 3.38436486,11.4059092 L2.1067178,15.3313209 C1.91410826,15.9219503 2.1242249,16.569406 2.6269531,16.9343798 L13.6655413,24.9553209 C13.8649064,25.0996309 14.1347733,25.098203 14.3326002,24.9517915 L25.373306,16.9343798 C25.8762704,16.5692556 26.0861711,15.9213012 25.8928355,15.330615 M9.39283545,12.144968 L12.4697766,21.6150856 L5.08342369,12.144968 M15.5340119,21.6172033 L18.4846002,12.5381445 L18.611659,12.144968 L22.9246002,12.144968 L16.2420119,20.7059092 M21.143659,4.35273269 L23.3057766,11.0113209 L18.9780119,11.0113209 M17.4229531,12.1407327 L15.2791884,18.7379092 L14.0001296,22.6668503 L10.5822472,12.1407327 M6.86012957,4.35273269 L9.02648251,11.0113209 L4.70154133,11.0113209 M3.29118839,16.020968 C3.18436061,15.9432767 3.13987047,15.8055284 3.18107074,15.6800268 L4.12977663,12.7647327 L11.087659,21.684968 M24.7097766,16.020968 L16.9126002,21.6828503 L16.9387178,21.648968 L23.8704825,12.7647327 L24.8191884,15.678615 C24.8608813,15.8041731 24.8166519,15.9422827 24.7097766,16.0202621"></path>
-        </svg>
-    </a>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 </div>
-
-
-
-
-	<div class="footer-mobile-links">
-		<p><a href="https://github.com/kimcc/hugo-theme-noteworthy" target="_blank" rel="noopener">Noteworthy theme</a></p>
-		<span class="divider-bar">|</span>
-		<p><a href="https://gohugo.io" target="_blank" rel="noopener">Built with Hugo</a></p>
-	</div>
-
-	<script src="https://www.colmryan.org/js/main.min.fa5c2b23e07b5d9bfad267a52b4b24fdb053e6fb7524993383594926a3ac270c.js" integrity="sha256-+lwrI+B7XZv60melK0sk/bBT5vt1JJkzg1lJJqOsJww=" crossorigin="anonymous"></script>
-</footer>
     </body>
 </html>

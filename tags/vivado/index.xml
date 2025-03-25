@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>vivado on Tomorrow Said Toad</title>
+    <title>Vivado on Tomorrow Said Toad</title>
     <link>https://www.colmryan.org/tags/vivado/</link>
-    <description>Recent content in vivado on Tomorrow Said Toad</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Vivado on Tomorrow Said Toad</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
+    <copyright>© Colm Ryan</copyright>
     <lastBuildDate>Mon, 22 Aug 2016 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://www.colmryan.org/tags/vivado/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <atom:link href="https://www.colmryan.org/tags/vivado/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Avrum&#39;s Clock Domain Crossing Widsom</title>
       <link>https://www.colmryan.org/posts/avrum-cdc-wisdom/</link>
       <pubDate>Mon, 22 Aug 2016 00:00:00 +0000</pubDate>
-      
       <guid>https://www.colmryan.org/posts/avrum-cdc-wisdom/</guid>
       <description>A collection of clock domain crossing from Xilinx forums</description>
     </item>
-    
   </channel>
 </rss>

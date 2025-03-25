@@ -1,60 +1,48 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>python on Tomorrow Said Toad</title>
+    <title>Python on Tomorrow Said Toad</title>
     <link>https://www.colmryan.org/tags/python/</link>
-    <description>Recent content in python on Tomorrow Said Toad</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Python on Tomorrow Said Toad</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
+    <copyright>© Colm Ryan</copyright>
     <lastBuildDate>Mon, 22 Jun 2020 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://www.colmryan.org/tags/python/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <atom:link href="https://www.colmryan.org/tags/python/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>pylint to CodeClimate converter</title>
       <link>https://www.colmryan.org/posts/pylint_to_codeclimate/</link>
       <pubDate>Mon, 22 Jun 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://www.colmryan.org/posts/pylint_to_codeclimate/</guid>
       <description>A little helper function to get nice code quality reports in Gitlab</description>
     </item>
-    
     <item>
       <title>Python function call overhead</title>
       <link>https://www.colmryan.org/posts/python_function_call_overhead/</link>
       <pubDate>Wed, 17 Jun 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://www.colmryan.org/posts/python_function_call_overhead/</guid>
       <description>Measuring function call overhead from Python 2.7 to 3.8</description>
     </item>
-    
     <item>
       <title>Asyncio Socket Pool</title>
       <link>https://www.colmryan.org/posts/asyncio-socket-pool/</link>
       <pubDate>Mon, 12 Aug 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://www.colmryan.org/posts/asyncio-socket-pool/</guid>
       <description>A socket pool with Python&amp;rsquo;s asyncio</description>
     </item>
-    
+    <item>
+      <title>Bitfield nicities in Python</title>
+      <link>https://www.colmryan.org/posts/bitfield-nicieties-in-python/</link>
+      <pubDate>Mon, 08 Feb 2016 00:00:00 +0000</pubDate>
+      <guid>https://www.colmryan.org/posts/bitfield-nicieties-in-python/</guid>
+      <description>Using metaprogamming to make bitfields easy in Python</description>
+    </item>
     <item>
       <title>asyncio real-time signal processing</title>
       <link>https://www.colmryan.org/posts/asyncio-realtime-dsp/</link>
       <pubDate>Sun, 20 Sep 2015 00:00:00 +0000</pubDate>
-      
       <guid>https://www.colmryan.org/posts/asyncio-realtime-dsp/</guid>
       <description>Using Python&amp;rsquo;s asyncio for real-time signal processing</description>
     </item>
-    
-    <item>
-      <title>Bitfield nicities in Python</title>
-      <link>https://www.colmryan.org/posts/bitfield-nicieties-in-python/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.colmryan.org/posts/bitfield-nicieties-in-python/</guid>
-      <description>Using metaprogamming to make bitfields easy in Python</description>
-    </item>
-    
   </channel>
 </rss>

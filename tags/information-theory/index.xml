@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>information theory on Tomorrow Said Toad</title>
+    <title>Information Theory on Tomorrow Said Toad</title>
     <link>https://www.colmryan.org/tags/information-theory/</link>
-    <description>Recent content in information theory on Tomorrow Said Toad</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Information Theory on Tomorrow Said Toad</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
+    <copyright>© Colm Ryan</copyright>
     <lastBuildDate>Tue, 30 Jun 2020 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://www.colmryan.org/tags/information-theory/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <atom:link href="https://www.colmryan.org/tags/information-theory/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Where to sample a Ramsey experiment</title>
       <link>https://www.colmryan.org/posts/where_to_sample_a_ramsey/</link>
       <pubDate>Tue, 30 Jun 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://www.colmryan.org/posts/where_to_sample_a_ramsey/</guid>
       <description>The tradeoff between sensitivity and shot noise</description>
     </item>
-    
   </channel>
 </rss>

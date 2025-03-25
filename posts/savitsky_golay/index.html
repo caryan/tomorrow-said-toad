@@ -1,171 +1,95 @@
 <!DOCTYPE html>
+<html><head lang="en">
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Two approaches to Savitsky-Golay filtering - Tomorrow Said Toad</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Comparing matrix inversion and Gram polynomial approaches to Savitsky-Golay filtering." />
+	<meta property="og:image" content=""/>
+	<meta property="og:url" content="https://www.colmryan.org/posts/savitsky_golay/">
+  <meta property="og:site_name" content="Tomorrow Said Toad">
+  <meta property="og:title" content="Two approaches to Savitsky-Golay filtering">
+  <meta property="og:description" content="Comparing matrix inversion and Gram polynomial approaches to Savitsky-Golay filtering.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2019-11-30T00:00:00+00:00">
+    <meta property="article:modified_time" content="2020-02-27T00:00:00+00:00">
+    <meta property="article:tag" content="Software">
+    <meta property="article:tag" content="Julia">
 
-<html lang="en-us">
-    <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="format-detection" content="telephone=no"/>
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Two approaches to Savitsky-Golay filtering">
+  <meta name="twitter:description" content="Comparing matrix inversion and Gram polynomial approaches to Savitsky-Golay filtering.">
 
-    <title>Two approaches to Savitsky-Golay filtering | Tomorrow Said Toad</title>
-    
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#FF3DB4">
-    <meta name="theme-color" content="#ffffff">
-
-    
-    
-    
-    <link rel="stylesheet" href="https://www.colmryan.org/css/main.min.975b1911c008aee6ab5fb42e51274b8268ebcb65dc15bd4a5f69b9eedb485c3e.css"/>
-
-    
-    
-    
-
-    
-    
- 
-    
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-158537342-1', 'auto');
+        <link href="https://www.colmryan.org/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css" rel="stylesheet">
 	
-	ga('send', 'pageview');
-}
-</script>
-</head>
 
-    <body>
-        
-<nav>
-  <header>
-    <div class="site-title">
-        <a href="/">Tomorrow Said Toad</a>
-    </div>  
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="https://www.colmryan.org/css/main.6a0f23ea50fd34b46fee262a5a68e17d458c51a2bc99ba1ba018065de6b180c3.css" />
+		<link id="darkModeStyle" rel="stylesheet" type="text/css" href="https://www.colmryan.org/css/dark.50b57e12d401420df23965fed157368aba37b76df0ecefd0b1ecd4da664f01a0.css" media="(prefers-color-scheme: dark)"  /><script type="text/javascript"
+		src="https://www.colmryan.org/js/MathJax.js"></script>
+		
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({
+			tex2jax: {
+				inlineMath: [['$','$'], ['\\(','\\)']],
+				displayMath: [['$$','$$'], ['\[','\]']],
+				processEscapes: true,
+				processEnvironments: true,
+				skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+				TeX: { equationNumbers: { autoNumber: "AMS" },
+						 extensions: ["AMSmath.js", "AMSsymbols.js"] }
+			}
+		});
+		</script><link rel="stylesheet" href="https://www.colmryan.org/katex/katex.min.css ">
+		<script defer src="https://www.colmryan.org/katex/katex.min.js"></script>
+		<script defer src="https://www.colmryan.org/katex/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+		
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+					renderMathInElement(document.body, {
+							delimiters: [
+									{left: "$$", right: "$$", display: true},
+									{left: "$", right: "$", display: false}
+							]
+					});
+			});
+		</script>
+</head>
+<body>
+        <div class="content"><header>
+	<div class="main">
+		<a href="https://www.colmryan.org/">Tomorrow Said Toad</a>
+	</div>
+	<nav>
+		
+		<a href="/">Home</a>
+		
+		<a href="/posts">All posts</a>
+		
+		<a href="/about">About</a>
+		
+		<a href="/tags">Tags</a>
+		
+		
+	</nav>
 </header>
 
-  <div class="nav-menu">
-  
-  <a class="color-link nav-link" href="https://www.colmryan.org/index.xml" target="_blank" rel="noopener" type="application/rss+xml">RSS</a>
-</div>
-<footer class="footer">
-	<div class="social-icons">
+<main>
+  <article>
+    <div class="post-container">
+      
+      <div class="post-content">
+        <div class="title">
+          <h1 class="title">Two approaches to Savitsky-Golay filtering</h1>
+          <div class="meta">Posted on Nov 30, 2019</div>
+        </div>
         
-    <a class="social-icon" href="mailto:colm@colmryan.org" target="_blank" rel="noopener" title="Email">
-        <svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" fill="#ABABAB" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
-            <path d="M25.2794292,5.59128519 L14,16.8707144 L2.72057081,5.59128519 C3.06733103,5.30237414 3.51336915,5.12857603 4,5.12857603 L24,5.12857603 C24.4866308,5.12857603 24.932669,5.30237414 25.2794292,5.59128519 Z M25.9956978,6.99633695 C25.998551,7.04004843 26,7.08414302 26,7.12857603 L26,20.871424 C26,21.0798433 25.9681197,21.2808166 25.9089697,21.4697335 L18.7156355,14.2763993 L25.9956978,6.99633695 Z M24.9498374,22.6319215 C24.6672737,22.7846939 24.3437653,22.871424 24,22.871424 L4,22.871424 C3.5268522,22.871424 3.09207889,22.7071233 2.74962118,22.432463 L10.0950247,15.0870594 L13.9848068,18.9768415 L14.1878486,18.7737996 L14.2030419,18.7889929 L17.6549753,15.3370594 L24.9498374,22.6319215 Z M2.00810114,21.0526627 C2.00273908,20.9929669 2,20.9325153 2,20.871424 L2,7.12857603 C2,7.08414302 2.00144896,7.04004843 2.00430222,6.99633695 L9.03436454,14.0263993 L2.00810114,21.0526627 Z"></path>
-        </svg>
-    </a>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <a class="social-icon" href="https://www.linkedin.com/in/colm-ryan-660687113" target="_blank" rel="noopener" title="LinkedIn">
-        <svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" fill="#ABABAB" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
-            <path d="M2,3.654102 C2,2.69908141 2.79442509,1.92397846 3.77383592,1.92397846 L24.2261641,1.92397846 C25.2058917,1.92397846 26,2.69908141 26,3.654102 L26,24.3462148 C26,25.3015521 25.2058917,26.0760215 24.2261641,26.0760215 L3.77383592,26.0760215 C2.79442509,26.0760215 2,25.3015521 2,24.3465315 L2,3.65378524 L2,3.654102 Z M9.27526132,22.1415901 L9.27526132,11.2356668 L5.65030092,11.2356668 L5.65030092,22.1415901 L9.27557808,22.1415901 L9.27526132,22.1415901 Z M7.46341463,9.74691162 C8.72727273,9.74691162 9.51409566,8.90940767 9.51409566,7.86284447 C9.49033893,6.79252455 8.72727273,5.97846056 7.48748812,5.97846056 C6.24675325,5.97846056 5.43649034,6.79252455 5.43649034,7.86284447 C5.43649034,8.90940767 6.22299652,9.74691162 7.4396579,9.74691162 L7.46309788,9.74691162 L7.46341463,9.74691162 Z M11.2815965,22.1415901 L14.9062401,22.1415901 L14.9062401,16.0519481 C14.9062401,15.7263225 14.9299968,15.4000634 15.0256573,15.1675641 C15.2876148,14.5159962 15.8840672,13.8416218 16.8856509,13.8416218 C18.1970225,13.8416218 18.7218879,14.8416218 18.7218879,16.3078872 L18.7218879,22.1415901 L22.3465315,22.1415901 L22.3465315,15.8885017 C22.3465315,12.5388027 20.5584416,10.9800443 18.1735825,10.9800443 C16.2182452,10.9800443 15.3595185,12.072854 14.8824834,12.8172315 L14.9065569,12.8172315 L14.9065569,11.2359835 L11.2819132,11.2359835 C11.3291099,12.2591067 11.2815965,22.1419069 11.2815965,22.1419069 L11.2815965,22.1415901 Z"></path>
-        </svg>
-    </a>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    <a class="social-icon" href="https://github.com/caryan/" target="_blank" rel="noopener" title="GitHub">
-        <svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" fill="#ABABAB" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
-            <path d="M13.9988029,1.32087331 C6.82105037,1.32087331 1,7.14112562 1,14.3212723 C1,20.0649109 4.72454649,24.9370678 9.89038951,26.6560892 C10.5408085,26.7757983 10.7778323,26.374374 10.7778323,26.0296121 C10.7778323,25.7215609 10.7666595,24.9035493 10.760275,23.8189856 C7.14426471,24.6042767 6.38131925,22.0760223 6.38131925,22.0760223 C5.78995672,20.5740732 4.93762853,20.1742451 4.93762853,20.1742451 C3.75729765,19.3682044 5.02701126,19.3841656 5.02701126,19.3841656 C6.33183953,19.4759425 7.01817121,20.7241085 7.01817121,20.7241085 C8.17775254,22.7104801 10.0611744,22.1366749 10.8017741,21.8038838 C10.919887,20.9643246 11.2558703,20.3913175 11.6269683,20.066507 C8.74038491,19.7385043 5.70536235,18.6228163 5.70536235,13.6413251 C5.70536235,12.2223743 6.21213051,11.0611968 7.04370914,10.1530044 C6.90963504,9.82420367 6.46351945,8.50181809 7.17139875,6.71256734 C7.17139875,6.71256734 8.26234691,6.36301702 10.7459099,8.04532771 C11.78259,7.75642995 12.8950858,7.61277914 14.000399,7.60719272 C15.1049142,7.61277914 16.2166119,7.75642995 17.2548881,8.04532771 C19.736855,6.36301702 20.8262071,6.71256734 20.8262071,6.71256734 C21.5356825,8.50181809 21.0895669,9.82420367 20.9562909,10.1530044 C21.7894656,11.0611968 22.2922435,12.2223743 22.2922435,13.6413251 C22.2922435,18.6355852 19.2524325,19.734514 16.3570705,20.0561322 C16.8231376,20.4575564 17.2389269,21.2508282 17.2389269,22.4638795 C17.2389269,24.2012564 17.2229657,25.603448 17.2229657,26.0296121 C17.2229657,26.3775663 17.4575954,26.7821827 18.116793,26.6552912 C23.2786458,24.9322794 27,20.0633148 27,14.3212723 C27,7.14112562 21.1789496,1.32087331 13.9988029,1.32087331"></path>
-        </svg>
-    </a>
-    
-
-    
-    
-    
-    <a class="social-icon" href="https://gitlab.com/caryan" target="_blank" rel="noopener" title="GitLab">
-        <svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" fill="#ABABAB" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
-            <path d="M25.8928355,15.330615 L24.6377766,11.4743798 C24.6311235,11.4388709 24.6209558,11.4041117 24.6074237,11.370615 L22.0895413,3.62002681 C21.9519499,3.20985323 21.5664025,2.9345029 21.1337766,2.93743857 C20.7020628,2.93482083 20.3190624,3.21391308 20.189306,3.62567387 L17.789306,11.0113209 L10.2144825,11.0113209 L7.8109531,3.62567387 C7.68166096,3.2154114 7.3008703,2.9366795 6.8707178,2.93743857 L6.86507074,2.93743857 C6.43207772,2.9375139 6.04793469,3.21523509 5.91212957,3.62637975 L3.39212957,11.3861445 C3.39212957,11.3932033 3.38648251,11.3988503 3.38436486,11.4059092 L2.1067178,15.3313209 C1.91410826,15.9219503 2.1242249,16.569406 2.6269531,16.9343798 L13.6655413,24.9553209 C13.8649064,25.0996309 14.1347733,25.098203 14.3326002,24.9517915 L25.373306,16.9343798 C25.8762704,16.5692556 26.0861711,15.9213012 25.8928355,15.330615 M9.39283545,12.144968 L12.4697766,21.6150856 L5.08342369,12.144968 M15.5340119,21.6172033 L18.4846002,12.5381445 L18.611659,12.144968 L22.9246002,12.144968 L16.2420119,20.7059092 M21.143659,4.35273269 L23.3057766,11.0113209 L18.9780119,11.0113209 M17.4229531,12.1407327 L15.2791884,18.7379092 L14.0001296,22.6668503 L10.5822472,12.1407327 M6.86012957,4.35273269 L9.02648251,11.0113209 L4.70154133,11.0113209 M3.29118839,16.020968 C3.18436061,15.9432767 3.13987047,15.8055284 3.18107074,15.6800268 L4.12977663,12.7647327 L11.087659,21.684968 M24.7097766,16.020968 L16.9126002,21.6828503 L16.9387178,21.648968 L23.8704825,12.7647327 L24.8191884,15.678615 C24.8608813,15.8041731 24.8166519,15.9422827 24.7097766,16.0202621"></path>
-        </svg>
-    </a>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-</div>
-
-
-
-
-	<p><a href="https://github.com/kimcc/hugo-theme-noteworthy" target="_blank" rel="noopener">Noteworthy theme</a></p>
-	<p><a href="https://gohugo.io" target="_blank" rel="noopener">Built with Hugo</a></p>
-
-	<script src="https://www.colmryan.org/js/main.min.fa5c2b23e07b5d9bfad267a52b4b24fdb053e6fb7524993383594926a3ac270c.js" integrity="sha256-+lwrI+B7XZv60melK0sk/bBT5vt1JJkzg1lJJqOsJww=" crossorigin="anonymous"></script>
-</footer>
-</nav>
-
-        <div id="content" class="content-container">
-        
-
-<h1 class="post-title">Two approaches to Savitsky-Golay filtering</h1>
-    
-    <time>November 30, 2019</time>
-    
-    <div>
-        <p>
-        <p>Savitsky-Golay filtering<sup class="footnote-ref" id="fnref:1"><a class="footnote" href="#fn:1">1</a></sup> is one of my first choices for smoothing noisy experimental data. It has the nice property of preserving higher moments of the data and so particularly for spectroscopy it preserves peak heights <sup class="footnote-ref" id="fnref:2"><a class="footnote" href="#fn:2">2</a></sup>. Savitsky-Golay filtering is a simple enough idea: fit a moving <span  class="math">\(n^{th}\)</span>-degree polynomial to a window around each point and then evaluate the polynomial at the mid-point to provide the smoothed value. The key insight of Savitsky-Golay was that we don't have to repeat the least-squares fit for every point: we can write the polynomial coefficients as a linear combination of the data values in the window so that once we know the appropriate weights we can apply the filter as a convolution.</p>
-
-<p>I wanted to work through the usual derivation for the Savitsky-Golay convolution coefficients starting from the design matrix to make sure I understood both the pseudo-inverse approach and how <code>SciPy</code> was calculating the filter coefficients for a particular derivative with a matrix-vector least squares inversion. And I also got curious about another approach using a different family of polynomials, the Gram polynomials <sup class="footnote-ref" id="fnref:3"><a class="footnote" href="#fn:3">3</a></sup>.</p>
-
+        <section class="body">
+          <p>Savitsky-Golay filtering<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> is one of my first choices for smoothing noisy experimental data. It has the nice property of preserving higher moments of the data and so particularly for spectroscopy it preserves peak heights <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>. Savitsky-Golay filtering is a simple enough idea: fit a moving \(n^{th}\)-degree polynomial to a window around each point and then evaluate the polynomial at the mid-point to provide the smoothed value. The key insight of Savitsky-Golay was that we don&rsquo;t have to repeat the least-squares fit for every point: we can write the polynomial coefficients as a linear combination of the data values in the window so that once we know the appropriate weights we can apply the filter as a convolution.</p>
+<p>I wanted to work through the usual derivation for the Savitsky-Golay convolution coefficients starting from the design matrix to make sure I understood both the pseudo-inverse approach and how <code>SciPy</code> was calculating the filter coefficients for a particular derivative with a matrix-vector least squares inversion. And I also got curious about another approach using a different family of polynomials, the Gram polynomials <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
 <h1 id="calculating-filter-coefficients-with-matrix-inversions">Calculating filter coefficients with matrix inversions</h1>
-
-<p>Using the conventional polynomials <span  class="math">\(p_0 + p_1x + p_2x^2 + p_3x^3 + \dots\)</span> we can cast the polynomial fitting problem in matrix form: <span  class="math">\(\mathbf{A}\cdot\mathbf{p} = \mathbf{y}\)</span> for a column vector of the polynomial coefficients, <span  class="math">\(\mathbf{p}\)</span> and the data in the window to fit <span  class="math">\(\mathbf{y}\)</span>. For equally spaced normalized points <span  class="math">\(\dots -2, -1, 0, 1, 2, \dots\)</span> the design matrix <span  class="math">\(\mathbf{A}\)</span> is a <a href="https://en.wikipedia.org/wiki/Vandermonde_matrix">Vandermonde matrix</a>:</p>
-
-<p><span  class="math">\[
+<p>Using the conventional polynomials \(p_0 + p_1x + p_2x^2 + p_3x^3 + \dots\) we can cast the polynomial fitting problem in matrix form: \(\mathbf{A}\cdot\mathbf{p} = \mathbf{y}\) for a column vector of the polynomial coefficients, \(\mathbf{p}\) and the data in the window to fit \(\mathbf{y}\). For equally spaced normalized points \(\dots -2, -1, 0, 1, 2, \dots\) the design matrix \(\mathbf{A}\) is a <a href="https://en.wikipedia.org/wiki/Vandermonde_matrix">Vandermonde matrix</a>:</p>
+$$
 \begin{bmatrix}
 \vdots & \vdots & \vdots & \vdots &\\
 1 & -2 & 4 & -8 & \dots \\
@@ -191,13 +115,9 @@ y_1 \\
 y_2 \\
 \vdots
 \end{bmatrix}
-\]</span></p>
-
-<h2 id="full-pseudoinverse">Full Pseudo-Inverse</h2>
-
-<p>For fitting a <span  class="math">\(m^{th}\)</span> order polynomial to a data window <span  class="math">\(w\)</span> points wide we have a <span  class="math">\(\mathbf{A}\)</span> is a <span  class="math">\(w \times (m+1)\)</span> matrix and we are looking for the pseudo-inverse matrix <span  class="math">\(\mathbf{C}\)</span> (<span  class="math">\((m+1) \times w\)</span>) such that <span  class="math">\(\mathbf{CA}\)</span> is a <span  class="math">\((m+1) \times (m+1)\)</span> identity matrix and if we left multiply both sides by <span  class="math">\(\mathbf{C}\)</span> then we have the coefficients as a product of a matrix <span  class="math">\(\mathbf{C}\)</span> and the data.</p>
-
-<p><span  class="math">\[
+$$<h2 id="full-pseudo-inverse">Full Pseudo-Inverse</h2>
+<p>For fitting a \(m^{th}\) order polynomial to a data window \(w\) points wide we have a \(\mathbf{A}\) is a \(w \times (m+1)\) matrix and we are looking for the pseudo-inverse matrix \(\mathbf{C}\) (\((m+1) \times w\)) such that \(\mathbf{CA}\) is a \((m+1) \times (m+1)\) identity matrix and if we left multiply both sides by \(\mathbf{C}\) then we have the coefficients as a product of a matrix \(\mathbf{C}\) and the data.</p>
+$$
 \begin{bmatrix}
 p_0 \\
 p_1 \\
@@ -215,17 +135,11 @@ y_1 \\
 y_2 \\
 \vdots
 \end{bmatrix}
-\]</span></p>
-
-<p>We are guaranteed the pseudo-inverse exists because <span  class="math">\(w > m\)</span> for the fit to unique and a rectangular <span  class="math">\(w \times m\)</span> Vandermonde matrix with all <span  class="math">\(x_i\)</span> unique (which we have because we have equally spaced points) has maximum rank.</p>
-
-<p>Each row of <span  class="math">\(\mathbf{C}\)</span> gives the coefficients for a particular polynomial coefficient. However, for Savitsky-Golay we have a moving window and we only need to evaluate the window at the middle point where <span  class="math">\(x=0\)</span> and so all the <span  class="math">\(p_i, i>0\)</span> don't matter and we only need the first row. Hence we only need a single row of the matrix. Taking the <span  class="math">\(n\)</span>'th derivative of the smoothed signal just shifts the coefficients with a factorial scaling and accounting for the x-point spacing. For example the 1st derivative will be <span  class="math">\(p_1 + 2p_2x + 3p_3x^2 + \dots\)</span> so for <span  class="math">\(x=0\)</span> we only need to evaluate the <span  class="math">\(p_1\)</span> term or the first row.</p>
-
+$$<p>We are guaranteed the pseudo-inverse exists because \(w > m\) for the fit to unique and a rectangular \(w \times m\) Vandermonde matrix with all \(x_i\) unique (which we have because we have equally spaced points) has maximum rank.</p>
+<p>Each row of \(\mathbf{C}\) gives the coefficients for a particular polynomial coefficient. However, for Savitsky-Golay we have a moving window and we only need to evaluate the window at the middle point where \(x=0\) and so all the \(p_i, i>0\) don&rsquo;t matter and we only need the first row. Hence we only need a single row of the matrix. Taking the \(n\)&rsquo;th derivative of the smoothed signal just shifts the coefficients with a factorial scaling and accounting for the x-point spacing. For example the 1st derivative will be \(p_1 + 2p_2x + 3p_3x^2 + \dots\) so for \(x=0\) we only need to evaluate the \(p_1\) term or the first row.</p>
 <h2 id="solving-for-a-only-a-single-row-of-coefficients">Solving for a only a single row of coefficients</h2>
-
-<p>We can take advantage of that by least-squares solving for only a single row of <span  class="math">\(\mathbf{C}\)</span>. We're looking to solve <span  class="math">\(\mathbf{CA} = \mathbf{I}\)</span> and taking the transpose to put it in the conventional <span  class="math">\(\mathbf{AX} = \mathbf{B}\)</span> we have <span  class="math">\(\mathbf{A}^\mathrm{T}\mathbf{C}^\mathrm{T} = \mathbf{I}\)</span> or <span  class="math">\(\mathbf{C}^\mathrm{T} = \mathbf{A}^\mathrm{T} \backslash \mathbf{I}\)</span>. We can then solve for say only the first column of <span  class="math">\(\mathbf{C}^\mathrm{T}\)</span> with</p>
-
-<p><span  class="math">\[
+<p>We can take advantage of that by least-squares solving for only a single row of\(\mathbf{C}\). We&rsquo;re looking to solve \(\mathbf{CA} = \mathbf{I}\) and taking the transpose to put it in the conventional \(\mathbf{AX} = \mathbf{B}\) we have \(\mathbf{A}^\mathrm{T}\mathbf{C}^\mathrm{T} = \mathbf{I}\) or \(\mathbf{C}^\mathrm{T} = \mathbf{A}^\mathrm{T} \backslash \mathbf{I}\). We can then solve for say only the first column of $\(\mathbf{C}^\mathrm{T}\) with</p>
+$$
 \vec{C}_0 = \mathbf{A}^\mathrm{T} \backslash
 \begin{bmatrix}
 1 \\
@@ -234,159 +148,73 @@ y_2 \\
 0 \\
 \vdots
 \end{bmatrix}
-\]</span></p>
-
-<h1 id="calculating-filter-coefficients-with-orthogonal-polynomials">Calculating filter coefficients with orthogonal polynomials</h1>
-
-<p>I was intrigued with a second approach using <a href="https://en.wikipedia.org/wiki/Discrete_Chebyshev_polynomials">discrete Chebyshev polynomials or Gram polynomials</a> because it promised a closed form solution <sup class="footnote-ref" id="fnref:3"><a class="footnote" href="#fn:3">4</a></sup> for all points in the window (as opposed to just the midpoint). This is particularly convenient at the edges. The paper provides a recursive formula for the full table of weights for every data point to evaluate the least squares fit at every point in the window. I have implemented this in the notebook but at first pass it seems rather slow and only of utility if you don't have access to matrix inversion routines. E.g. there appears to be a <a href="https://github.com/arntanguy/gram_savitzky_golay">C++ implementation</a>.</p>
-
-<h1 id="corrections-to-the-original-savitskygolay">Corrections to the original Savitsky-Golay</h1>
-
-<p>Gorry's paper also pointed out a subsequent paper <sup class="footnote-ref" id="fnref:4"><a class="footnote" href="#fn:4">5</a></sup> that corrected many of the tables in the original Savitsky-Golay paper with the particularly harsh comment:</p>
-
+$$<h1 id="calculating-filter-coefficients-with-orthogonal-polynomials">Calculating filter coefficients with orthogonal polynomials</h1>
+<p>I was intrigued with a second approach using <a href="https://en.wikipedia.org/wiki/Discrete_Chebyshev_polynomials">discrete Chebyshev polynomials or Gram polynomials</a> because it promised a closed form solution <sup id="fnref1:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> for all points in the window (as opposed to just the midpoint). This is particularly convenient at the edges. The paper provides a recursive formula for the full table of weights for every data point to evaluate the least squares fit at every point in the window. I have implemented this in the notebook but at first pass it seems rather slow and only of utility if you don&rsquo;t have access to matrix inversion routines. E.g. there appears to be a <a href="https://github.com/arntanguy/gram_savitzky_golay">C++ implementation</a>.</p>
+<h1 id="corrections-to-the-original-savitsky-golay">Corrections to the original Savitsky-Golay</h1>
+<p>Gorry&rsquo;s paper also pointed out a subsequent paper <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup> that corrected many of the tables in the original Savitsky-Golay paper with the particularly harsh comment:</p>
 <blockquote>
-<p>The corrected values are presented in Table I. Also, Tables II, III, IV, V, and VI are corrected versions of Tables V, VII, IX, X, and XI given by Savitzky and Golay (I). They either contain more numerous errors or are systematically false.</p>
-</blockquote>
-
+<p>The corrected values are presented in Table I. Also, Tables II, III, IV, V, and VI are corrected versions of Tables V, VII, IX, X, and XI given by Savitzky and Golay (I). They either contain more numerous errors or are systematically false.</p></blockquote>
 <h1 id="julia-notebook-demo">Julia Notebook Demo</h1>
-
-<p>I put together a little notebook demoing and benchmarking the two approaches. There are probably plenty of optimizations to be made to the Gram polynomial approach but if we have access to good matrix inversion routines then there does not seem to be any advantage to using Gram polynomials as it's a couple of orders of magnitude slower.</p>
-
-<script src="https://gist.github.com/caryan/6cb5be4bf7e0306dc236c3688e548d68.js"></script>
-<div class="footnotes">
-
+<p>I put together a little notebook demoing and benchmarking the two approaches. There are probably plenty of optimizations to be made to the Gram polynomial approach but if we have access to good matrix inversion routines then there does not seem to be any advantage to using Gram polynomials as it&rsquo;s a couple of orders of magnitude slower.</p>
+<!-- raw HTML omitted -->
+<div class="footnotes" role="doc-endnotes">
 <hr>
-
 <ol>
-<li id="fn:1">Savitzky, A., &amp; Golay, M. J. E. (1964). Smoothing and Differentiation of Data by Simplified Least Squares Procedures. <a href="https://doi.org/10.1021/ac60214a047">Analytical Chemistry, 36(8), 1627–1639</a>.
- <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
-<li id="fn:2">Press, W. H., &amp; Teukolsky, S. A. (1990). Savitzky-Golay Smoothing Filters. <a href="https://doi.org/10.1063/1.4822961">Computers in Physics, 4(6), 669</a>.
- <a class="footnote-return" href="#fnref:2"><sup>[return]</sup></a></li>
-<li id="fn:3">Gorry, P. A. (1990). General Least-Squares Smoothing and Differentiation by the Convolution (Savitzky-Golay) Method. <a href="https://doi.org/10.1021/ac00205a007">Analytical Chemistry, 62(6), 570–573</a>.
- <a class="footnote-return" href="#fnref:3"><sup>[return]</sup></a></li>
-<li id="fn:3">Gorry, P. A. (1990). General Least-Squares Smoothing and Differentiation by the Convolution (Savitzky-Golay) Method. <a href="https://doi.org/10.1021/ac00205a007">Analytical Chemistry, 62(6), 570–573</a>.
- <a class="footnote-return" href="#fnref:3"><sup>[return]</sup></a></li>
-<li id="fn:4">Steinier, J., Termonia, Y., &amp; Deltour, J. (1972). Comments on Smoothing and differentiation of data by simplified least square procedure. <a href="https://doi.org/10.1021/ac60319a045">Analytical Chemistry, 44(11), 1906–1909</a>
- <a class="footnote-return" href="#fnref:4"><sup>[return]</sup></a></li>
+<li id="fn:1">
+<p>Savitzky, A., &amp; Golay, M. J. E. (1964). Smoothing and Differentiation of Data by Simplified Least Squares Procedures. <a href="https://doi.org/10.1021/ac60214a047">Analytical Chemistry, 36(8), 1627–1639</a>.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>Press, W. H., &amp; Teukolsky, S. A. (1990). Savitzky-Golay Smoothing Filters. <a href="https://doi.org/10.1063/1.4822961">Computers in Physics, 4(6), 669</a>.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>Gorry, P. A. (1990). General Least-Squares Smoothing and Differentiation by the Convolution (Savitzky-Golay) Method. <a href="https://doi.org/10.1021/ac00205a007">Analytical Chemistry, 62(6), 570–573</a>.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref1:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p>Steinier, J., Termonia, Y., &amp; Deltour, J. (1972). Comments on Smoothing and differentiation of data by simplified least square procedure. <a href="https://doi.org/10.1021/ac60319a045">Analytical Chemistry, 44(11), 1906–1909</a>&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
 </ol>
 </div>
 
-        </p>
-    </div>
-    
+        </section>
+        <div class="post-tags">
+          
+          
+          <nav class="nav tags">
+            <ul class="tags">
+              
+              <li><a href="/tags/software">software</a></li>
+              
+              <li><a href="/tags/julia">julia</a></li>
+              
+            </ul>
+          </nav>
+          
+          
+        </div>
+      </div>
 
-    
-
-    <div class="page-footer">
-        
-        <hr class="footer-divider">
-        
-            <a class="tag" href="/tags/software">#software</a>
-        
-            <a class="tag" href="/tags/julia">#julia</a>
-        
+      
       
     </div>
 
+    </article>
+</main>
+<footer>
+  <div style="display:flex"><a class="soc" href="mailto:colm@colmryan.org" rel="me" title="Email"><svg class="feather">
+   <use href="/svg/feather-sprite.51cf5647cb1987f769b616558f2620fd9423d72058490231b391bf6aa3744b55.svg#mail" />
+</svg></a><a class="border"></a><a class="soc" href="https://github.com/caryan/" rel="me" title="GitHub"><svg class="feather">
+   <use href="/svg/feather-sprite.51cf5647cb1987f769b616558f2620fd9423d72058490231b391bf6aa3744b55.svg#github" />
+</svg></a><a class="border"></a><a class="soc" href="https://gitlab.com/caryan" rel="me" title="GitLab"><svg class="feather">
+   <use href="/svg/feather-sprite.51cf5647cb1987f769b616558f2620fd9423d72058490231b391bf6aa3744b55.svg#gitlab" />
+</svg></a><a class="border"></a></div>
+  <div class="footer-info">
+    2025  © Colm Ryan |  <a
+      href="https://github.com/athul/archie">Archie Theme</a> | Built with <a href="https://gohugo.io">Hugo</a>
+  </div>
+</footer>
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
-    onload="renderMathInElement(document.body);"></script>
 
-        </div>
-        <footer class="footer-mobile">
-	<div class="social-icons">
-        
-    <a class="social-icon" href="mailto:colm@colmryan.org" target="_blank" rel="noopener" title="Email">
-        <svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" fill="#ABABAB" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
-            <path d="M25.2794292,5.59128519 L14,16.8707144 L2.72057081,5.59128519 C3.06733103,5.30237414 3.51336915,5.12857603 4,5.12857603 L24,5.12857603 C24.4866308,5.12857603 24.932669,5.30237414 25.2794292,5.59128519 Z M25.9956978,6.99633695 C25.998551,7.04004843 26,7.08414302 26,7.12857603 L26,20.871424 C26,21.0798433 25.9681197,21.2808166 25.9089697,21.4697335 L18.7156355,14.2763993 L25.9956978,6.99633695 Z M24.9498374,22.6319215 C24.6672737,22.7846939 24.3437653,22.871424 24,22.871424 L4,22.871424 C3.5268522,22.871424 3.09207889,22.7071233 2.74962118,22.432463 L10.0950247,15.0870594 L13.9848068,18.9768415 L14.1878486,18.7737996 L14.2030419,18.7889929 L17.6549753,15.3370594 L24.9498374,22.6319215 Z M2.00810114,21.0526627 C2.00273908,20.9929669 2,20.9325153 2,20.871424 L2,7.12857603 C2,7.08414302 2.00144896,7.04004843 2.00430222,6.99633695 L9.03436454,14.0263993 L2.00810114,21.0526627 Z"></path>
-        </svg>
-    </a>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <a class="social-icon" href="https://www.linkedin.com/in/colm-ryan-660687113" target="_blank" rel="noopener" title="LinkedIn">
-        <svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" fill="#ABABAB" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
-            <path d="M2,3.654102 C2,2.69908141 2.79442509,1.92397846 3.77383592,1.92397846 L24.2261641,1.92397846 C25.2058917,1.92397846 26,2.69908141 26,3.654102 L26,24.3462148 C26,25.3015521 25.2058917,26.0760215 24.2261641,26.0760215 L3.77383592,26.0760215 C2.79442509,26.0760215 2,25.3015521 2,24.3465315 L2,3.65378524 L2,3.654102 Z M9.27526132,22.1415901 L9.27526132,11.2356668 L5.65030092,11.2356668 L5.65030092,22.1415901 L9.27557808,22.1415901 L9.27526132,22.1415901 Z M7.46341463,9.74691162 C8.72727273,9.74691162 9.51409566,8.90940767 9.51409566,7.86284447 C9.49033893,6.79252455 8.72727273,5.97846056 7.48748812,5.97846056 C6.24675325,5.97846056 5.43649034,6.79252455 5.43649034,7.86284447 C5.43649034,8.90940767 6.22299652,9.74691162 7.4396579,9.74691162 L7.46309788,9.74691162 L7.46341463,9.74691162 Z M11.2815965,22.1415901 L14.9062401,22.1415901 L14.9062401,16.0519481 C14.9062401,15.7263225 14.9299968,15.4000634 15.0256573,15.1675641 C15.2876148,14.5159962 15.8840672,13.8416218 16.8856509,13.8416218 C18.1970225,13.8416218 18.7218879,14.8416218 18.7218879,16.3078872 L18.7218879,22.1415901 L22.3465315,22.1415901 L22.3465315,15.8885017 C22.3465315,12.5388027 20.5584416,10.9800443 18.1735825,10.9800443 C16.2182452,10.9800443 15.3595185,12.072854 14.8824834,12.8172315 L14.9065569,12.8172315 L14.9065569,11.2359835 L11.2819132,11.2359835 C11.3291099,12.2591067 11.2815965,22.1419069 11.2815965,22.1419069 L11.2815965,22.1415901 Z"></path>
-        </svg>
-    </a>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    <a class="social-icon" href="https://github.com/caryan/" target="_blank" rel="noopener" title="GitHub">
-        <svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" fill="#ABABAB" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
-            <path d="M13.9988029,1.32087331 C6.82105037,1.32087331 1,7.14112562 1,14.3212723 C1,20.0649109 4.72454649,24.9370678 9.89038951,26.6560892 C10.5408085,26.7757983 10.7778323,26.374374 10.7778323,26.0296121 C10.7778323,25.7215609 10.7666595,24.9035493 10.760275,23.8189856 C7.14426471,24.6042767 6.38131925,22.0760223 6.38131925,22.0760223 C5.78995672,20.5740732 4.93762853,20.1742451 4.93762853,20.1742451 C3.75729765,19.3682044 5.02701126,19.3841656 5.02701126,19.3841656 C6.33183953,19.4759425 7.01817121,20.7241085 7.01817121,20.7241085 C8.17775254,22.7104801 10.0611744,22.1366749 10.8017741,21.8038838 C10.919887,20.9643246 11.2558703,20.3913175 11.6269683,20.066507 C8.74038491,19.7385043 5.70536235,18.6228163 5.70536235,13.6413251 C5.70536235,12.2223743 6.21213051,11.0611968 7.04370914,10.1530044 C6.90963504,9.82420367 6.46351945,8.50181809 7.17139875,6.71256734 C7.17139875,6.71256734 8.26234691,6.36301702 10.7459099,8.04532771 C11.78259,7.75642995 12.8950858,7.61277914 14.000399,7.60719272 C15.1049142,7.61277914 16.2166119,7.75642995 17.2548881,8.04532771 C19.736855,6.36301702 20.8262071,6.71256734 20.8262071,6.71256734 C21.5356825,8.50181809 21.0895669,9.82420367 20.9562909,10.1530044 C21.7894656,11.0611968 22.2922435,12.2223743 22.2922435,13.6413251 C22.2922435,18.6355852 19.2524325,19.734514 16.3570705,20.0561322 C16.8231376,20.4575564 17.2389269,21.2508282 17.2389269,22.4638795 C17.2389269,24.2012564 17.2229657,25.603448 17.2229657,26.0296121 C17.2229657,26.3775663 17.4575954,26.7821827 18.116793,26.6552912 C23.2786458,24.9322794 27,20.0633148 27,14.3212723 C27,7.14112562 21.1789496,1.32087331 13.9988029,1.32087331"></path>
-        </svg>
-    </a>
-    
-
-    
-    
-    
-    <a class="social-icon" href="https://gitlab.com/caryan" target="_blank" rel="noopener" title="GitLab">
-        <svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" fill="#ABABAB" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
-            <path d="M25.8928355,15.330615 L24.6377766,11.4743798 C24.6311235,11.4388709 24.6209558,11.4041117 24.6074237,11.370615 L22.0895413,3.62002681 C21.9519499,3.20985323 21.5664025,2.9345029 21.1337766,2.93743857 C20.7020628,2.93482083 20.3190624,3.21391308 20.189306,3.62567387 L17.789306,11.0113209 L10.2144825,11.0113209 L7.8109531,3.62567387 C7.68166096,3.2154114 7.3008703,2.9366795 6.8707178,2.93743857 L6.86507074,2.93743857 C6.43207772,2.9375139 6.04793469,3.21523509 5.91212957,3.62637975 L3.39212957,11.3861445 C3.39212957,11.3932033 3.38648251,11.3988503 3.38436486,11.4059092 L2.1067178,15.3313209 C1.91410826,15.9219503 2.1242249,16.569406 2.6269531,16.9343798 L13.6655413,24.9553209 C13.8649064,25.0996309 14.1347733,25.098203 14.3326002,24.9517915 L25.373306,16.9343798 C25.8762704,16.5692556 26.0861711,15.9213012 25.8928355,15.330615 M9.39283545,12.144968 L12.4697766,21.6150856 L5.08342369,12.144968 M15.5340119,21.6172033 L18.4846002,12.5381445 L18.611659,12.144968 L22.9246002,12.144968 L16.2420119,20.7059092 M21.143659,4.35273269 L23.3057766,11.0113209 L18.9780119,11.0113209 M17.4229531,12.1407327 L15.2791884,18.7379092 L14.0001296,22.6668503 L10.5822472,12.1407327 M6.86012957,4.35273269 L9.02648251,11.0113209 L4.70154133,11.0113209 M3.29118839,16.020968 C3.18436061,15.9432767 3.13987047,15.8055284 3.18107074,15.6800268 L4.12977663,12.7647327 L11.087659,21.684968 M24.7097766,16.020968 L16.9126002,21.6828503 L16.9387178,21.648968 L23.8704825,12.7647327 L24.8191884,15.678615 C24.8608813,15.8041731 24.8166519,15.9422827 24.7097766,16.0202621"></path>
-        </svg>
-    </a>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
 </div>
-
-
-
-
-	<div class="footer-mobile-links">
-		<p><a href="https://github.com/kimcc/hugo-theme-noteworthy" target="_blank" rel="noopener">Noteworthy theme</a></p>
-		<span class="divider-bar">|</span>
-		<p><a href="https://gohugo.io" target="_blank" rel="noopener">Built with Hugo</a></p>
-	</div>
-
-	<script src="https://www.colmryan.org/js/main.min.fa5c2b23e07b5d9bfad267a52b4b24fdb053e6fb7524993383594926a3ac270c.js" integrity="sha256-+lwrI+B7XZv60melK0sk/bBT5vt1JJkzg1lJJqOsJww=" crossorigin="anonymous"></script>
-</footer>
     </body>
 </html>

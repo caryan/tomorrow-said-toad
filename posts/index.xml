@@ -4,120 +4,94 @@
     <title>Posts on Tomorrow Said Toad</title>
     <link>https://www.colmryan.org/posts/</link>
     <description>Recent content in Posts on Tomorrow Said Toad</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
+    <copyright>© Colm Ryan</copyright>
     <lastBuildDate>Tue, 30 Jun 2020 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://www.colmryan.org/posts/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <atom:link href="https://www.colmryan.org/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Where to sample a Ramsey experiment</title>
       <link>https://www.colmryan.org/posts/where_to_sample_a_ramsey/</link>
       <pubDate>Tue, 30 Jun 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://www.colmryan.org/posts/where_to_sample_a_ramsey/</guid>
       <description>The tradeoff between sensitivity and shot noise</description>
     </item>
-    
     <item>
       <title>pylint to CodeClimate converter</title>
       <link>https://www.colmryan.org/posts/pylint_to_codeclimate/</link>
       <pubDate>Mon, 22 Jun 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://www.colmryan.org/posts/pylint_to_codeclimate/</guid>
       <description>A little helper function to get nice code quality reports in Gitlab</description>
     </item>
-    
     <item>
       <title>Python function call overhead</title>
       <link>https://www.colmryan.org/posts/python_function_call_overhead/</link>
       <pubDate>Wed, 17 Jun 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://www.colmryan.org/posts/python_function_call_overhead/</guid>
       <description>Measuring function call overhead from Python 2.7 to 3.8</description>
     </item>
-    
     <item>
       <title>Quantum Optimal Control with SciML</title>
       <link>https://www.colmryan.org/posts/quantum_optimal_control_diffeqflux/</link>
       <pubDate>Tue, 09 Jun 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://www.colmryan.org/posts/quantum_optimal_control_diffeqflux/</guid>
       <description>Using SciML and Julia for numerical optimized pulse shapes.</description>
     </item>
-    
     <item>
       <title>No init system on Ubuntu 18.04 base</title>
       <link>https://www.colmryan.org/posts/no-init-in-ubuntu-18.04-base/</link>
       <pubDate>Mon, 10 Feb 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://www.colmryan.org/posts/no-init-in-ubuntu-18.04-base/</guid>
       <description>Restoring an init system to an Ubuntu 18.04 minimal image</description>
     </item>
-    
     <item>
       <title>Two approaches to Savitsky-Golay filtering</title>
       <link>https://www.colmryan.org/posts/savitsky_golay/</link>
       <pubDate>Sat, 30 Nov 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://www.colmryan.org/posts/savitsky_golay/</guid>
       <description>Comparing matrix inversion and Gram polynomial approaches to Savitsky-Golay filtering.</description>
     </item>
-    
     <item>
       <title>Asyncio Socket Pool</title>
       <link>https://www.colmryan.org/posts/asyncio-socket-pool/</link>
       <pubDate>Mon, 12 Aug 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://www.colmryan.org/posts/asyncio-socket-pool/</guid>
       <description>A socket pool with Python&amp;rsquo;s asyncio</description>
     </item>
-    
     <item>
       <title>Reflection to discover function keyword arguments in Julia</title>
       <link>https://www.colmryan.org/posts/reflection_function_kwargs_julia/</link>
       <pubDate>Thu, 12 Jan 2017 00:00:00 +0000</pubDate>
-      
       <guid>https://www.colmryan.org/posts/reflection_function_kwargs_julia/</guid>
       <description>Extracting named keyword arguments from a function in Julia</description>
     </item>
-    
     <item>
       <title>Avrum&#39;s Clock Domain Crossing Widsom</title>
       <link>https://www.colmryan.org/posts/avrum-cdc-wisdom/</link>
       <pubDate>Mon, 22 Aug 2016 00:00:00 +0000</pubDate>
-      
       <guid>https://www.colmryan.org/posts/avrum-cdc-wisdom/</guid>
       <description>A collection of clock domain crossing from Xilinx forums</description>
     </item>
-    
+    <item>
+      <title>Variant calls with GATK</title>
+      <link>https://www.colmryan.org/posts/variant-calls-with-gatk/</link>
+      <pubDate>Sun, 29 May 2016 00:00:00 +0000</pubDate>
+      <guid>https://www.colmryan.org/posts/variant-calls-with-gatk/</guid>
+      <description>Setting up a variant calling pipeline</description>
+    </item>
+    <item>
+      <title>Bitfield nicities in Python</title>
+      <link>https://www.colmryan.org/posts/bitfield-nicieties-in-python/</link>
+      <pubDate>Mon, 08 Feb 2016 00:00:00 +0000</pubDate>
+      <guid>https://www.colmryan.org/posts/bitfield-nicieties-in-python/</guid>
+      <description>Using metaprogamming to make bitfields easy in Python</description>
+    </item>
     <item>
       <title>asyncio real-time signal processing</title>
       <link>https://www.colmryan.org/posts/asyncio-realtime-dsp/</link>
       <pubDate>Sun, 20 Sep 2015 00:00:00 +0000</pubDate>
-      
       <guid>https://www.colmryan.org/posts/asyncio-realtime-dsp/</guid>
       <description>Using Python&amp;rsquo;s asyncio for real-time signal processing</description>
     </item>
-    
-    <item>
-      <title>Bitfield nicities in Python</title>
-      <link>https://www.colmryan.org/posts/bitfield-nicieties-in-python/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.colmryan.org/posts/bitfield-nicieties-in-python/</guid>
-      <description>Using metaprogamming to make bitfields easy in Python</description>
-    </item>
-    
-    <item>
-      <title>Variant calls with GATK</title>
-      <link>https://www.colmryan.org/posts/variant-calls-with-gatk/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.colmryan.org/posts/variant-calls-with-gatk/</guid>
-      <description>Setting up a variant calling pipeline</description>
-    </item>
-    
   </channel>
 </rss>
