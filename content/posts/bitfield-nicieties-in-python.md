@@ -1,6 +1,6 @@
 ---
 title: Bitfield nicities in Python
-date: 2016-2-08
+date: 2016-02-08
 tags:
   - software
   - python

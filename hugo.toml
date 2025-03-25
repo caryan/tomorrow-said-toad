@@ -1,10 +1,22 @@
 baseURL = "https://www.colmryan.org/"
 languageCode = "en-us"
 title = "Tomorrow Said Toad"
-summaryLength = 10 # Configure how long the post summary should be on the homepage.
-theme = "noteworthy"
+copyright = "© Colm Ryan"
+theme = "archie"
+
+# Code Highlight
+pygmentsstyle = "monokai"
+pygmentscodefences = true
+pygmentscodefencesguesssyntax = true
+
 
 googleAnalytics = "UA-158537342-1" 
+
+[pagination]
+  disableAliases = false
+  pagerSize = 5
+  path = 'page'
+
 
 [taxonomies]
   tag = "tags"
@@ -12,14 +24,60 @@ googleAnalytics = "UA-158537342-1"
 [author]
 	name = "Colm Ryan"
 
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.extensions]
+      [markup.goldmark.extensions.passthrough]
+        enable = true
+        [markup.goldmark.extensions.passthrough.delimiters]
+          block = [['\[', '\]'], ['$$', '$$']]
+          inline = [['\(', '\)']]
+
 [params]
 	# Blog description at the top of the homepage. Supports markdown.
-	description = "Tomorrow said toad - today I will take life easy."
+	subtitle = "Tomorrow said toad - today I will take life easy."
+	mode="auto" # color-mode → light,dark,toggle or auto
+	useCDN=false # don't use CDNs for fonts and icons, instead serve them locally.
+	mathjax = true # enable MathJax support
+	katex = true # enable KaTeX support
 
-  # account links
-  email    = "mailto:colm@colmryan.org"
-  github   = "https://github.com/caryan/"
-  gitlab   = "https://gitlab.com/caryan"
-	linkedin = "https://www.linkedin.com/in/colm-ryan-660687113"
 
-	math = true
+# Social Tags
+
+[[params.social]]
+name = "Email"
+icon = "mail"
+url = "mailto:colm@colmryan.org"
+
+[[params.social]]
+name = "GitHub"
+icon = "github"
+url = "https://github.com/caryan/"
+
+[[params.social]]
+name = "GitLab"
+icon = "gitlab"
+url = "https://gitlab.com/caryan"
+
+
+# Main menu Items
+
+[[menu.main]]
+name = "Home"
+url = "/"
+weight = 1
+
+[[menu.main]]
+name = "All posts"
+url = "/posts"
+weight = 2
+
+[[menu.main]]
+name = "About"
+url = "/about"
+weight = 3
+
+[[menu.main]]
+name = "Tags"
+url = "/tags"
+weight = 4

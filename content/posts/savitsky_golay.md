@@ -7,16 +7,15 @@ tags:
   - julia
 summary: Comparing matrix inversion and Gram polynomial approaches to Savitsky-Golay filtering.
 draft: false
-markup: mmark #  mmark is deprecated but needed for Katex for now https://github.com/gohugoio/hugo/issues/6544
 ---
 
-Savitsky-Golay filtering[^1] is one of my first choices for smoothing noisy experimental data. It has the nice property of preserving higher moments of the data and so particularly for spectroscopy it preserves peak heights [^2]. Savitsky-Golay filtering is a simple enough idea: fit a moving $$n^{th}$$-degree polynomial to a window around each point and then evaluate the polynomial at the mid-point to provide the smoothed value. The key insight of Savitsky-Golay was that we don't have to repeat the least-squares fit for every point: we can write the polynomial coefficients as a linear combination of the data values in the window so that once we know the appropriate weights we can apply the filter as a convolution.
+Savitsky-Golay filtering[^1] is one of my first choices for smoothing noisy experimental data. It has the nice property of preserving higher moments of the data and so particularly for spectroscopy it preserves peak heights [^2]. Savitsky-Golay filtering is a simple enough idea: fit a moving \(n^{th}\)-degree polynomial to a window around each point and then evaluate the polynomial at the mid-point to provide the smoothed value. The key insight of Savitsky-Golay was that we don't have to repeat the least-squares fit for every point: we can write the polynomial coefficients as a linear combination of the data values in the window so that once we know the appropriate weights we can apply the filter as a convolution.
 
 I wanted to work through the usual derivation for the Savitsky-Golay convolution coefficients starting from the design matrix to make sure I understood both the pseudo-inverse approach and how `SciPy` was calculating the filter coefficients for a particular derivative with a matrix-vector least squares inversion. And I also got curious about another approach using a different family of polynomials, the Gram polynomials [^3].
 
 # Calculating filter coefficients with matrix inversions
 
-Using the conventional polynomials $$p_0 + p_1x + p_2x^2 + p_3x^3 + \dots$$ we can cast the polynomial fitting problem in matrix form: $$\mathbf{A}\cdot\mathbf{p} = \mathbf{y}$$ for a column vector of the polynomial coefficients, $$\mathbf{p}$$ and the data in the window to fit $$\mathbf{y}$$. For equally spaced normalized points $$\dots -2, -1, 0, 1, 2, \dots$$ the design matrix $$\mathbf{A}$$ is a [Vandermonde matrix](https://en.wikipedia.org/wiki/Vandermonde_matrix):
+Using the conventional polynomials \(p_0 + p_1x + p_2x^2 + p_3x^3 + \dots\) we can cast the polynomial fitting problem in matrix form: \(\mathbf{A}\cdot\mathbf{p} = \mathbf{y}\) for a column vector of the polynomial coefficients, \(\mathbf{p}\) and the data in the window to fit \(\mathbf{y}\). For equally spaced normalized points \(\dots -2, -1, 0, 1, 2, \dots\) the design matrix \(\mathbf{A}\) is a [Vandermonde matrix](https://en.wikipedia.org/wiki/Vandermonde_matrix):
 
 $$
 \begin{bmatrix}
@@ -48,7 +47,7 @@ $$
 
 ## Full Pseudo-Inverse
 
-For fitting a $$m^{th}$$ order polynomial to a data window $$w$$ points wide we have a $$\mathbf{A}$$ is a $$w \times (m+1)$$ matrix and we are looking for the pseudo-inverse matrix $$\mathbf{C}$$ ($$(m+1) \times w$$) such that $$\mathbf{CA}$$ is a $$(m+1) \times (m+1)$$ identity matrix and if we left multiply both sides by $$\mathbf{C}$$ then we have the coefficients as a product of a matrix $$\mathbf{C}$$ and the data.
+For fitting a \(m^{th}\) order polynomial to a data window \(w\) points wide we have a \(\mathbf{A}\) is a \(w \times (m+1)\) matrix and we are looking for the pseudo-inverse matrix \(\mathbf{C}\) (\((m+1) \times w\)) such that \(\mathbf{CA}\) is a \((m+1) \times (m+1)\) identity matrix and if we left multiply both sides by \(\mathbf{C}\) then we have the coefficients as a product of a matrix \(\mathbf{C}\) and the data.
 
 $$
 \begin{bmatrix}
@@ -70,13 +69,13 @@ y_2 \\
 \end{bmatrix}
 $$
 
-We are guaranteed the pseudo-inverse exists because $$w > m$$ for the fit to unique and a rectangular $$w \times m$$ Vandermonde matrix with all $$x_i$$ unique (which we have because we have equally spaced points) has maximum rank.
+We are guaranteed the pseudo-inverse exists because \(w > m\) for the fit to unique and a rectangular \(w \times m\) Vandermonde matrix with all \(x_i\) unique (which we have because we have equally spaced points) has maximum rank.
 
-Each row of $$\mathbf{C}$$ gives the coefficients for a particular polynomial coefficient. However, for Savitsky-Golay we have a moving window and we only need to evaluate the window at the middle point where $$x=0$$ and so all the $$p_i, i>0$$ don't matter and we only need the first row. Hence we only need a single row of the matrix. Taking the $$n$$'th derivative of the smoothed signal just shifts the coefficients with a factorial scaling and accounting for the x-point spacing. For example the 1st derivative will be $$p_1 + 2p_2x + 3p_3x^2 + \dots$$ so for $$x=0$$ we only need to evaluate the $$p_1$$ term or the first row.
+Each row of \(\mathbf{C}\) gives the coefficients for a particular polynomial coefficient. However, for Savitsky-Golay we have a moving window and we only need to evaluate the window at the middle point where \(x=0\) and so all the \(p_i, i>0\) don't matter and we only need the first row. Hence we only need a single row of the matrix. Taking the \(n\)'th derivative of the smoothed signal just shifts the coefficients with a factorial scaling and accounting for the x-point spacing. For example the 1st derivative will be \(p_1 + 2p_2x + 3p_3x^2 + \dots\) so for \(x=0\) we only need to evaluate the \(p_1\) term or the first row.
 
 ## Solving for a only a single row of coefficients
 
-We can take advantage of that by least-squares solving for only a single row of $$\mathbf{C}$$. We're looking to solve $$\mathbf{CA} = \mathbf{I}$$ and taking the transpose to put it in the conventional $$\mathbf{AX} = \mathbf{B}$$ we have $$\mathbf{A}^\mathrm{T}\mathbf{C}^\mathrm{T} = \mathbf{I}$$ or $$\mathbf{C}^\mathrm{T} = \mathbf{A}^\mathrm{T} \backslash \mathbf{I}$$. We can then solve for say only the first column of $$\mathbf{C}^\mathrm{T}$$ with
+We can take advantage of that by least-squares solving for only a single row of\(\mathbf{C}\). We're looking to solve \(\mathbf{CA} = \mathbf{I}\) and taking the transpose to put it in the conventional \(\mathbf{AX} = \mathbf{B}\) we have \(\mathbf{A}^\mathrm{T}\mathbf{C}^\mathrm{T} = \mathbf{I}\) or \(\mathbf{C}^\mathrm{T} = \mathbf{A}^\mathrm{T} \backslash \mathbf{I}\). We can then solve for say only the first column of $\(\mathbf{C}^\mathrm{T}\) with
 
 $$
 \vec{C}_0 = \mathbf{A}^\mathrm{T} \backslash

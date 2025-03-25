@@ -1,6 +1,6 @@
 ---
 title: Variant calls with GATK
-date: 2016-5-29
+date: 2016-05-29
 tags:
   - software
   - Julia
