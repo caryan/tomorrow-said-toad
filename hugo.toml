@@ -9,7 +9,6 @@ pygmentsstyle = "monokai"
 pygmentscodefences = true
 pygmentscodefencesguesssyntax = true
 
-
 googleAnalytics = "UA-158537342-1" 
 
 [pagination]
@@ -17,6 +16,9 @@ googleAnalytics = "UA-158537342-1"
   pagerSize = 5
   path = 'page'
 
+[caches]
+  [caches.images]
+    dir = ':cacheDir/images'
 
 [taxonomies]
   tag = "tags"
