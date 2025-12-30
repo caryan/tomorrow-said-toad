@@ -1,0 +1,14 @@
+<div class="header-inner">
+  <h1 class="site-title">
+    <a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a>
+  </h1>
+  <nav>
+    {{- range .Site.Menus.main }}
+    <a href="{{ .URL }}"{{ if $.IsMenuCurrent "main" . }} aria-current="page"{{ end }}>{{ .Name }}</a>
+    {{- end }}
+    <button class="theme-toggle" id="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
+      {{- partial "icons/sun.html" . -}}
+      {{- partial "icons/moon.html" . -}}
+    </button>
+  </nav>
+</div>

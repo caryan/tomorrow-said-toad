@@ -1,0 +1,26 @@
+{{ define "main" }}
+{{- with .Site.Params.subtitle }}
+<p class="site-subtitle">{{ . | safeHTML }}</p>
+{{- end }}
+
+{{- $paginator := .Paginate (where site.RegularPages "Section" "posts") }}
+<ul class="post-list">
+  {{- range $paginator.Pages }}
+  <li>
+    <div class="post-list-item">
+      <div class="post-list-title">
+        <a href="{{ .Permalink }}">{{ .Title }}</a>
+      </div>
+      <div class="post-list-meta">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+      </div>
+      {{- with .Summary }}
+      <div class="post-list-summary">{{ . }}</div>
+      {{- end }}
+    </div>
+  </li>
+  {{- end }}
+</ul>
+
+{{- partial "pagination.html" . -}}
+{{ end }}

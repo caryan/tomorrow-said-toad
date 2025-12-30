@@ -2,7 +2,7 @@ baseURL = "https://www.colmryan.org/"
 languageCode = "en-us"
 title = "Tomorrow Said Toad"
 copyright = "© Colm Ryan"
-theme = "archie"
+theme = "Eigen"
 
 # Code Highlight
 pygmentsstyle = "monokai"
@@ -36,12 +36,8 @@ googleAnalytics = "UA-158537342-1"
           inline = [['\(', '\)']]
 
 [params]
-	# Blog description at the top of the homepage. Supports markdown.
 	subtitle = "Tomorrow said toad - today I will take life easy."
-	mode="auto" # color-mode → light,dark,toggle or auto
-	useCDN=true # use CDNs for fonts, icons, and MathJax
-	mathjax = true # enable MathJax support
-	katex = false # enable KaTeX support
+	mathjax = true
 
 
 # Social Tags

@@ -1,0 +1,17 @@
+{{ define "main" }}
+<h1>Posts tagged "{{ .Title }}"</h1>
+
+{{- range .Pages.GroupByDate "2006" }}
+<div class="archive-year" id="{{ .Key }}">
+  <h2 class="archive-year-header">{{ .Key }}</h2>
+  <ul class="archive-posts">
+    {{- range .Pages }}
+    <li>
+      <span class="archive-date">{{ .Date.Format "Jan 2" }}</span>
+      <span class="archive-title"><a href="{{ .Permalink }}">{{ .Title }}</a></span>
+    </li>
+    {{- end }}
+  </ul>
+</div>
+{{- end }}
+{{ end }}

@@ -1,0 +1,14 @@
+<div class="footer-inner">
+  <div class="copyright">
+    {{ with .Site.Copyright }}{{ . | safeHTML }}{{ else }}&copy; {{ now.Year }} {{ .Site.Title }}{{ end }}
+  </div>
+  {{- if .Site.Params.social }}
+  <div class="social-icons">
+    {{- range .Site.Params.social }}
+    <a href="{{ .url }}" title="{{ .name }}" rel="me noopener noreferrer" target="_blank">
+      {{- partial (printf "icons/%s.html" .icon) $ -}}
+    </a>
+    {{- end }}
+  </div>
+  {{- end }}
+</div>

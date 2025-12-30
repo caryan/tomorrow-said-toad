@@ -1,0 +1,30 @@
+{{ define "main" }}
+<h1>{{ .Title }}</h1>
+{{- with .Content }}
+<div class="page-content">
+  {{ . }}
+</div>
+{{- end }}
+
+{{- $pages := .Pages }}
+{{- if .IsHome }}
+  {{- $pages = where site.RegularPages "Section" "posts" }}
+{{- end }}
+
+{{- /* Group pages by year */ -}}
+{{- range $pages.GroupByDate "2006" }}
+<div class="archive-year" id="{{ .Key }}">
+  <h2 class="archive-year-header">{{ .Key }}</h2>
+  <ul class="archive-posts">
+    {{- range .Pages }}
+    <li>
+      <span class="archive-date">{{ .Date.Format "Jan 2" }}</span>
+      <span class="archive-title"><a href="{{ .Permalink }}">{{ .Title }}</a></span>
+    </li>
+    {{- end }}
+  </ul>
+</div>
+{{- end }}
+
+{{- partial "pagination.html" . -}}
+{{ end }}
